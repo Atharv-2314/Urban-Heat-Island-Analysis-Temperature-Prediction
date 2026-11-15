@@ -8,6 +8,8 @@ import compression from 'compression';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
 
 import { errorHandler, notFound, requestId } from './middleware';
 import { cacheService } from './services/cache';
@@ -103,6 +105,16 @@ app.get('/api', (_req, res) => {
 // ── Error Handlers ────────────────────────────────────────────────────────────
 app.use(notFound);
 app.use(errorHandler);
+
+// ── Static Frontend (production Docker build) ─────────────────────────────────
+const STATIC_DIR = path.join(__dirname, '..', 'public');
+if (fs.existsSync(STATIC_DIR)) {
+  app.use(express.static(STATIC_DIR));
+  // SPA fallback: serve index.html for all non-API routes
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(STATIC_DIR, 'index.html'));
+  });
+}
 
 // ── Start Server ──────────────────────────────────────────────────────────────
 app.listen(PORT, () => {

@@ -1,0 +1,82 @@
+version: "3.9"
+
+services:
+  # ──────────────────────────────────────────────────────────
+  # Python pipeline (runs once at startup, then exits)
+  # ──────────────────────────────────────────────────────────
+  pipeline:
+    build:
+      context: .
+      target: python-base
+    image: uhi-pipeline:latest
+    container_name: uhi_pipeline
+    command: python -m src.pipeline --stage all
+    volumes:
+      - data_processed:/app/data/processed
+      - model_artifacts:/app/models
+      - reports:/app/reports
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+    restart: "no"
+
+  # ──────────────────────────────────────────────────────────
+  # Node.js REST API backend
+  # ──────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    image: uhi-app:latest
+    container_name: uhi_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - data_processed:/app/data/processed:ro
+      - model_artifacts:/app/models:ro
+      - reports:/app/reports:ro
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+      - DATA_DIR=/app/data/processed
+      - MODELS_DIR=/app/models
+      - REPORTS_DIR=/app/reports
+    depends_on:
+      pipeline:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+  # ──────────────────────────────────────────────────────────
+  # React + Vite dev server (development only)
+  # For production, static files are served by the API above.
+  # ──────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: uhi-frontend-dev:latest
+    container_name: uhi_frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+    depends_on:
+      - api
+    profiles:
+      - dev
+    restart: unless-stopped
+
+volumes:
+  data_processed:
+  model_artifacts:
+  reports:

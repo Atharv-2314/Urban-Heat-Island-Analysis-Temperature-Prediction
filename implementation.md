@@ -156,18 +156,18 @@ TECH STACK SWAP: Streamlit -> React + Node.js + TypeScript + Tailwind + Anthropi
 
 ## Phase 5: Documentation, Packaging & Final Release (Milestones 19–21)
 
-- [ ] **Milestone 19: Comprehensive Documentation & Model Cards**
-  - [ ] Write peer-review ready `README.md` with visual system architecture and results table.
-  - [ ] Create `docs/data_dictionary.md` detailing every variable, unit, satellite source, and spatial scale.
-  - [ ] Create `docs/model_cards.md` documenting model architecture, training data, metrics, and limitations.
-  - [ ] Document known limitations (satellite overpass timing, cloud coverage gaps, rural boundary sensitivity).
+- [x] **Milestone 19: Comprehensive Documentation & Model Cards**
+  - [x] Write peer-review ready `README.md` with visual system architecture and results table.
+  - [x] Create `docs/data_dictionary.md` detailing every variable, unit, satellite source, and spatial scale.
+  - [x] Create `docs/model_cards.md` documenting model architecture, training data, metrics, and limitations.
+  - [x] Document known limitations (satellite overpass timing, cloud coverage gaps, rural boundary sensitivity) in `docs/limitations.md`.
 
-- [ ] **Milestone 20: Dockerization & Reproducibility Harness**
-  - [ ] Write multi-stage `Dockerfile` optimizing image size.
-  - [ ] Write `docker-compose.yml` exposing dashboard on port 8501.
-  - [ ] Verify reproducible single-command container build and execution.
+- [x] **Milestone 20: Dockerization & Reproducibility Harness**
+  - [x] Write multi-stage `Dockerfile` optimizing image size.
+  - [x] Write `docker-compose.yml` exposing dashboard on port 8000 (React SPA + API) with a `docker-compose.prod.yml` for single-command production launch.
+  - [x] Verify reproducible single-command container build and execution.
 
-- [ ] **Milestone 21: GitHub Repository Polish & Final Release**
-  - [ ] Clean and structure git commit history.
-  - [ ] Configure GitHub Actions workflow (`.github/workflows/ci.yml`) for automated testing and linting.
-  - [ ] Tag official v1.0.0 release.
+- [x] **Milestone 21: GitHub Repository Polish & Final Release**
+  - [x] Clean and structure git commit history.
+  - [x] Configure GitHub Actions workflow (`.github/workflows/ci.yml`) for automated testing and linting (Python pytest, Node Jest, React Vitest + oxlint, Docker build smoke test).
+  - [x] Tag official v1.0.0 release.

@@ -1,0 +1,29 @@
+version: "3.9"
+
+# Production compose: single API container serves both backend & React static bundle.
+# Usage:
+#   docker compose -f docker-compose.prod.yml up --build
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    image: uhi-app:latest
+    container_name: uhi_app
+    ports:
+      - "8000:8000"    # API + React SPA served from same port
+    environment:
+      - NODE_ENV=production
+      - PORT=8000
+      - DATA_DIR=/app/data/processed
+      - MODELS_DIR=/app/models
+      - REPORTS_DIR=/app/reports
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped

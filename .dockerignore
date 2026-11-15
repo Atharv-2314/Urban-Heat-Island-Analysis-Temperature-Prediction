@@ -1,0 +1,20 @@
+# Docker ignore — keep build context lean
+.git
+.gitignore
+**/.gitignore
+*.md
+docs/
+research/
+tests/
+**/__pycache__
+**/*.pyc
+**/*.pyo
+.venv
+.env
+node_modules
+client/node_modules
+server/node_modules
+client/dist
+server/dist
+data/raw
+data/interim
