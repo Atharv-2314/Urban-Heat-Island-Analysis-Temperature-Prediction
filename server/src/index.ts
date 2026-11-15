@@ -16,6 +16,7 @@ import citiesRouter from './routes/cities';
 import monthlyRouter from './routes/monthly';
 import modelsRouter from './routes/models';
 import simulatorRouter from './routes/simulator';
+import spatialRouter from './routes/spatial';
 
 dotenv.config();
 
@@ -72,6 +73,7 @@ app.use('/api/cities', citiesRouter);
 app.use('/api/monthly', monthlyRouter);
 app.use('/api/models', modelsRouter);
 app.use('/api/simulator', simulatorRouter);
+app.use('/api/spatial', spatialRouter);
 
 // ── API Root Info ─────────────────────────────────────────────────────────────
 app.get('/api', (_req, res) => {

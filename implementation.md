@@ -133,24 +133,24 @@ TECH STACK SWAP: Streamlit -> React + Node.js + TypeScript + Tailwind + Anthropi
   - [x] Implement caching and chunked data streaming for sub-second responses across the 42-city temporal datasets and ~1 km grid files.
   - [x] Build model inference endpoints in Python wrapped by Node.js child processes or lightweight FastAPI/Flask microservice for the What-If planning simulator.
 
-- [ ] **Milestone 16: React & TypeScript 6-Page Frontend Suite (Anthropic UI Styled)**
-  - [ ] Initialize frontend application using React, TypeScript, Vite, Tailwind CSS, and Lucide icons. Apply artifact-grade clean typographic hierarchy, muted cards, subtle borders, and high-density data tables.
-  - [ ] **Page 1: Global 42-City Overview Map** (Interactive Leaflet/Mapbox map with city markers, UHI intensity color scales, and climate group tags).
-  - [ ] **Page 2: City Deep-Dive & Temporal Heatwaves** (Recharts historical time-series, seasonal profiles, and multi-year anomaly heatmaps).
-  - [ ] **Page 3: Sampled ~1 km Grid Spatial Explorer** (Intra-urban spatial heat distribution, hot spots vs. cool parks breakdown).
-  - [ ] **Page 4: ML Model Performance & Climatology Benchmarks** (Model comparison cards, parity plots, residual analysis, and test scores).
-  - [ ] **Page 5: SHAP Interpretability & Biophysical Insights** (SHAP beeswarm visualization and individual city waterfall explanation cards).
-  - [ ] **Page 6: Interactive Urban Cooling Simulator** (Real-time slider controls for greening/albedo policies showing instant estimated UHI temperature drops).
+- [x] **Milestone 16: React & TypeScript 6-Page Frontend Suite (Anthropic UI Styled)**
+  - [x] Initialize frontend application using React, TypeScript, Vite, Tailwind CSS, and Lucide icons. Apply artifact-grade clean typographic hierarchy, muted cards, subtle borders, and high-density data tables.
+  - [x] **Page 1: Global 42-City Overview Map** (Interactive Leaflet/Mapbox map with city markers, UHI intensity color scales, and climate group tags).
+  - [x] **Page 2: City Deep-Dive & Temporal Heatwaves** (Recharts historical time-series, seasonal profiles, and multi-year anomaly heatmaps).
+  - [x] **Page 3: Sampled ~1 km Grid Spatial Explorer** (Intra-urban spatial heat distribution, hot spots vs. cool parks breakdown).
+  - [x] **Page 4: ML Model Performance & Climatology Benchmarks** (Model comparison cards, parity plots, residual analysis, and test scores).
+  - [x] **Page 5: SHAP Interpretability & Biophysical Insights** (SHAP beeswarm visualization and individual city waterfall explanation cards).
+  - [x] **Page 6: Interactive Urban Cooling Simulator** (Real-time slider controls for greening/albedo policies showing instant estimated UHI temperature drops).
 
-- [ ] **Milestone 17: Accessibility (WCAG 2.1), Usability & UI Polish**
-  - [ ] Ensure full keyboard tab navigation, visible focus rings, and Enter/Space activation for all interactive controls and sliders.
-  - [ ] Apply colorblind-safe palettes (Viridis, Cividis, Plasma) with distinct luminance curves across all charts.
-  - [ ] Add ARIA descriptive labels, tooltips, and clear text summaries for all map layers and charts.
+- [x] **Milestone 17: Accessibility (WCAG 2.1), Usability & UI Polish**
+  - [x] Ensure full keyboard tab navigation, visible focus rings, and Enter/Space activation for all interactive controls and sliders.
+  - [x] Apply colorblind-safe palettes (Viridis, Cividis, Plasma) with distinct luminance curves across all charts.
+  - [x] Add ARIA descriptive labels, tooltips, and clear text summaries for all map layers and charts.
 
-- [ ] **Milestone 18: Automated Testing Suite & CLI Pipeline Orchestration**
-  - [ ] Write backend unit tests (`pytest`) for schema validation, data cleaning, lag calculations, and metric computations.
-  - [ ] Write frontend component and smoke tests (Jest / Cypress) for React views and API integration.
-  - [ ] Build unified CLI pipeline runner: `python -m src.pipeline --stage [all|clean|features|train|eval]`.
+- [x] **Milestone 18: Automated Testing Suite & CLI Pipeline Orchestration**
+  - [x] Write backend unit tests (`pytest`) for schema validation, data cleaning, lag calculations, and metric computations.
+  - [x] Write frontend component and smoke tests (Jest / Cypress) for React views and API integration.
+  - [x] Build unified CLI pipeline runner: `python -m src.pipeline --stage [all|clean|features|train|eval]`.
 
 ---
 

@@ -14,6 +14,7 @@ export const DATA_PATHS = {
   shapValues: path.join(PROJECT_ROOT, 'data', 'processed', 'monthly_level', 'uhi_shap_values_2025.parquet'),
   simulationBenchmarks: path.join(PROJECT_ROOT, 'data', 'processed', 'monthly_level', 'uhi_simulation_benchmarks.parquet'),
   climatologyRef: path.join(PROJECT_ROOT, 'models', 'climatology_reference.parquet'),
+  pixelLevelDir: path.join(PROJECT_ROOT, 'data', 'processed', 'pixel_level'),
   splits: {
     train: path.join(PROJECT_ROOT, 'data', 'processed', 'splits', 'train.parquet'),
     val: path.join(PROJECT_ROOT, 'data', 'processed', 'splits', 'val.parquet'),
