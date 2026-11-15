@@ -1,0 +1,64 @@
+{
+  "top_10_global_drivers": [
+    {
+      "feature": "Urban_Valid_LST_Pixel_Count",
+      "mean_abs_shap": 0.4231222561083868
+    },
+    {
+      "feature": "relative_humidity",
+      "mean_abs_shap": 0.3645948587631181
+    },
+    {
+      "feature": "longitude",
+      "mean_abs_shap": 0.29005830280750894
+    },
+    {
+      "feature": "relative_humidity_lag1",
+      "mean_abs_shap": 0.22142151693922446
+    },
+    {
+      "feature": "Rural_Valid_LST_Pixel_Count",
+      "mean_abs_shap": 0.15006793287155298
+    },
+    {
+      "feature": "latitude",
+      "mean_abs_shap": 0.14871395566837894
+    },
+    {
+      "feature": "ndwi",
+      "mean_abs_shap": 0.10827618459003466
+    },
+    {
+      "feature": "population_density",
+      "mean_abs_shap": 0.10312763780917718
+    },
+    {
+      "feature": "ndbi",
+      "mean_abs_shap": 0.08679114201284825
+    },
+    {
+      "feature": "ndvi",
+      "mean_abs_shap": 0.06402578789306544
+    }
+  ],
+  "interactions": {
+    "ndvi_wind": {
+      "feature_a": "ndvi",
+      "feature_b": "wind_speed",
+      "mean_shap_a_at_low_b": 0.009241592397145178,
+      "mean_shap_a_at_high_b": 0.023016410250921725,
+      "median_feature_b_threshold": 1.3289425373077393,
+      "scientific_takeaway": "When wind_speed is low (<= 1.33), ndvi SHAP impact averages 0.009; when high, it shifts to 0.023."
+    },
+    "ndvi_humidity": {
+      "feature_a": "ndvi",
+      "feature_b": "relative_humidity",
+      "mean_shap_a_at_low_b": 0.009558166293697865,
+      "mean_shap_a_at_high_b": 0.022698538920366777,
+      "median_feature_b_threshold": 68.970458984375,
+      "scientific_takeaway": "When relative_humidity is low (<= 68.97), ndvi SHAP impact averages 0.010; when high, it shifts to 0.023."
+    }
+  },
+  "saved_shap_parquet": "uhi_shap_values_2025.parquet",
+  "records_analyzed": 489
+}

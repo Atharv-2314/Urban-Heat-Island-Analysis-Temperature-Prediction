@@ -1,0 +1,510 @@
+{
+  "scenario": {
+    "name": "Moderate Green & Cool Roofs Policy",
+    "delta_ndvi": 0.15,
+    "delta_ndbi": -0.15,
+    "delta_ndwi": 0.05
+  },
+  "global_average_cooling_celsius": 0.222,
+  "top_cooling_beneficiaries": [
+    {
+      "city": "Mangaluru",
+      "climate_group": "Tropical_Monsoon",
+      "mean_cooling_celsius": 1.185,
+      "max_cooling_celsius": 0.593
+    },
+    {
+      "city": "Kochi",
+      "climate_group": "Tropical_Monsoon",
+      "mean_cooling_celsius": 1.009,
+      "max_cooling_celsius": 0.078
+    },
+    {
+      "city": "Bhubaneswar",
+      "climate_group": "Tropical_Monsoon",
+      "mean_cooling_celsius": 0.808,
+      "max_cooling_celsius": 0.308
+    },
+    {
+      "city": "Siliguri",
+      "climate_group": "Humid_Subtropical",
+      "mean_cooling_celsius": 0.806,
+      "max_cooling_celsius": -0.271
+    },
+    {
+      "city": "Mysuru",
+      "climate_group": "Tropical_Savanna_Upland",
+      "mean_cooling_celsius": 0.769,
+      "max_cooling_celsius": -0.174
+    }
+  ],
+  "least_cooling_beneficiaries": [
+    {
+      "city": "Ahmedabad",
+      "climate_group": "Hot_Desert_SemiArid",
+      "mean_cooling_celsius": -0.105,
+      "max_cooling_celsius": -0.727
+    },
+    {
+      "city": "Madrid",
+      "climate_group": "Mediterranean",
+      "mean_cooling_celsius": -0.125,
+      "max_cooling_celsius": -0.83
+    },
+    {
+      "city": "Jodhpur",
+      "climate_group": "Hot_Desert_SemiArid",
+      "mean_cooling_celsius": -0.378,
+      "max_cooling_celsius": -0.947
+    },
+    {
+      "city": "Jaipur",
+      "climate_group": "Hot_Desert_SemiArid",
+      "mean_cooling_celsius": -0.434,
+      "max_cooling_celsius": -1.202
+    },
+    {
+      "city": "Cairo",
+      "climate_group": "Hot_Desert",
+      "mean_cooling_celsius": -0.812,
+      "max_cooling_celsius": -0.944
+    }
+  ],
+  "sample_city_profiles": {
+    "Ahmedabad": {
+      "city": "Ahmedabad",
+      "climate_group": "Hot_Desert_SemiArid",
+      "interventions": {
+        "delta_ndvi_greening": 0.15,
+        "delta_ndbi_albedo": -0.15,
+        "delta_ndwi_water": 0.05
+      },
+      "mean_cooling_celsius": -0.105,
+      "max_cooling_celsius": -0.727,
+      "min_cooling_celsius": 0.78,
+      "monthly_breakdown": [
+        {
+          "month": 1,
+          "baseline_uhi": 0.238,
+          "counterfactual_uhi": 0.966,
+          "cooling_effect_celsius": -0.727
+        },
+        {
+          "month": 2,
+          "baseline_uhi": 0.463,
+          "counterfactual_uhi": 1.17,
+          "cooling_effect_celsius": -0.706
+        },
+        {
+          "month": 3,
+          "baseline_uhi": 0.195,
+          "counterfactual_uhi": 0.744,
+          "cooling_effect_celsius": -0.549
+        },
+        {
+          "month": 4,
+          "baseline_uhi": -0.6,
+          "counterfactual_uhi": -0.358,
+          "cooling_effect_celsius": -0.242
+        },
+        {
+          "month": 5,
+          "baseline_uhi": -0.631,
+          "counterfactual_uhi": -0.675,
+          "cooling_effect_celsius": 0.044
+        },
+        {
+          "month": 6,
+          "baseline_uhi": 0.142,
+          "counterfactual_uhi": 0.044,
+          "cooling_effect_celsius": 0.098
+        },
+        {
+          "month": 7,
+          "baseline_uhi": 1.443,
+          "counterfactual_uhi": 1.079,
+          "cooling_effect_celsius": 0.365
+        },
+        {
+          "month": 8,
+          "baseline_uhi": 0.977,
+          "counterfactual_uhi": 0.197,
+          "cooling_effect_celsius": 0.78
+        },
+        {
+          "month": 9,
+          "baseline_uhi": 2.197,
+          "counterfactual_uhi": 1.936,
+          "cooling_effect_celsius": 0.261
+        },
+        {
+          "month": 10,
+          "baseline_uhi": 1.006,
+          "counterfactual_uhi": 0.761,
+          "cooling_effect_celsius": 0.245
+        },
+        {
+          "month": 11,
+          "baseline_uhi": 0.522,
+          "counterfactual_uhi": 0.688,
+          "cooling_effect_celsius": -0.166
+        },
+        {
+          "month": 12,
+          "baseline_uhi": -0.034,
+          "counterfactual_uhi": 0.631,
+          "cooling_effect_celsius": -0.665
+        }
+      ],
+      "policy_summary": "Implementing +15% green canopy and -15% cool roofs in Ahmedabad is associated with an average cooling of -0.11 C."
+    },
+    "Delhi": {
+      "city": "Delhi",
+      "climate_group": "Hot_SemiArid",
+      "interventions": {
+        "delta_ndvi_greening": 0.15,
+        "delta_ndbi_albedo": -0.15,
+        "delta_ndwi_water": 0.05
+      },
+      "mean_cooling_celsius": 0.162,
+      "max_cooling_celsius": -0.322,
+      "min_cooling_celsius": 0.528,
+      "monthly_breakdown": [
+        {
+          "month": 1,
+          "baseline_uhi": 0.397,
+          "counterfactual_uhi": 0.247,
+          "cooling_effect_celsius": 0.15
+        },
+        {
+          "month": 2,
+          "baseline_uhi": 0.549,
+          "counterfactual_uhi": 0.326,
+          "cooling_effect_celsius": 0.223
+        },
+        {
+          "month": 3,
+          "baseline_uhi": 0.377,
+          "counterfactual_uhi": 0.157,
+          "cooling_effect_celsius": 0.22
+        },
+        {
+          "month": 4,
+          "baseline_uhi": -0.498,
+          "counterfactual_uhi": -0.176,
+          "cooling_effect_celsius": -0.322
+        },
+        {
+          "month": 5,
+          "baseline_uhi": -0.388,
+          "counterfactual_uhi": -0.916,
+          "cooling_effect_celsius": 0.528
+        },
+        {
+          "month": 6,
+          "baseline_uhi": -0.849,
+          "counterfactual_uhi": -1.06,
+          "cooling_effect_celsius": 0.211
+        },
+        {
+          "month": 7,
+          "baseline_uhi": 1.0,
+          "counterfactual_uhi": 0.956,
+          "cooling_effect_celsius": 0.045
+        },
+        {
+          "month": 8,
+          "baseline_uhi": -3.354,
+          "counterfactual_uhi": -3.354,
+          "cooling_effect_celsius": -0.0
+        },
+        {
+          "month": 9,
+          "baseline_uhi": 1.115,
+          "counterfactual_uhi": 0.92,
+          "cooling_effect_celsius": 0.195
+        },
+        {
+          "month": 10,
+          "baseline_uhi": 0.535,
+          "counterfactual_uhi": 0.241,
+          "cooling_effect_celsius": 0.294
+        },
+        {
+          "month": 11,
+          "baseline_uhi": -0.629,
+          "counterfactual_uhi": -0.921,
+          "cooling_effect_celsius": 0.292
+        },
+        {
+          "month": 12,
+          "baseline_uhi": -0.247,
+          "counterfactual_uhi": -0.353,
+          "cooling_effect_celsius": 0.107
+        }
+      ],
+      "policy_summary": "Implementing +15% green canopy and -15% cool roofs in Delhi is associated with an average cooling of 0.16 C."
+    },
+    "London": {
+      "city": "London",
+      "climate_group": "Temperate_Oceanic",
+      "interventions": {
+        "delta_ndvi_greening": 0.15,
+        "delta_ndbi_albedo": -0.15,
+        "delta_ndwi_water": 0.05
+      },
+      "mean_cooling_celsius": 0.214,
+      "max_cooling_celsius": -0.236,
+      "min_cooling_celsius": 0.787,
+      "monthly_breakdown": [
+        {
+          "month": 1,
+          "baseline_uhi": -0.216,
+          "counterfactual_uhi": -0.14,
+          "cooling_effect_celsius": -0.076
+        },
+        {
+          "month": 2,
+          "baseline_uhi": -1.193,
+          "counterfactual_uhi": -1.193,
+          "cooling_effect_celsius": -0.0
+        },
+        {
+          "month": 3,
+          "baseline_uhi": 0.242,
+          "counterfactual_uhi": 0.478,
+          "cooling_effect_celsius": -0.236
+        },
+        {
+          "month": 4,
+          "baseline_uhi": 0.71,
+          "counterfactual_uhi": 0.413,
+          "cooling_effect_celsius": 0.297
+        },
+        {
+          "month": 5,
+          "baseline_uhi": 0.744,
+          "counterfactual_uhi": 0.458,
+          "cooling_effect_celsius": 0.286
+        },
+        {
+          "month": 6,
+          "baseline_uhi": 0.845,
+          "counterfactual_uhi": 0.058,
+          "cooling_effect_celsius": 0.787
+        },
+        {
+          "month": 7,
+          "baseline_uhi": 0.523,
+          "counterfactual_uhi": 0.431,
+          "cooling_effect_celsius": 0.092
+        },
+        {
+          "month": 8,
+          "baseline_uhi": 0.857,
+          "counterfactual_uhi": 0.887,
+          "cooling_effect_celsius": -0.03
+        },
+        {
+          "month": 9,
+          "baseline_uhi": 0.305,
+          "counterfactual_uhi": -0.287,
+          "cooling_effect_celsius": 0.593
+        },
+        {
+          "month": 10,
+          "baseline_uhi": 0.364,
+          "counterfactual_uhi": -0.401,
+          "cooling_effect_celsius": 0.765
+        },
+        {
+          "month": 11,
+          "baseline_uhi": 0.235,
+          "counterfactual_uhi": 0.144,
+          "cooling_effect_celsius": 0.091
+        },
+        {
+          "month": 12,
+          "baseline_uhi": -2.583,
+          "counterfactual_uhi": -2.583,
+          "cooling_effect_celsius": -0.0
+        }
+      ],
+      "policy_summary": "Implementing +15% green canopy and -15% cool roofs in London is associated with an average cooling of 0.21 C."
+    },
+    "Tokyo": {
+      "city": "Tokyo",
+      "climate_group": "Humid_Subtropical",
+      "interventions": {
+        "delta_ndvi_greening": 0.15,
+        "delta_ndbi_albedo": -0.15,
+        "delta_ndwi_water": 0.05
+      },
+      "mean_cooling_celsius": 0.125,
+      "max_cooling_celsius": -0.189,
+      "min_cooling_celsius": 0.454,
+      "monthly_breakdown": [
+        {
+          "month": 1,
+          "baseline_uhi": -0.312,
+          "counterfactual_uhi": -0.364,
+          "cooling_effect_celsius": 0.052
+        },
+        {
+          "month": 2,
+          "baseline_uhi": -0.24,
+          "counterfactual_uhi": -0.177,
+          "cooling_effect_celsius": -0.063
+        },
+        {
+          "month": 3,
+          "baseline_uhi": -0.539,
+          "counterfactual_uhi": -0.659,
+          "cooling_effect_celsius": 0.119
+        },
+        {
+          "month": 4,
+          "baseline_uhi": 0.692,
+          "counterfactual_uhi": 0.238,
+          "cooling_effect_celsius": 0.454
+        },
+        {
+          "month": 5,
+          "baseline_uhi": 1.465,
+          "counterfactual_uhi": 1.4,
+          "cooling_effect_celsius": 0.065
+        },
+        {
+          "month": 6,
+          "baseline_uhi": 1.381,
+          "counterfactual_uhi": 1.183,
+          "cooling_effect_celsius": 0.199
+        },
+        {
+          "month": 7,
+          "baseline_uhi": 0.798,
+          "counterfactual_uhi": 0.987,
+          "cooling_effect_celsius": -0.189
+        },
+        {
+          "month": 8,
+          "baseline_uhi": 0.222,
+          "counterfactual_uhi": -0.067,
+          "cooling_effect_celsius": 0.289
+        },
+        {
+          "month": 9,
+          "baseline_uhi": 0.74,
+          "counterfactual_uhi": 0.769,
+          "cooling_effect_celsius": -0.029
+        },
+        {
+          "month": 10,
+          "baseline_uhi": 0.631,
+          "counterfactual_uhi": 0.297,
+          "cooling_effect_celsius": 0.335
+        },
+        {
+          "month": 11,
+          "baseline_uhi": -0.026,
+          "counterfactual_uhi": -0.017,
+          "cooling_effect_celsius": -0.009
+        },
+        {
+          "month": 12,
+          "baseline_uhi": -0.037,
+          "counterfactual_uhi": -0.313,
+          "cooling_effect_celsius": 0.277
+        }
+      ],
+      "policy_summary": "Implementing +15% green canopy and -15% cool roofs in Tokyo is associated with an average cooling of 0.13 C."
+    },
+    "Madrid": {
+      "city": "Madrid",
+      "climate_group": "Mediterranean",
+      "interventions": {
+        "delta_ndvi_greening": 0.15,
+        "delta_ndbi_albedo": -0.15,
+        "delta_ndwi_water": 0.05
+      },
+      "mean_cooling_celsius": -0.125,
+      "max_cooling_celsius": -0.83,
+      "min_cooling_celsius": 1.275,
+      "monthly_breakdown": [
+        {
+          "month": 1,
+          "baseline_uhi": -0.133,
+          "counterfactual_uhi": 0.173,
+          "cooling_effect_celsius": -0.306
+        },
+        {
+          "month": 2,
+          "baseline_uhi": -0.19,
+          "counterfactual_uhi": -0.028,
+          "cooling_effect_celsius": -0.162
+        },
+        {
+          "month": 3,
+          "baseline_uhi": 0.258,
+          "counterfactual_uhi": 0.22,
+          "cooling_effect_celsius": 0.038
+        },
+        {
+          "month": 4,
+          "baseline_uhi": 0.555,
+          "counterfactual_uhi": 0.437,
+          "cooling_effect_celsius": 0.118
+        },
+        {
+          "month": 5,
+          "baseline_uhi": 0.288,
+          "counterfactual_uhi": 0.379,
+          "cooling_effect_celsius": -0.091
+        },
+        {
+          "month": 6,
+          "baseline_uhi": -1.464,
+          "counterfactual_uhi": -1.409,
+          "cooling_effect_celsius": -0.055
+        },
+        {
+          "month": 7,
+          "baseline_uhi": -2.433,
+          "counterfactual_uhi": -1.603,
+          "cooling_effect_celsius": -0.83
+        },
+        {
+          "month": 8,
+          "baseline_uhi": -2.549,
+          "counterfactual_uhi": -1.83,
+          "cooling_effect_celsius": -0.718
+        },
+        {
+          "month": 9,
+          "baseline_uhi": -2.056,
+          "counterfactual_uhi": -1.507,
+          "cooling_effect_celsius": -0.549
+        },
+        {
+          "month": 10,
+          "baseline_uhi": -1.419,
+          "counterfactual_uhi": -1.14,
+          "cooling_effect_celsius": -0.278
+        },
+        {
+          "month": 11,
+          "baseline_uhi": 0.207,
+          "counterfactual_uhi": -1.067,
+          "cooling_effect_celsius": 1.275
+        },
+        {
+          "month": 12,
+          "baseline_uhi": -0.205,
+          "counterfactual_uhi": -0.263,
+          "cooling_effect_celsius": 0.058
+        }
+      ],
+      "policy_summary": "Implementing +15% green canopy and -15% cool roofs in Madrid is associated with an average cooling of -0.13 C."
+    }
+  }
+}

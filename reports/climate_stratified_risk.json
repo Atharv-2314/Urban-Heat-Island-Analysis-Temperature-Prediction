@@ -1,0 +1,209 @@
+{
+  "climate_stratified_performance": [
+    {
+      "climate_group": "Humid_Subtropical",
+      "sample_count": 94,
+      "rmse": 1.5055,
+      "mae": 0.7909,
+      "r2": 0.4714,
+      "mean_observed_uhi": 0.7973,
+      "mean_predicted_uhi": 0.9567
+    },
+    {
+      "climate_group": "Tropical_Monsoon",
+      "sample_count": 83,
+      "rmse": 1.1825,
+      "mae": 0.7643,
+      "r2": 0.0998,
+      "mean_observed_uhi": 1.4362,
+      "mean_predicted_uhi": 1.304
+    },
+    {
+      "climate_group": "Tropical_Savanna_Upland",
+      "sample_count": 57,
+      "rmse": 1.2609,
+      "mae": 0.9002,
+      "r2": 0.4794,
+      "mean_observed_uhi": -0.7816,
+      "mean_predicted_uhi": -0.5424
+    },
+    {
+      "climate_group": "Hot_SemiArid",
+      "sample_count": 46,
+      "rmse": 1.4712,
+      "mae": 0.9766,
+      "r2": -0.0287,
+      "mean_observed_uhi": -0.1972,
+      "mean_predicted_uhi": -0.4506
+    },
+    {
+      "climate_group": "Hot_Desert_SemiArid",
+      "sample_count": 46,
+      "rmse": 1.0016,
+      "mae": 0.76,
+      "r2": 0.6836,
+      "mean_observed_uhi": -0.5302,
+      "mean_predicted_uhi": -0.5201
+    },
+    {
+      "climate_group": "Cold_Continental_Snow",
+      "sample_count": 33,
+      "rmse": 0.9306,
+      "mae": 0.6421,
+      "r2": 0.8273,
+      "mean_observed_uhi": 2.2881,
+      "mean_predicted_uhi": 2.2047
+    },
+    {
+      "climate_group": "Hot_Desert",
+      "sample_count": 24,
+      "rmse": 0.6673,
+      "mae": 0.4358,
+      "r2": -0.9646,
+      "mean_observed_uhi": -0.899,
+      "mean_predicted_uhi": -0.6812
+    },
+    {
+      "climate_group": "Continental",
+      "sample_count": 24,
+      "rmse": 0.7978,
+      "mae": 0.6317,
+      "r2": 0.21,
+      "mean_observed_uhi": 0.1382,
+      "mean_predicted_uhi": 0.0675
+    },
+    {
+      "climate_group": "Continental_Monsoon",
+      "sample_count": 24,
+      "rmse": 2.0765,
+      "mae": 0.8782,
+      "r2": 0.4607,
+      "mean_observed_uhi": -0.0219,
+      "mean_predicted_uhi": 0.3103
+    },
+    {
+      "climate_group": "Mediterranean",
+      "sample_count": 24,
+      "rmse": 0.7414,
+      "mae": 0.5765,
+      "r2": 0.7098,
+      "mean_observed_uhi": 0.3764,
+      "mean_predicted_uhi": 0.3784
+    },
+    {
+      "climate_group": "Subtropical_Highland",
+      "sample_count": 12,
+      "rmse": 0.7797,
+      "mae": 0.6501,
+      "r2": 0.3505,
+      "mean_observed_uhi": 2.1085,
+      "mean_predicted_uhi": 1.6168
+    },
+    {
+      "climate_group": "Tropical_Highland",
+      "sample_count": 12,
+      "rmse": 2.1044,
+      "mae": 1.272,
+      "r2": 0.2823,
+      "mean_observed_uhi": -0.9913,
+      "mean_predicted_uhi": -0.8411
+    },
+    {
+      "climate_group": "Temperate_Oceanic",
+      "sample_count": 10,
+      "rmse": 0.5783,
+      "mae": 0.4855,
+      "r2": 0.1424,
+      "mean_observed_uhi": 0.2557,
+      "mean_predicted_uhi": 0.4609
+    }
+  ],
+  "top_vulnerable_cities": [
+    {
+      "city": "Ahmedabad",
+      "climate_group": "Hot_Desert_SemiArid",
+      "vulnerability_score": 100.0,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": 0.5516623258590698,
+      "mean_pop_density": 21588.294545494315
+    },
+    {
+      "city": "Beijing",
+      "climate_group": "Continental_Monsoon",
+      "vulnerability_score": 100.0,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": 0.24513137340545654,
+      "mean_pop_density": 20870.611678490917
+    },
+    {
+      "city": "Delhi",
+      "climate_group": "Hot_SemiArid",
+      "vulnerability_score": 100.0,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": 0.1224314346909523,
+      "mean_pop_density": 22093.95805974096
+    },
+    {
+      "city": "Nairobi",
+      "climate_group": "Tropical_Highland",
+      "vulnerability_score": 100.0,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": -0.7729520201683044,
+      "mean_pop_density": 12090.769590819546
+    },
+    {
+      "city": "London",
+      "climate_group": "Temperate_Oceanic",
+      "vulnerability_score": 100.0,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": 0.45382413268089294,
+      "mean_pop_density": 11154.254334981473
+    },
+    {
+      "city": "Mexico City",
+      "climate_group": "Subtropical_Highland",
+      "vulnerability_score": 100.0,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": 1.4143543243408203,
+      "mean_pop_density": 12184.185867187045
+    },
+    {
+      "city": "Sapporo",
+      "climate_group": "Cold_Continental_Snow",
+      "vulnerability_score": 93.3,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": 3.61019229888916,
+      "mean_pop_density": 5107.568961874538
+    },
+    {
+      "city": "Kolkata",
+      "climate_group": "Tropical_Monsoon",
+      "vulnerability_score": 91.4,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": 2.1624538898468018,
+      "mean_pop_density": 32845.59814313442
+    },
+    {
+      "city": "Bengaluru",
+      "climate_group": "Tropical_Savanna_Upland",
+      "vulnerability_score": 90.0,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": -0.7900182008743286,
+      "mean_pop_density": 26660.597839533686
+    },
+    {
+      "city": "Riyadh",
+      "climate_group": "Hot_Desert",
+      "vulnerability_score": 85.0,
+      "risk_tier": "Extreme Risk",
+      "mean_uhi": -0.5125733017921448,
+      "mean_pop_density": 8016.720706597944
+    }
+  ],
+  "tier_distribution": {
+    "Moderate Risk": 18,
+    "Extreme Risk": 11,
+    "High Risk": 10,
+    "Low Risk": 3
+  }
+}

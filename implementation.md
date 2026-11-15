@@ -92,36 +92,36 @@
 
 ## Phase 3: Machine Learning, Forecasting & Causal Simulation (Milestones 10–14)
 
-- [ ] **Milestone 10: Machine Learning UHI Regression Modeling**
-  - [ ] Build baseline linear model with regularization (Ridge / Lasso).
-  - [ ] Train ensemble tree model (Random Forest Regressor).
-  - [ ] Train Gradient Boosted Decision Trees (XGBoost Regressor).
-  - [ ] Tune hyperparameters on the 2024 Validation set.
-  - [ ] Evaluate predictions against the holdout 2025 Test set using RMSE, MAE, $R^2$, and MAPE.
-  - [ ] Save trained models to `models/` (.joblib / .json).
+- [x] **Milestone 10: Machine Learning UHI Regression Modeling**
+  - [x] Build baseline linear model with regularization (Ridge / Lasso).
+  - [x] Train ensemble tree model (Random Forest Regressor).
+  - [x] Train Gradient Boosted Decision Trees (HistGradientBoosting / XGBoost Regressor).
+  - [x] Tune hyperparameters on the 2024 Validation set.
+  - [x] Evaluate predictions against the holdout 2025 Test set using RMSE, MAE, $R^2$, and MAPE.
+  - [x] Save trained models to `models/` (.joblib / .json).
 
-- [ ] **Milestone 11: 1-Month-Ahead Weather & Temperature Forecasting**
-  - [ ] Develop autoregressive forecasting model predicting $t+1$ month conditions.
-  - [ ] Benchmark against:
-    - [ ] Persistence Baseline (last month's observed value)
-    - [ ] Climatological Baseline (historical 2016–2023 monthly mean for that city)
-  - [ ] Compute forecast skill score (improvement over climatology).
+- [x] **Milestone 11: 1-Month-Ahead Weather & Temperature Forecasting**
+  - [x] Develop autoregressive forecasting model predicting $t+1$ month conditions.
+  - [x] Benchmark against:
+    - [x] Persistence Baseline (last month's observed value)
+    - [x] Climatological Baseline (historical 2016–2023 monthly mean for that city)
+  - [x] Compute forecast skill score (improvement over climatology).
 
-- [ ] **Milestone 12: Climate-Stratified Performance & Risk Scoring**
-  - [ ] Compute stratified performance metrics across Köppen climate groups (Tropical, Arid, Temperate, Continental).
-  - [ ] Implement tiered/stratified UHI vulnerability risk scoring to avoid arid/polar bias.
-  - [ ] Quantify model uncertainty and error distributions per city.
+- [x] **Milestone 12: Climate-Stratified Performance & Risk Scoring**
+  - [x] Compute stratified performance metrics across Köppen climate groups (Tropical, Arid, Temperate, Continental).
+  - [x] Implement tiered/stratified UHI vulnerability risk scoring to avoid arid/polar bias.
+  - [x] Quantify model uncertainty and error distributions per city.
 
-- [ ] **Milestone 13: SHAP Feature Attributions & Model Explainability**
-  - [ ] Compute TreeSHAP summary values across the test cohort.
-  - [ ] Generate SHAP beeswarm importance plots for global drivers.
-  - [ ] Compute SHAP interaction values (e.g., NDVI cooling effect conditioned on wind speed / humidity).
-  - [ ] Export explainability artifacts for dashboard integration.
+- [x] **Milestone 13: SHAP Feature Attributions & Model Explainability**
+  - [x] Compute TreeSHAP summary values across the test cohort.
+  - [x] Generate SHAP beeswarm importance plots for global drivers.
+  - [x] Compute SHAP interaction values (e.g., NDVI cooling effect conditioned on wind speed / humidity).
+  - [x] Export explainability artifacts for dashboard integration.
 
-- [ ] **Milestone 14: Urban Planning Counterfactual "What-If" Simulator**
-  - [ ] Build simulation function: $\Delta\text{UHI} = f(\mathbf{X}_{\text{modified}}) - f(\mathbf{X}_{\text{current}})$.
-  - [ ] Implement parameter adjustments for greening ($\Delta\text{NDVI} \in [+0.05, +0.30]$), cool roofs ($\Delta\text{NDBI} \in [-0.30, -0.05]$), and water retention ($\Delta\text{NDWI}$).
-  - [ ] Enforce biophysical boundary constraints (indices cannot exceed $[-1.0, 1.0]$).
+- [x] **Milestone 14: Urban Planning Counterfactual "What-If" Simulator**
+  - [x] Build simulation function: $\Delta\text{UHI} = f(\mathbf{X}_{\text{modified}}) - f(\mathbf{X}_{\text{current}})$.
+  - [x] Implement parameter adjustments for greening ($\Delta\text{NDVI} \in [+0.05, +0.30]$), cool roofs ($\Delta\text{NDBI} \in [-0.30, -0.05]$), and water retention ($\Delta\text{NDWI}$).
+  - [x] Enforce biophysical boundary constraints (indices cannot exceed $[-1.0, 1.0]$).
 
 ---
 

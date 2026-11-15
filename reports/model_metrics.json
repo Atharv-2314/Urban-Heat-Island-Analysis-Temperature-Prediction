@@ -1,0 +1,39 @@
+{
+  "Ridge_Regression": {
+    "validation_2024": {
+      "rmse": 2.5825,
+      "mae": 1.247,
+      "r2": 0.1589
+    },
+    "test_2025": {
+      "rmse": 1.5768,
+      "mae": 1.1139,
+      "r2": 0.3693
+    }
+  },
+  "Random_Forest": {
+    "validation_2024": {
+      "rmse": 2.3874,
+      "mae": 0.8973,
+      "r2": 0.2813
+    },
+    "test_2025": {
+      "rmse": 1.3323,
+      "mae": 0.7848,
+      "r2": 0.5498
+    }
+  },
+  "Hist_Gradient_Boosting": {
+    "validation_2024": {
+      "rmse": 2.3704,
+      "mae": 0.8892,
+      "r2": 0.2914
+    },
+    "test_2025": {
+      "rmse": 1.2794,
+      "mae": 0.7743,
+      "r2": 0.5848
+    }
+  },
+  "best_model": "Hist_Gradient_Boosting"
+}

@@ -1,0 +1,23 @@
+{
+  "test_year": 2025,
+  "sample_size": 462,
+  "benchmarks": {
+    "Persistence_Baseline": {
+      "rmse": 3.4019,
+      "mae": 2.6146,
+      "r2": 0.8148
+    },
+    "Climatological_Mean_Baseline": {
+      "rmse": 1.0829,
+      "mae": 0.8337,
+      "r2": 0.9812
+    },
+    "ML_Forecaster_HistGB": {
+      "rmse": 1.3955,
+      "mae": 1.0258,
+      "r2": 0.9688
+    }
+  },
+  "skill_score_vs_climatology": -0.2887,
+  "interpretation": "ML model reduces forecast error by -28.9% compared to historical climatology."
+}
