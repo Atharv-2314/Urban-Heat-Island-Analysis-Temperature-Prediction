@@ -1,0 +1,114 @@
+// UHI Project - Shared TypeScript Types
+// server/src/types/index.ts
+
+export interface CityRecord {
+  city: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  climate_group: string;
+  koppen_zone: string;
+  population?: number;
+  region: string;
+}
+
+export interface MonthlyDataRecord {
+  city: string;
+  year: number;
+  month: number;
+  uhi_intensity: number;
+  lst_urban: number;
+  lst_rural: number;
+  ndvi: number;
+  ndbi: number;
+  ndwi: number;
+  temperature_2m: number;
+  relative_humidity: number;
+  wind_speed: number;
+  total_precipitation: number;
+  cloud_cover?: number;
+  climate_group: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface ModelMetrics {
+  validation_2024: { rmse: number; mae: number; r2: number };
+  test_2025: { rmse: number; mae: number; r2: number };
+}
+
+export interface ModelMetricsResponse {
+  [modelName: string]: ModelMetrics | string;
+  best_model: string;
+}
+
+export interface RiskScore {
+  city: string;
+  risk_score: number;
+  risk_tier: string;
+  uhi_intensity: number;
+  climate_group: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface ShapValue {
+  city: string;
+  year: number;
+  month: number;
+  feature: string;
+  shap_value: number;
+  feature_value: number;
+}
+
+export interface SimulationResult {
+  city: string;
+  climate_group: string;
+  delta_uhi: number;
+  current_uhi: number;
+  simulated_uhi: number;
+  ndvi_change: number;
+  ndbi_change: number;
+  ndwi_change: number;
+}
+
+export interface SimulationRequest {
+  delta_ndvi?: number;
+  delta_ndbi?: number;
+  delta_ndwi?: number;
+  city?: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  cached?: boolean;
+  timestamp: string;
+  count?: number;
+}
+
+export interface ForecastBenchmark {
+  city: string;
+  climate_group: string;
+  persistence_rmse: number;
+  climatology_rmse: number;
+  model_rmse: number;
+  skill_score: number;
+}
+
+export interface PaginationParams {
+  page: number;
+  limit: number;
+  city?: string;
+  year?: number;
+  climate_group?: string;
+}
+
+export interface HealthStatus {
+  status: string;
+  uptime: number;
+  python_api: string;
+  cache_stats: { keys: number; hits: number; misses: number };
+  timestamp: string;
+}

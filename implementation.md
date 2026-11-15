@@ -125,30 +125,31 @@
 
 ---
 
-## Phase 4: Interactive Streamlit Dashboard & Quality Engineering (Milestones 15–18)
+## UPDATED PHASE 4: FULL-STACK WEB APPLICATION & QUALITY ENGINEERING (Milestones 15–18)
+TECH STACK SWAP: Streamlit -> React + Node.js + TypeScript + Tailwind + Anthropic UI Patterns
 
-- [ ] **Milestone 15: Streamlit Architecture, Theming & Data Loaders**
-  - [ ] Initialize `dashboard/app.py` entry point with multi-page navigation.
-  - [ ] Implement responsive UI with high-contrast styling and dark/light mode compatibility.
-  - [ ] Add `@st.cache_data` and `@st.cache_resource` for sub-second page transitions from Parquet files.
+- [x] **Milestone 15: Node.js Backend API Architecture & Data Serving Layer**
+  - [x] Initialize `server/` Node.js Express server to expose REST endpoints for processed Parquet datasets, model artifacts, and SHAP values.
+  - [x] Implement caching and chunked data streaming for sub-second responses across the 42-city temporal datasets and ~1 km grid files.
+  - [x] Build model inference endpoints in Python wrapped by Node.js child processes or lightweight FastAPI/Flask microservice for the What-If planning simulator.
 
-- [ ] **Milestone 16: Interactive Dashboard Pages (6-Page Suite)**
-  - [ ] **Page 1: Global 42-City Overview Map** (PyDeck/Plotly map with city markers, UHI intensity color scale, climate tags).
-  - [ ] **Page 2: City Deep-Dive & Temporal Heatwaves** (Historical time-series, seasonal profiles, multi-year anomaly heatmaps).
-  - [ ] **Page 3: Sampled ~1 km Grid Spatial Explorer** (Intra-urban spatial heat distribution, hot spots vs. cool parks).
-  - [ ] **Page 4: ML Model Performance & Climatology Benchmarks** (Model comparison cards, parity plots, residual analysis, test scores).
-  - [ ] **Page 5: SHAP Interpretability & Biophysical Insights** (SHAP beeswarm plots, individual city waterfall explanations).
-  - [ ] **Page 6: Interactive Urban Cooling Simulator** (Sliders for greening/albedo policies with real-time temperature drop estimations).
+- [ ] **Milestone 16: React & TypeScript 6-Page Frontend Suite (Anthropic UI Styled)**
+  - [ ] Initialize frontend application using React, TypeScript, Vite, Tailwind CSS, and Lucide icons. Apply artifact-grade clean typographic hierarchy, muted cards, subtle borders, and high-density data tables.
+  - [ ] **Page 1: Global 42-City Overview Map** (Interactive Leaflet/Mapbox map with city markers, UHI intensity color scales, and climate group tags).
+  - [ ] **Page 2: City Deep-Dive & Temporal Heatwaves** (Recharts historical time-series, seasonal profiles, and multi-year anomaly heatmaps).
+  - [ ] **Page 3: Sampled ~1 km Grid Spatial Explorer** (Intra-urban spatial heat distribution, hot spots vs. cool parks breakdown).
+  - [ ] **Page 4: ML Model Performance & Climatology Benchmarks** (Model comparison cards, parity plots, residual analysis, and test scores).
+  - [ ] **Page 5: SHAP Interpretability & Biophysical Insights** (SHAP beeswarm visualization and individual city waterfall explanation cards).
+  - [ ] **Page 6: Interactive Urban Cooling Simulator** (Real-time slider controls for greening/albedo policies showing instant estimated UHI temperature drops).
 
-- [ ] **Milestone 17: Accessibility (WCAG 2.1) & Usability Hardening**
-  - [ ] Ensure full keyboard tab navigation across all interactive widgets.
-  - [ ] Apply colorblind-safe palettes (Viridis, Cividis, Plasma) with distinct luminance curves.
-  - [ ] Add ARIA descriptive labels and clear text legends for charts and tables.
+- [ ] **Milestone 17: Accessibility (WCAG 2.1), Usability & UI Polish**
+  - [ ] Ensure full keyboard tab navigation, visible focus rings, and Enter/Space activation for all interactive controls and sliders.
+  - [ ] Apply colorblind-safe palettes (Viridis, Cividis, Plasma) with distinct luminance curves across all charts.
+  - [ ] Add ARIA descriptive labels, tooltips, and clear text summaries for all map layers and charts.
 
-- [ ] **Milestone 18: Automated Testing Suite (`pytest`) & CLI Pipeline Orchestration**
-  - [ ] Write unit tests for schema validation, data cleaning, lag calculations, and metric computations.
-  - [ ] Write integration tests for model inference and counterfactual simulation boundaries.
-  - [ ] Write Streamlit smoke tests (`streamlit.testing.v1`).
+- [ ] **Milestone 18: Automated Testing Suite & CLI Pipeline Orchestration**
+  - [ ] Write backend unit tests (`pytest`) for schema validation, data cleaning, lag calculations, and metric computations.
+  - [ ] Write frontend component and smoke tests (Jest / Cypress) for React views and API integration.
   - [ ] Build unified CLI pipeline runner: `python -m src.pipeline --stage [all|clean|features|train|eval]`.
 
 ---
