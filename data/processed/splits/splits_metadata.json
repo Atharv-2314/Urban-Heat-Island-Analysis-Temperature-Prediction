@@ -1,0 +1,34 @@
+{
+  "train": {
+    "years": [
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "rows": 4032,
+    "cities": 42,
+    "file": "train_2016_2023.parquet"
+  },
+  "validation": {
+    "years": [
+      2024
+    ],
+    "rows": 504,
+    "cities": 42,
+    "file": "val_2024.parquet"
+  },
+  "test": {
+    "years": [
+      2025
+    ],
+    "rows": 504,
+    "cities": 42,
+    "file": "test_2025.parquet"
+  },
+  "total_rows": 5040
+}

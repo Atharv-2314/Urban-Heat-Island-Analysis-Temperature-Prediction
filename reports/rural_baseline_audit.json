@@ -1,0 +1,135 @@
+{
+  "buffer_sampling_audit": {
+    "rural_to_urban_sample_ratio": 3.051861190793325,
+    "mean_rural_pixels_per_scene": 807.8464285714285,
+    "mean_urban_pixels_per_scene": 264.7061507936508,
+    "cloud_obscured_rural_scenes": 203,
+    "cloud_obscured_urban_scenes": 307,
+    "climate_rural_stats": [
+      {
+        "climate_group": "Cold_Continental_Snow",
+        "mean_rural_lst": 14.240145683288574,
+        "std_rural_lst": 15.039592742919922,
+        "mean_urban_lst": 16.566686630249023,
+        "mean_uhi": 2.1688592433929443,
+        "mean_rural_pixels": 807.8138888888889,
+        "mean_urban_pixels": 281.68611111111113
+      },
+      {
+        "climate_group": "Continental",
+        "mean_rural_lst": 21.662399291992188,
+        "std_rural_lst": 12.91614818572998,
+        "mean_urban_lst": 21.935314178466797,
+        "mean_uhi": 0.013826235197484493,
+        "mean_rural_pixels": 921.3166666666667,
+        "mean_urban_pixels": 266.15
+      },
+      {
+        "climate_group": "Continental_Monsoon",
+        "mean_rural_lst": 21.182924270629883,
+        "std_rural_lst": 13.418418884277344,
+        "mean_urban_lst": 21.032955169677734,
+        "mean_uhi": 0.1806839257478714,
+        "mean_rural_pixels": 976.6875,
+        "mean_urban_pixels": 302.5833333333333
+      },
+      {
+        "climate_group": "Hot_Desert",
+        "mean_rural_lst": 36.809444427490234,
+        "std_rural_lst": 10.238203048706055,
+        "mean_urban_lst": 36.07089614868164,
+        "mean_uhi": -0.738551914691925,
+        "mean_rural_pixels": 1028.2875,
+        "mean_urban_pixels": 334.225
+      },
+      {
+        "climate_group": "Hot_Desert_SemiArid",
+        "mean_rural_lst": 38.9676399230957,
+        "std_rural_lst": 8.684603691101074,
+        "mean_urban_lst": 38.36354446411133,
+        "mean_uhi": -0.6873062252998352,
+        "mean_rural_pixels": 921.3270833333333,
+        "mean_urban_pixels": 299.9583333333333
+      },
+      {
+        "climate_group": "Hot_SemiArid",
+        "mean_rural_lst": 35.604835510253906,
+        "std_rural_lst": 8.50655460357666,
+        "mean_urban_lst": 35.27418899536133,
+        "mean_uhi": -0.4252142310142517,
+        "mean_rural_pixels": 860.8395833333333,
+        "mean_urban_pixels": 277.41041666666666
+      },
+      {
+        "climate_group": "Humid_Subtropical",
+        "mean_rural_lst": 29.68328857421875,
+        "std_rural_lst": 8.633883476257324,
+        "mean_urban_lst": 30.468027114868164,
+        "mean_uhi": 0.6788420677185059,
+        "mean_rural_pixels": 778.5802083333333,
+        "mean_urban_pixels": 256.5885416666667
+      },
+      {
+        "climate_group": "Mediterranean",
+        "mean_rural_lst": 30.183382034301758,
+        "std_rural_lst": 12.132962226867676,
+        "mean_urban_lst": 30.51953887939453,
+        "mean_uhi": 0.1610090583562851,
+        "mean_rural_pixels": 1046.85,
+        "mean_urban_pixels": 342.48333333333335
+      },
+      {
+        "climate_group": "Subtropical_Highland",
+        "mean_rural_lst": 31.78571128845215,
+        "std_rural_lst": 5.477135181427002,
+        "mean_urban_lst": 33.20006561279297,
+        "mean_uhi": 1.4143543243408203,
+        "mean_rural_pixels": 922.125,
+        "mean_urban_pixels": 304.21666666666664
+      },
+      {
+        "climate_group": "Temperate_Oceanic",
+        "mean_rural_lst": 19.852596282958984,
+        "std_rural_lst": 10.892729759216309,
+        "mean_urban_lst": 20.458433151245117,
+        "mean_uhi": 0.45382413268089294,
+        "mean_rural_pixels": 1054.6,
+        "mean_urban_pixels": 328.1166666666667
+      },
+      {
+        "climate_group": "Tropical_Highland",
+        "mean_rural_lst": 33.21996307373047,
+        "std_rural_lst": 4.692385673522949,
+        "mean_urban_lst": 32.55985641479492,
+        "mean_uhi": -0.7729520201683044,
+        "mean_rural_pixels": 621.6333333333333,
+        "mean_urban_pixels": 201.725
+      },
+      {
+        "climate_group": "Tropical_Monsoon",
+        "mean_rural_lst": 32.77464294433594,
+        "std_rural_lst": 7.549023628234863,
+        "mean_urban_lst": 34.199363708496094,
+        "mean_uhi": 1.1137570142745972,
+        "mean_rural_pixels": 562.4333333333333,
+        "mean_urban_pixels": 197.92380952380952
+      },
+      {
+        "climate_group": "Tropical_Savanna_Upland",
+        "mean_rural_lst": 35.270912170410156,
+        "std_rural_lst": 8.642765998840332,
+        "mean_urban_lst": 34.71717071533203,
+        "mean_uhi": -0.8523995280265808,
+        "mean_rural_pixels": 733.425,
+        "mean_urban_pixels": 240.00166666666667
+      }
+    ]
+  },
+  "target_equation_audit": {
+    "status": "PASSED",
+    "checked_records": 4737,
+    "max_discrepancy": 3.814697265625e-06,
+    "inconsistent_count": 0,
+    "message": "UHI = LST - Rural_LST strictly verified across all 4737 records."
+  }
+}

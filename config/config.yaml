@@ -1,0 +1,89 @@
+# ==============================================================================
+# 42-CITY URBAN HEAT ISLAND (UHI) PROJECT CONFIGURATION
+# ==============================================================================
+
+project:
+  name: "Urban-Heat-Island-Analysis-Temperature-Prediction"
+  version: "1.0.0"
+  random_seed: 42
+
+study_scope:
+  years: [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+  total_years: 10
+  total_cities: 42
+  expected_city_month_rows: 5040  # 42 cities * 10 years * 12 months
+
+paths:
+  raw_monthly_dir: "data/raw/monthly_level"
+  raw_pixel_dir: "data/raw/pixel_level/UHI_Pixel_Data"
+  interim_monthly_merged: "data/interim/monthly_level/UHI_MonthlyDataset_Merged.csv"
+  interim_pixel_dir: "data/interim/pixel_level/citywise_dataset"
+  processed_monthly_parquet: "data/processed/monthly_level/uhi_monthly_clean.parquet"
+  processed_splits_dir: "data/processed/splits"
+  models_dir: "models"
+  reports_dir: "reports"
+
+splits:
+  temporal:
+    train_years: [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
+    val_years: [2024]
+    test_years: [2025]
+
+# Scientific constraints & bounds for 10-point validation
+scientific_bounds:
+  lst_min_celsius: -50.0
+  lst_max_celsius: 70.0
+  ndvi_min: -1.0
+  ndvi_max: 1.0
+  ndbi_min: -1.0
+  ndbi_max: 1.0
+  ndwi_min: -1.0
+  ndwi_max: 1.0
+  precipitation_min: 0.0
+  wind_speed_min: 0.0
+  strict_no_zero_imputation: true
+
+# 42 City Registry with Climate Groups
+cities:
+  Ahmedabad: { country: "India", region: "Indian", climate_group: "Hot_Desert_SemiArid" }
+  Beijing: { country: "China", region: "International", climate_group: "Continental_Monsoon" }
+  Bengaluru: { country: "India", region: "Indian", climate_group: "Tropical_Savanna_Upland" }
+  Bhopal: { country: "India", region: "Indian", climate_group: "Tropical_Savanna_Upland" }
+  Bhubaneswar: { country: "India", region: "Indian", climate_group: "Tropical_Monsoon" }
+  Budapest: { country: "Hungary", region: "International", climate_group: "Continental" }
+  Cairo: { country: "Egypt", region: "International", climate_group: "Hot_Desert" }
+  Chennai: { country: "India", region: "Indian", climate_group: "Tropical_Monsoon" }
+  Delhi: { country: "India", region: "Indian", climate_group: "Hot_SemiArid" }
+  Dhaka: { country: "Bangladesh", region: "International", climate_group: "Tropical_Monsoon" }
+  Gandhinagar: { country: "India", region: "Indian", climate_group: "Hot_Desert_SemiArid" }
+  Guwahati: { country: "India", region: "Indian", climate_group: "Humid_Subtropical" }
+  Helsinki: { country: "Finland", region: "International", climate_group: "Cold_Continental_Snow" }
+  Hyderabad: { country: "India", region: "Indian", climate_group: "Hot_SemiArid" }
+  Indore: { country: "India", region: "Indian", climate_group: "Hot_SemiArid" }
+  Jaipur: { country: "India", region: "Indian", climate_group: "Hot_Desert_SemiArid" }
+  Jodhpur: { country: "India", region: "Indian", climate_group: "Hot_Desert_SemiArid" }
+  Kanpur: { country: "India", region: "Indian", climate_group: "Humid_Subtropical" }
+  Kochi: { country: "India", region: "Indian", climate_group: "Tropical_Monsoon" }
+  Kolkata: { country: "India", region: "Indian", climate_group: "Tropical_Monsoon" }
+  London: { country: "United Kingdom", region: "International", climate_group: "Temperate_Oceanic" }
+  Los Angeles: { country: "United States", region: "International", climate_group: "Mediterranean" }
+  Lucknow: { country: "India", region: "Indian", climate_group: "Humid_Subtropical" }
+  Madrid: { country: "Spain", region: "International", climate_group: "Mediterranean" }
+  Mangaluru: { country: "India", region: "Indian", climate_group: "Tropical_Monsoon" }
+  Mexico City: { country: "Mexico", region: "International", climate_group: "Subtropical_Highland" }
+  Montreal: { country: "Canada", region: "International", climate_group: "Cold_Continental_Snow" }
+  Mumbai: { country: "India", region: "Indian", climate_group: "Tropical_Monsoon" }
+  Mysuru: { country: "India", region: "Indian", climate_group: "Tropical_Savanna_Upland" }
+  Nagpur: { country: "India", region: "Indian", climate_group: "Tropical_Savanna_Upland" }
+  Nairobi: { country: "Kenya", region: "International", climate_group: "Tropical_Highland" }
+  New York: { country: "United States", region: "International", climate_group: "Continental" }
+  Patna: { country: "India", region: "Indian", climate_group: "Humid_Subtropical" }
+  Pune: { country: "India", region: "Indian", climate_group: "Tropical_Savanna_Upland" }
+  Riyadh: { country: "Saudi Arabia", region: "International", climate_group: "Hot_Desert" }
+  Sao Paulo: { country: "Brazil", region: "International", climate_group: "Humid_Subtropical" }
+  Sapporo: { country: "Japan", region: "International", climate_group: "Cold_Continental_Snow" }
+  Seoul: { country: "South Korea", region: "International", climate_group: "Continental_Monsoon" }
+  Siliguri: { country: "India", region: "Indian", climate_group: "Humid_Subtropical" }
+  Sydney: { country: "Australia", region: "International", climate_group: "Humid_Subtropical" }
+  Tokyo: { country: "Japan", region: "International", climate_group: "Humid_Subtropical" }
+  Udaipur: { country: "India", region: "Indian", climate_group: "Hot_SemiArid" }

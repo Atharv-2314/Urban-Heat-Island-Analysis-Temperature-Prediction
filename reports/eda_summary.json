@@ -1,0 +1,227 @@
+{
+  "global_summary": {
+    "total_records": 5040,
+    "total_cities": 42,
+    "total_climate_groups": 13,
+    "uhi_mean": 0.2577992081642151,
+    "uhi_median": 0.3021649718284607,
+    "uhi_std": 2.2293241024017334,
+    "uhi_min": -22.48813247680664,
+    "uhi_max": 43.351524353027344,
+    "lst_mean": 31.194461822509766,
+    "lst_min": -43.373321533203125,
+    "lst_max": 56.699073791503906,
+    "missing_thermal_percent": 5.952380952380952
+  },
+  "top_hotspot_cities": [
+    {
+      "city": "Sapporo",
+      "climate_group": "Cold_Continental_Snow",
+      "mean_uhi": 3.61019229888916
+    },
+    {
+      "city": "Siliguri",
+      "climate_group": "Humid_Subtropical",
+      "mean_uhi": 2.283123254776001
+    },
+    {
+      "city": "Kolkata",
+      "climate_group": "Tropical_Monsoon",
+      "mean_uhi": 2.1624538898468018
+    },
+    {
+      "city": "Montreal",
+      "climate_group": "Cold_Continental_Snow",
+      "mean_uhi": 1.8075754642486572
+    },
+    {
+      "city": "Sao Paulo",
+      "climate_group": "Humid_Subtropical",
+      "mean_uhi": 1.5969890356063843
+    }
+  ],
+  "top_cool_island_cities": [
+    {
+      "city": "Udaipur",
+      "climate_group": "Hot_SemiArid",
+      "mean_uhi": -1.1823135614395142
+    },
+    {
+      "city": "Jaipur",
+      "climate_group": "Hot_Desert_SemiArid",
+      "mean_uhi": -1.317872405052185
+    },
+    {
+      "city": "Bhopal",
+      "climate_group": "Tropical_Savanna_Upland",
+      "mean_uhi": -1.3788527250289917
+    },
+    {
+      "city": "Pune",
+      "climate_group": "Tropical_Savanna_Upland",
+      "mean_uhi": -1.5068647861480713
+    },
+    {
+      "city": "Jodhpur",
+      "climate_group": "Hot_Desert_SemiArid",
+      "mean_uhi": -2.086632013320923
+    }
+  ],
+  "climate_group_summary": [
+    {
+      "climate_group": "Cold_Continental_Snow",
+      "city_count": 3,
+      "total_observations": 320,
+      "mean_uhi": 2.1688592433929443,
+      "std_uhi": 2.313277244567871,
+      "median_uhi": 1.518422245979309,
+      "mean_air_temp": 7.436211585998535,
+      "mean_precipitation": 90.5302505493164,
+      "mean_ndvi": 0.3020152449607849
+    },
+    {
+      "climate_group": "Subtropical_Highland",
+      "city_count": 1,
+      "total_observations": 120,
+      "mean_uhi": 1.4143543243408203,
+      "std_uhi": 1.4356616735458374,
+      "median_uhi": 1.4082651138305664,
+      "mean_air_temp": 16.081205368041992,
+      "mean_precipitation": 89.8908920288086,
+      "mean_ndvi": 0.18118023872375488
+    },
+    {
+      "climate_group": "Tropical_Monsoon",
+      "city_count": 7,
+      "total_observations": 774,
+      "mean_uhi": 1.1137570142745972,
+      "std_uhi": 2.0845627784729004,
+      "median_uhi": 1.1173375844955444,
+      "mean_air_temp": 26.67226791381836,
+      "mean_precipitation": 174.2849578857422,
+      "mean_ndvi": 0.41326650977134705
+    },
+    {
+      "climate_group": "Humid_Subtropical",
+      "city_count": 8,
+      "total_observations": 901,
+      "mean_uhi": 0.6788420677185059,
+      "std_uhi": 2.3659098148345947,
+      "median_uhi": 0.7424612045288086,
+      "mean_air_temp": 22.073190689086914,
+      "mean_precipitation": 132.2909698486328,
+      "mean_ndvi": 0.36213335394859314
+    },
+    {
+      "climate_group": "Temperate_Oceanic",
+      "city_count": 1,
+      "total_observations": 110,
+      "mean_uhi": 0.45382413268089294,
+      "std_uhi": 1.0681877136230469,
+      "median_uhi": 0.4062395989894867,
+      "mean_air_temp": 11.3094482421875,
+      "mean_precipitation": 60.0308837890625,
+      "mean_ndvi": 0.41320186853408813
+    },
+    {
+      "climate_group": "Continental_Monsoon",
+      "city_count": 2,
+      "total_observations": 222,
+      "mean_uhi": 0.1806839257478714,
+      "std_uhi": 1.8801378011703491,
+      "median_uhi": 0.2173336297273636,
+      "mean_air_temp": 12.45119857788086,
+      "mean_precipitation": 73.67402648925781,
+      "mean_ndvi": 0.2829270362854004
+    },
+    {
+      "climate_group": "Mediterranean",
+      "city_count": 2,
+      "total_observations": 234,
+      "mean_uhi": 0.1610090583562851,
+      "std_uhi": 1.7524219751358032,
+      "median_uhi": 0.22713536024093628,
+      "mean_air_temp": 16.664552688598633,
+      "mean_precipitation": 37.239376068115234,
+      "mean_ndvi": 0.25570666790008545
+    },
+    {
+      "climate_group": "Continental",
+      "city_count": 2,
+      "total_observations": 230,
+      "mean_uhi": 0.013826235197484493,
+      "std_uhi": 1.2400319576263428,
+      "median_uhi": -0.12012581527233124,
+      "mean_air_temp": 12.214864730834961,
+      "mean_precipitation": 76.66954040527344,
+      "mean_ndvi": 0.3068310618400574
+    },
+    {
+      "climate_group": "Hot_SemiArid",
+      "city_count": 4,
+      "total_observations": 456,
+      "mean_uhi": -0.4252142310142517,
+      "std_uhi": 1.548840045928955,
+      "median_uhi": -0.44266653060913086,
+      "mean_air_temp": 24.828777313232422,
+      "mean_precipitation": 79.06492614746094,
+      "mean_ndvi": 0.34048914909362793
+    },
+    {
+      "climate_group": "Hot_Desert_SemiArid",
+      "city_count": 4,
+      "total_observations": 473,
+      "mean_uhi": -0.6873062252998352,
+      "std_uhi": 2.674879789352417,
+      "median_uhi": -0.6441655158996582,
+      "mean_air_temp": 26.3093318939209,
+      "mean_precipitation": 56.299476623535156,
+      "mean_ndvi": 0.32269829511642456
+    },
+    {
+      "climate_group": "Hot_Desert",
+      "city_count": 2,
+      "total_observations": 240,
+      "mean_uhi": -0.738551914691925,
+      "std_uhi": 0.7307620048522949,
+      "median_uhi": -0.7828004360198975,
+      "mean_air_temp": 24.598033905029297,
+      "mean_precipitation": 3.7677724361419678,
+      "mean_ndvi": 0.14340350031852722
+    },
+    {
+      "climate_group": "Tropical_Highland",
+      "city_count": 1,
+      "total_observations": 115,
+      "mean_uhi": -0.7729520201683044,
+      "std_uhi": 2.0284245014190674,
+      "median_uhi": -0.6439297199249268,
+      "mean_air_temp": 19.067777633666992,
+      "mean_precipitation": 54.79682540893555,
+      "mean_ndvi": 0.3949855864048004
+    },
+    {
+      "climate_group": "Tropical_Savanna_Upland",
+      "city_count": 5,
+      "total_observations": 542,
+      "mean_uhi": -0.8523995280265808,
+      "std_uhi": 2.1099886894226074,
+      "median_uhi": -0.7204759120941162,
+      "mean_air_temp": 24.679922103881836,
+      "mean_precipitation": 100.75765991210938,
+      "mean_ndvi": 0.37991565465927124
+    }
+  ],
+  "correlations_with_uhi": {
+    "uhi": 1.0,
+    "air_temperature": -0.07268084866317699,
+    "ndvi": 0.23726771615049877,
+    "ndbi": -0.21808609246194108,
+    "ndwi": -0.1728724983914263,
+    "population_density": -0.05242543564847678,
+    "wind_speed": -0.11290695888326835,
+    "relative_humidity": 0.36905160042110463,
+    "solar_radiation": -0.13831924028428405,
+    "total_precipitation": 0.22662581875121038
+  }
+}
