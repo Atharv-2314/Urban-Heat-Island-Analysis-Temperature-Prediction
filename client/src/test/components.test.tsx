@@ -1,7 +1,6 @@
 // Frontend UI Component Smoke and Accessibility Unit Tests
 // client/src/test/components.test.tsx
 
-import React from 'react';
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MetricCard } from '../components/MetricCard';

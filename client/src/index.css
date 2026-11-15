@@ -81,6 +81,11 @@
   z-index: 10;
 }
 
+/* Dark mode tiles filter for OpenStreetMap without distorting markers or overlays */
+.dark-tiles .leaflet-tile-pane {
+  filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg);
+}
+
 /* High contrast outline for interactive focus rings */
 .focus-ring {
   transition: box-shadow 0.15s ease-in-out, border-color 0.15s ease-in-out;

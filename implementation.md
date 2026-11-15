@@ -171,3 +171,21 @@ TECH STACK SWAP: Streamlit -> React + Node.js + TypeScript + Tailwind + Anthropi
   - [x] Clean and structure git commit history.
   - [x] Configure GitHub Actions workflow (`.github/workflows/ci.yml`) for automated testing and linting (Python pytest, Node Jest, React Vitest + oxlint, Docker build smoke test).
   - [x] Tag official v1.0.0 release.
+
+---
+
+## Phase 6: Fixing
+
+- [x] **Milestone 22: Map API Solution**
+  - [x] Identify all Leaflet `<TileLayer>` components in `client/src/` that require an API key or render "API KEY REQUIRED" tiles.
+  - [x] Replace `<TileLayer>` URL in `client/src/pages/OverviewMap.tsx` with CartoDB Dark Matter (free, no key required): `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png`.
+  - [x] Replace `<TileLayer>` URL in `client/src/pages/SpatialExplorer.tsx` with the same CartoDB Dark Matter URL.
+  - [x] Update attribution string in both files to: `&copy; OpenStreetMap contributors &copy; CARTO`.
+  - [x] Verify no other pages in `client/src/` contain a `<TileLayer>` with a keyed or broken provider.
+
+- [x] **Milestone 23: Watermark-Free OpenStreetMap Dark Filter Solution**
+  - [x] Replace TileLayer URL in `client/src/pages/OverviewMap.tsx` with standard OpenStreetMap: `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`.
+  - [x] Replace TileLayer URL in `client/src/pages/SpatialExplorer.tsx` with standard OpenStreetMap: `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`.
+  - [x] Update attribution in both files to: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`.
+  - [x] Apply CSS dark-mode invert filter (`brightness(0.6) invert(1) contrast(3) hue-rotate(200deg)`) to map tile layers/container so tiles blend into the dark UI without watermarks or API requirements.
+  - [x] Verify clean builds and check that markers/popups maintain accurate color perception.

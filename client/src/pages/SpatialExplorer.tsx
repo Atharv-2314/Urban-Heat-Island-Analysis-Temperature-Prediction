@@ -229,11 +229,12 @@ export const SpatialExplorer: React.FC = () => {
               center={[cityMetadata.latitude, cityMetadata.longitude]}
               zoom={11}
               scrollWheelZoom={true}
+              className="dark-tiles"
               style={{ height: '100%', width: '100%' }}
             >
               <TileLayer
-                attribution='&copy; <a href="https://carto.com/">CartoDB</a> Positron'
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               {gridPixels.map((pixel, i) => {
                 const color = getMetricColor(pixel, displayMetric);
