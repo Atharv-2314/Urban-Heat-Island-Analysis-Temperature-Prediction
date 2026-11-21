@@ -60,7 +60,8 @@ export function readParquet<T>(
 ): Promise<T[]> {
   return new Promise((resolve, reject) => {
     const script = buildParquetScript(parquetPath, options);
-    const python = spawn('python', ['-c', script]);
+    const pythonBin = process.env.PYTHON_BIN || 'python';
+    const python = spawn(pythonBin, ['-c', script]);
 
     let stdout = '';
     let stderr = '';
