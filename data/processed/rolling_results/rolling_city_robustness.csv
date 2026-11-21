@@ -1,0 +1,127 @@
+city,region,climate_group,model,sample_count,mean_actual_uhi,rmse,mae,r2,mbe
+Ahmedabad,Indian,Hot_Desert_SemiArid,Hist_Gradient_Boosting,48,0.437,1.0104,0.8093,0.487,-0.1367
+Ahmedabad,Indian,Hot_Desert_SemiArid,Random_Forest,48,0.437,1.0233,0.7806,0.4738,-0.3951
+Ahmedabad,Indian,Hot_Desert_SemiArid,Ridge_Regression,48,0.437,1.3521,1.1286,0.0813,-0.538
+Beijing,International,Continental_Monsoon,Hist_Gradient_Boosting,47,0.367,0.7625,0.6269,0.4929,0.0257
+Beijing,International,Continental_Monsoon,Random_Forest,47,0.367,0.669,0.5239,0.6096,-0.1059
+Beijing,International,Continental_Monsoon,Ridge_Regression,47,0.367,0.917,0.7556,0.2666,-0.5059
+Bengaluru,Indian,Tropical_Savanna_Upland,Hist_Gradient_Boosting,44,-0.784,1.6241,0.9532,0.4484,0.1956
+Bengaluru,Indian,Tropical_Savanna_Upland,Random_Forest,44,-0.784,1.4936,0.9555,0.5335,0.4417
+Bengaluru,Indian,Tropical_Savanna_Upland,Ridge_Regression,44,-0.784,1.8889,1.4414,0.2539,0.5962
+Bhopal,Indian,Tropical_Savanna_Upland,Hist_Gradient_Boosting,47,-1.282,1.4443,0.9984,0.5914,0.3949
+Bhopal,Indian,Tropical_Savanna_Upland,Random_Forest,47,-1.282,1.6288,1.1594,0.4802,0.6497
+Bhopal,Indian,Tropical_Savanna_Upland,Ridge_Regression,47,-1.282,2.02,1.569,0.2007,1.1457
+Bhubaneswar,Indian,Tropical_Monsoon,Hist_Gradient_Boosting,48,0.165,2.5224,1.1531,0.2765,0.1983
+Bhubaneswar,Indian,Tropical_Monsoon,Random_Forest,48,0.165,2.3842,1.1084,0.3537,0.418
+Bhubaneswar,Indian,Tropical_Monsoon,Ridge_Regression,48,0.165,2.9449,1.5856,0.0139,0.9329
+Budapest,International,Continental,Hist_Gradient_Boosting,48,0.516,0.9628,0.7459,-0.0056,-0.0794
+Budapest,International,Continental,Random_Forest,48,0.516,0.8998,0.6862,0.1216,-0.0866
+Budapest,International,Continental,Ridge_Regression,48,0.516,1.2044,0.9868,-0.5738,0.1241
+Cairo,International,Hot_Desert,Hist_Gradient_Boosting,48,-0.885,0.4302,0.3202,-0.2219,-0.086
+Cairo,International,Hot_Desert,Random_Forest,48,-0.885,0.4123,0.2951,-0.1227,-0.0573
+Cairo,International,Hot_Desert,Ridge_Regression,48,-0.885,1.0383,0.9137,-6.1192,0.8897
+Chennai,Indian,Tropical_Monsoon,Hist_Gradient_Boosting,47,1.16,2.0014,1.0766,0.0533,-0.6323
+Chennai,Indian,Tropical_Monsoon,Random_Forest,47,1.16,1.9971,1.0813,0.0574,-0.712
+Chennai,Indian,Tropical_Monsoon,Ridge_Regression,47,1.16,2.4719,1.6109,-0.4442,-1.5054
+Delhi,Indian,Hot_SemiArid,Hist_Gradient_Boosting,48,0.149,0.6928,0.5349,0.0092,0.1116
+Delhi,Indian,Hot_SemiArid,Random_Forest,48,0.149,0.6672,0.493,0.0812,0.0788
+Delhi,Indian,Hot_SemiArid,Ridge_Regression,48,0.149,0.9367,0.7534,-0.8114,0.4751
+Dhaka,International,Tropical_Monsoon,Hist_Gradient_Boosting,44,1.02,0.9191,0.6445,-0.1064,0.2564
+Dhaka,International,Tropical_Monsoon,Random_Forest,44,1.02,0.8729,0.6164,0.0019,0.1917
+Dhaka,International,Tropical_Monsoon,Ridge_Regression,44,1.02,0.9673,0.7771,-0.2255,0.2551
+Gandhinagar,Indian,Hot_Desert_SemiArid,Hist_Gradient_Boosting,48,-0.0,0.839,0.6352,-0.6365,0.124
+Gandhinagar,Indian,Hot_Desert_SemiArid,Random_Forest,48,-0.0,0.8108,0.5974,-0.5282,0.1631
+Gandhinagar,Indian,Hot_Desert_SemiArid,Ridge_Regression,48,-0.0,1.247,0.9031,-2.6148,0.5716
+Guwahati,Indian,Humid_Subtropical,Hist_Gradient_Boosting,47,1.619,0.8583,0.5733,0.417,-0.0387
+Guwahati,Indian,Humid_Subtropical,Random_Forest,47,1.619,0.8489,0.5651,0.4297,-0.1046
+Guwahati,Indian,Humid_Subtropical,Ridge_Regression,47,1.619,0.8088,0.5452,0.4822,-0.2481
+Helsinki,International,Cold_Continental_Snow,Hist_Gradient_Boosting,36,0.568,1.2758,0.8958,-0.3773,0.3346
+Helsinki,International,Cold_Continental_Snow,Random_Forest,36,0.568,1.2952,0.8631,-0.4197,0.1937
+Helsinki,International,Cold_Continental_Snow,Ridge_Regression,36,0.568,1.8712,1.3793,-1.963,1.0882
+Hyderabad,Indian,Hot_SemiArid,Hist_Gradient_Boosting,44,0.124,1.331,0.8,0.3603,-0.3548
+Hyderabad,Indian,Hot_SemiArid,Random_Forest,44,0.124,1.3189,0.8903,0.3719,-0.5224
+Hyderabad,Indian,Hot_SemiArid,Ridge_Regression,44,0.124,1.6181,1.0508,0.0547,-0.7049
+Indore,Indian,Hot_SemiArid,Hist_Gradient_Boosting,47,-0.221,1.6538,1.2443,0.0826,-0.1314
+Indore,Indian,Hot_SemiArid,Random_Forest,47,-0.221,1.7204,1.2727,0.0072,-0.3195
+Indore,Indian,Hot_SemiArid,Ridge_Regression,47,-0.221,1.7374,1.4291,-0.0125,-0.4836
+Jaipur,Indian,Hot_Desert_SemiArid,Hist_Gradient_Boosting,47,-0.37,6.3848,1.6869,0.058,-0.9479
+Jaipur,Indian,Hot_Desert_SemiArid,Random_Forest,47,-0.37,6.7966,1.8161,-0.0675,-0.6656
+Jaipur,Indian,Hot_Desert_SemiArid,Ridge_Regression,47,-0.37,6.5657,2.2392,0.0038,-0.0829
+Jodhpur,Indian,Hot_Desert_SemiArid,Hist_Gradient_Boosting,48,-2.173,0.8729,0.7163,0.3332,0.3391
+Jodhpur,Indian,Hot_Desert_SemiArid,Random_Forest,48,-2.173,0.9895,0.8228,0.1431,0.5745
+Jodhpur,Indian,Hot_Desert_SemiArid,Ridge_Regression,48,-2.173,1.5583,1.3381,-1.1251,1.1747
+Kanpur,Indian,Humid_Subtropical,Hist_Gradient_Boosting,44,0.222,0.9056,0.7246,0.5623,0.1163
+Kanpur,Indian,Humid_Subtropical,Random_Forest,44,0.222,0.9215,0.7763,0.5468,-0.0022
+Kanpur,Indian,Humid_Subtropical,Ridge_Regression,44,0.222,1.2766,1.0283,0.1303,-0.1743
+Kochi,Indian,Tropical_Monsoon,Hist_Gradient_Boosting,44,1.642,2.8959,1.6734,-0.8168,-0.3912
+Kochi,Indian,Tropical_Monsoon,Random_Forest,44,1.642,2.6322,1.4773,-0.501,-0.5178
+Kochi,Indian,Tropical_Monsoon,Ridge_Regression,44,1.642,2.4619,1.6488,-0.3131,-0.9984
+Kolkata,Indian,Tropical_Monsoon,Hist_Gradient_Boosting,47,2.207,1.5614,0.8932,-0.5069,-0.3705
+Kolkata,Indian,Tropical_Monsoon,Random_Forest,47,2.207,1.65,1.0287,-0.6827,-0.6863
+Kolkata,Indian,Tropical_Monsoon,Ridge_Regression,47,2.207,1.9319,1.5906,-1.3068,-1.4494
+London,International,Temperate_Oceanic,Hist_Gradient_Boosting,45,0.491,0.8838,0.6999,0.4523,0.0367
+London,International,Temperate_Oceanic,Random_Forest,45,0.491,0.8882,0.6786,0.4469,0.1174
+London,International,Temperate_Oceanic,Ridge_Regression,45,0.491,1.492,1.066,-0.5607,0.1966
+Los Angeles,International,Mediterranean,Hist_Gradient_Boosting,48,1.366,0.5452,0.4129,0.6479,0.0037
+Los Angeles,International,Mediterranean,Random_Forest,48,1.366,0.5935,0.4527,0.5828,-0.0337
+Los Angeles,International,Mediterranean,Ridge_Regression,48,1.366,0.9345,0.8002,-0.0343,-0.3566
+Lucknow,Indian,Humid_Subtropical,Hist_Gradient_Boosting,45,0.752,1.1609,0.889,0.4936,-0.4194
+Lucknow,Indian,Humid_Subtropical,Random_Forest,45,0.752,1.218,0.9212,0.4425,-0.5015
+Lucknow,Indian,Humid_Subtropical,Ridge_Regression,45,0.752,1.5772,1.3166,0.0653,-0.7613
+Madrid,International,Mediterranean,Hist_Gradient_Boosting,47,-0.871,0.9436,0.6905,0.3174,-0.1192
+Madrid,International,Mediterranean,Random_Forest,47,-0.871,0.8697,0.6974,0.42,0.0982
+Madrid,International,Mediterranean,Ridge_Regression,47,-0.871,1.7469,1.6096,-1.3397,1.3003
+Mangaluru,Indian,Tropical_Monsoon,Hist_Gradient_Boosting,45,1.465,2.3416,1.096,-0.5346,-0.0805
+Mangaluru,Indian,Tropical_Monsoon,Random_Forest,45,1.465,2.1525,1.0585,-0.2968,-0.0134
+Mangaluru,Indian,Tropical_Monsoon,Ridge_Regression,45,1.465,2.0647,1.007,-0.1931,0.0415
+Mexico City,International,Subtropical_Highland,Hist_Gradient_Boosting,48,1.356,0.8926,0.6054,0.5421,0.0094
+Mexico City,International,Subtropical_Highland,Random_Forest,48,1.356,0.8803,0.5664,0.5547,-0.009
+Mexico City,International,Subtropical_Highland,Ridge_Regression,48,1.356,0.9838,0.7405,0.4438,0.1095
+Montreal,International,Cold_Continental_Snow,Hist_Gradient_Boosting,47,1.714,1.1488,0.8399,0.5082,-0.1075
+Montreal,International,Cold_Continental_Snow,Random_Forest,47,1.714,1.2263,0.9472,0.4397,-0.3854
+Montreal,International,Cold_Continental_Snow,Ridge_Regression,47,1.714,1.3919,1.109,0.2781,-0.1519
+Mumbai,Indian,Tropical_Monsoon,Hist_Gradient_Boosting,43,1.314,3.4397,1.2412,-0.2438,-0.5837
+Mumbai,Indian,Tropical_Monsoon,Random_Forest,43,1.314,3.2428,1.1684,-0.1055,-0.5905
+Mumbai,Indian,Tropical_Monsoon,Ridge_Regression,43,1.314,3.1046,1.1495,-0.0133,-0.3927
+Mysuru,Indian,Tropical_Savanna_Upland,Hist_Gradient_Boosting,45,0.34,1.6089,1.0359,0.2785,0.11
+Mysuru,Indian,Tropical_Savanna_Upland,Random_Forest,45,0.34,1.5563,0.9814,0.3249,0.169
+Mysuru,Indian,Tropical_Savanna_Upland,Ridge_Regression,45,0.34,1.6328,1.0875,0.2569,-0.0218
+Nagpur,Indian,Tropical_Savanna_Upland,Hist_Gradient_Boosting,44,-1.056,2.2876,1.2099,-0.0117,0.0573
+Nagpur,Indian,Tropical_Savanna_Upland,Random_Forest,44,-1.056,2.0721,1.1658,0.1699,0.219
+Nagpur,Indian,Tropical_Savanna_Upland,Ridge_Regression,44,-1.056,2.0263,1.3489,0.2062,0.6629
+Nairobi,International,Tropical_Highland,Hist_Gradient_Boosting,47,-0.793,1.3772,1.026,0.5539,0.1973
+Nairobi,International,Tropical_Highland,Random_Forest,47,-0.793,1.4763,1.1722,0.4874,0.4322
+Nairobi,International,Tropical_Highland,Ridge_Regression,47,-0.793,1.6132,1.2602,0.388,0.4203
+New York,International,Continental,Hist_Gradient_Boosting,46,-0.439,1.0887,0.7406,-0.0695,0.2191
+New York,International,Continental,Random_Forest,46,-0.439,1.1809,0.8724,-0.2583,0.5038
+New York,International,Continental,Ridge_Regression,46,-0.439,1.4889,1.2611,-1.0001,0.7343
+Patna,Indian,Humid_Subtropical,Hist_Gradient_Boosting,48,0.455,1.7125,0.8402,0.0579,-0.4392
+Patna,Indian,Humid_Subtropical,Random_Forest,48,0.455,1.4993,0.8085,0.2779,-0.2473
+Patna,Indian,Humid_Subtropical,Ridge_Regression,48,0.455,1.7053,1.0455,0.0658,-0.1081
+Pune,Indian,Tropical_Savanna_Upland,Hist_Gradient_Boosting,39,-1.333,1.1326,0.8394,0.0595,0.3571
+Pune,Indian,Tropical_Savanna_Upland,Random_Forest,39,-1.333,1.1955,0.9713,-0.0479,0.6695
+Pune,Indian,Tropical_Savanna_Upland,Ridge_Regression,39,-1.333,1.5527,1.3757,-0.7677,1.1189
+Riyadh,International,Hot_Desert,Hist_Gradient_Boosting,48,-0.6,0.7343,0.5236,-0.0213,0.033
+Riyadh,International,Hot_Desert,Random_Forest,48,-0.6,0.7265,0.499,0.0005,0.0901
+Riyadh,International,Hot_Desert,Ridge_Regression,48,-0.6,1.3254,1.1218,-2.327,-0.9802
+Sao Paulo,International,Humid_Subtropical,Hist_Gradient_Boosting,47,1.708,1.6382,0.8489,0.0334,-0.2116
+Sao Paulo,International,Humid_Subtropical,Random_Forest,47,1.708,1.7866,0.8147,-0.1497,-0.4559
+Sao Paulo,International,Humid_Subtropical,Ridge_Regression,47,1.708,1.7048,0.9486,-0.0468,0.0489
+Sapporo,International,Cold_Continental_Snow,Hist_Gradient_Boosting,47,3.942,1.3403,1.0243,0.742,-0.3092
+Sapporo,International,Cold_Continental_Snow,Random_Forest,47,3.942,1.5276,1.1571,0.6648,-0.6538
+Sapporo,International,Cold_Continental_Snow,Ridge_Regression,47,3.942,2.4169,1.9348,0.161,-1.3729
+Seoul,International,Continental_Monsoon,Hist_Gradient_Boosting,48,0.403,1.3621,0.8592,0.1663,0.0172
+Seoul,International,Continental_Monsoon,Random_Forest,48,0.403,1.3052,0.8737,0.2344,0.0181
+Seoul,International,Continental_Monsoon,Ridge_Regression,48,0.403,1.2611,0.9929,0.2853,-0.37
+Siliguri,Indian,Humid_Subtropical,Hist_Gradient_Boosting,48,2.26,2.6313,1.799,0.4224,-0.095
+Siliguri,Indian,Humid_Subtropical,Random_Forest,48,2.26,2.6648,1.8214,0.4076,-0.2607
+Siliguri,Indian,Humid_Subtropical,Ridge_Regression,48,2.26,2.8983,2.0215,0.2992,-0.5635
+Sydney,International,Humid_Subtropical,Hist_Gradient_Boosting,46,0.22,1.4482,0.9453,0.0013,-0.1853
+Sydney,International,Humid_Subtropical,Random_Forest,46,0.22,1.2479,0.821,0.2586,-0.0012
+Sydney,International,Humid_Subtropical,Ridge_Regression,46,0.22,1.298,1.0177,0.1978,0.0806
+Tokyo,International,Humid_Subtropical,Hist_Gradient_Boosting,45,-0.51,1.5226,1.058,0.4314,0.2817
+Tokyo,International,Humid_Subtropical,Random_Forest,45,-0.51,1.464,1.0049,0.4743,0.5673
+Tokyo,International,Humid_Subtropical,Ridge_Regression,45,-0.51,1.9201,1.2753,0.0957,0.9972
+Udaipur,Indian,Hot_SemiArid,Hist_Gradient_Boosting,47,-0.903,0.945,0.6943,0.4403,-0.112
+Udaipur,Indian,Hot_SemiArid,Random_Forest,47,-0.903,0.9146,0.6353,0.4757,0.0812
+Udaipur,Indian,Hot_SemiArid,Ridge_Regression,47,-0.903,1.0676,0.9148,0.2857,0.5354

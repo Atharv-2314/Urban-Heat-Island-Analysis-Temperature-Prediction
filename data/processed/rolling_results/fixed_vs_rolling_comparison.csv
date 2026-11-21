@@ -1,0 +1,4 @@
+model,fixed_val_2024_rmse,fixed_val_2024_mae,fixed_val_2024_r2,fixed_test_2025_rmse,fixed_test_2025_mae,fixed_test_2025_r2,rolling_fold4_2024_rmse,rolling_fold4_2024_mae,rolling_fold4_2024_r2,rolling_fold4_2024_mbe,rolling_mean_rmse,rolling_std_rmse,rolling_mean_mae,rolling_mean_r2,rolling_mean_mbe,best_val_year,worst_val_year,pct_outperform_baseline,rank_fixed_val,rank_fixed_test,rank_rolling_mean,delta_rmse_rolling_vs_fixed_val
+Hist_Gradient_Boosting,2.3704,0.8892,0.2914,1.2794,0.7743,0.5848,2.4145,0.9054,0.2648,-0.1921,1.7404,0.5796,0.8958,0.4251,-0.0631,2023,2024,100.0,1,1,1,-0.63
+Random_Forest,2.3874,0.8973,0.2813,1.3323,0.7848,0.5498,2.5015,0.9317,0.2109,-0.1824,1.7414,0.6092,0.9022,0.4258,-0.0445,2023,2024,100.0,2,2,2,-0.646
+Ridge_Regression,2.5825,1.247,0.1589,1.5768,1.1139,0.3693,2.5654,1.2454,0.17,-0.1562,1.952,0.5134,1.2165,0.2688,0.0302,2023,2024,0.0,3,3,3,-0.6305

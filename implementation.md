@@ -189,3 +189,100 @@ TECH STACK SWAP: Streamlit -> React + Node.js + TypeScript + Tailwind + Anthropi
   - [x] Update attribution in both files to: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors`.
   - [x] Apply CSS dark-mode invert filter (`brightness(0.6) invert(1) contrast(3) hue-rotate(200deg)`) to map tile layers/container so tiles blend into the dark UI without watermarks or API requirements.
   - [x] Verify clean builds and check that markers/popups maintain accurate color perception.
+
+---
+
+## Phase 7: Time Split Rolling Window Validation (Milestones 24–29)
+
+**Objective:** Extend the existing fixed chronological evaluation with a five-year rolling training window followed by a one-year validation window. Assess temporal robustness, model stability, and generalisation across 42 global cities and different Köppen climate groups.
+
+**Core Evaluation Strategy:**
+- Preserve the existing chronological split: Train (2016–2023) | Validation (2024) | Final Test (2025).
+- Introduce an additional fixed-width rolling-window evaluation using five consecutive training years followed by the immediately succeeding validation year.
+- Keep 2025 completely untouched during rolling-window development and model selection.
+- Treat rolling-window validation as an additional robustness assessment, not a replacement for the original evaluation protocol.
+
+---
+
+- [x] **Milestone 24: Rolling Window Evaluation Design & Fold Generation**
+  - [x] Define a fixed five-year training window followed by a one-year validation window.
+  - [x] Generate four chronological folds:
+
+    | Fold | Training Period | Validation Period |
+    |---|---|---|
+    | 1 | 2016–2020 | 2021 |
+    | 2 | 2017–2021 | 2022 |
+    | 3 | 2018–2022 | 2023 |
+    | 4 | 2019–2023 | 2024 |
+
+  - [x] Implement a reusable chronological fold generator in `src/models/rolling_validation.py`.
+  - [x] Enforce strict temporal ordering and prevent future observations from entering training windows.
+  - [x] Verify that 2025 is excluded from all rolling folds.
+  - [x] Save fold configurations and metadata for reproducibility.
+
+- [x] **Milestone 25: Leakage-Safe Fold-Wise Model Training**
+  - [x] Integrate rolling-window evaluation with existing UHI regression models:
+    - Ridge Regression
+    - Random Forest Regressor
+    - Gradient Boosting / XGBoost Regressor
+  - [x] Train each model independently on the five-year training portion of every fold.
+  - [x] Fit imputers, scalers, and preprocessing operations using only the respective training window.
+  - [x] Reuse the existing leakage-safe feature engineering pipeline.
+  - [x] Maintain consistent feature columns and model configurations across folds.
+  - [x] Save fold-wise trained model artifacts and prediction outputs.
+
+- [x] **Milestone 26: Fold-Wise Performance Evaluation & Stability Metrics**
+  - [x] Evaluate predictions against the corresponding validation year for every fold.
+  - [x] Calculate the following metrics:
+    - Mean Absolute Error (MAE)
+    - Root Mean Squared Error (RMSE)
+    - Coefficient of Determination (R²)
+    - Mean Bias Error (MBE)
+  - [x] Calculate average and standard deviation of each model's RMSE across all four folds.
+  - [x] Identify the best-performing and worst-performing validation years.
+  - [x] Quantify the percentage of folds in which each model outperforms the selected baseline.
+  - [x] Avoid using MAPE as a primary metric because UHI values can be negative or close to zero.
+  - [x] Store consolidated metrics in `data/processed/rolling_results/`.
+
+- [x] **Milestone 27: Global, Geographical & Climate-Stratified Robustness Analysis**
+  - [x] Compare rolling-window performance across all 42 global cities.
+  - [x] Analyse model stability across Köppen climate groups.
+  - [x] Compare Indian and international city performance.
+  - [x] Identify cities and climate groups with consistently high prediction errors.
+  - [x] Examine seasonal performance differences across validation years.
+  - [x] Analyse whether model performance deteriorates or improves as the validation year advances.
+  - [x] Generate city-wise, regional, and climate-wise performance summaries.
+
+- [x] **Milestone 28: Fixed Split vs Rolling Window Comparative Analysis**
+  - [x] Compare the original fixed chronological evaluation against the four rolling-window folds.
+  - [x] Compare model rankings under both evaluation strategies.
+  - [x] Quantify differences in MAE, RMSE, R², and prediction bias.
+  - [x] Examine whether a model performs well on the fixed validation year but inconsistently across rolling folds.
+  - [x] Compare rolling-window average performance with the original 2024 validation results.
+  - [x] Document temporal generalisation limitations and potential sources of performance variation.
+  - [x] After completing all methodology and model-selection decisions, retain the original 2025 test set for its separate final evaluation.
+
+- [x] **Milestone 29: Temporal Robustness Dashboard & Reproducibility**
+  - [x] Create a dedicated **Temporal Robustness / Rolling Window Evaluation** dashboard page.
+  - [x] Implement a fold-wise model performance comparison table.
+  - [x] Add interactive charts for:
+    - RMSE and MAE across validation years.
+    - Model performance trends across the four folds.
+    - Average RMSE and standard deviation comparison.
+    - City-wise and climate-wise error distributions.
+  - [x] Add a comparative view of fixed chronological split versus rolling-window evaluation.
+  - [x] Display fold-specific training and validation periods.
+  - [x] Export evaluation metrics and predictions as CSV files.
+  - [x] Add automated tests for fold generation, temporal leakage prevention, metric calculations, and reproducibility.
+  - [x] Document the rolling-window methodology, results, and limitations in the research report and project documentation.
+
+---
+
+**Expected Deliverables:**
+1. Reusable five-year rolling-window validation pipeline.
+2. Four fold-wise model training and prediction datasets.
+3. Consolidated temporal performance and stability metrics.
+4. Global and climate-stratified robustness analysis.
+5. Fixed-split versus rolling-window comparative report.
+6. Dedicated Temporal Robustness dashboard page.
+7. Updated methodology and research documentation.

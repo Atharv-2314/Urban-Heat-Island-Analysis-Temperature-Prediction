@@ -1,0 +1,171 @@
+{
+  "evaluation_strategy": "5-Year Rolling Window Cross-Validation (4 Chronological Folds)",
+  "primary_metrics": [
+    "RMSE",
+    "MAE",
+    "R2",
+    "MBE"
+  ],
+  "mape_excluded_reason": "UHI intensity crosses zero and includes negative values (urban cooler than rural baseline).",
+  "folds_summary": {
+    "fold_1": {
+      "fold_id": 1,
+      "validation_year": 2021,
+      "metrics": {
+        "Ridge_Regression": {
+          "rmse": 2.1842,
+          "mae": 1.3712,
+          "r2": 0.2488,
+          "mbe": -0.0804,
+          "sample_count": 469
+        },
+        "Random_Forest": {
+          "rmse": 1.958,
+          "mae": 1.0728,
+          "r2": 0.3963,
+          "mbe": -0.0937,
+          "sample_count": 469
+        },
+        "Hist_Gradient_Boosting": {
+          "rmse": 2.0192,
+          "mae": 1.0981,
+          "r2": 0.358,
+          "mbe": -0.198,
+          "sample_count": 469
+        }
+      }
+    },
+    "fold_2": {
+      "fold_id": 2,
+      "validation_year": 2022,
+      "metrics": {
+        "Ridge_Regression": {
+          "rmse": 1.5691,
+          "mae": 1.1307,
+          "r2": 0.2996,
+          "mbe": 0.2576,
+          "sample_count": 489
+        },
+        "Random_Forest": {
+          "rmse": 1.329,
+          "mae": 0.81,
+          "r2": 0.4975,
+          "mbe": 0.0212,
+          "sample_count": 489
+        },
+        "Hist_Gradient_Boosting": {
+          "rmse": 1.3678,
+          "mae": 0.8028,
+          "r2": 0.4678,
+          "mbe": 0.0313,
+          "sample_count": 489
+        }
+      }
+    },
+    "fold_3": {
+      "fold_id": 3,
+      "validation_year": 2023,
+      "metrics": {
+        "Ridge_Regression": {
+          "rmse": 1.4894,
+          "mae": 1.1186,
+          "r2": 0.357,
+          "mbe": 0.0997,
+          "sample_count": 496
+        },
+        "Random_Forest": {
+          "rmse": 1.177,
+          "mae": 0.7944,
+          "r2": 0.5984,
+          "mbe": 0.0768,
+          "sample_count": 496
+        },
+        "Hist_Gradient_Boosting": {
+          "rmse": 1.16,
+          "mae": 0.777,
+          "r2": 0.61,
+          "mbe": 0.1062,
+          "sample_count": 496
+        }
+      }
+    },
+    "fold_4": {
+      "fold_id": 4,
+      "validation_year": 2024,
+      "metrics": {
+        "Ridge_Regression": {
+          "rmse": 2.5654,
+          "mae": 1.2454,
+          "r2": 0.17,
+          "mbe": -0.1562,
+          "sample_count": 480
+        },
+        "Random_Forest": {
+          "rmse": 2.5015,
+          "mae": 0.9317,
+          "r2": 0.2109,
+          "mbe": -0.1824,
+          "sample_count": 480
+        },
+        "Hist_Gradient_Boosting": {
+          "rmse": 2.4145,
+          "mae": 0.9054,
+          "r2": 0.2648,
+          "mbe": -0.1921,
+          "sample_count": 480
+        }
+      }
+    }
+  },
+  "stability_metrics": {
+    "Ridge_Regression": {
+      "mean_rmse": 1.952,
+      "std_rmse": 0.5134,
+      "mean_mae": 1.2165,
+      "std_mae": 0.1179,
+      "mean_r2": 0.2688,
+      "std_r2": 0.0794,
+      "mean_mbe": 0.0302,
+      "std_mbe": 0.1858,
+      "best_validation_year": 2023,
+      "best_fold_rmse": 1.4894,
+      "worst_validation_year": 2024,
+      "worst_fold_rmse": 2.5654,
+      "pct_folds_outperform_baseline": 0.0,
+      "baseline_reference": true
+    },
+    "Random_Forest": {
+      "mean_rmse": 1.7414,
+      "std_rmse": 0.6092,
+      "mean_mae": 0.9022,
+      "std_mae": 0.1292,
+      "mean_r2": 0.4258,
+      "std_r2": 0.1653,
+      "mean_mbe": -0.0445,
+      "std_mbe": 0.1161,
+      "best_validation_year": 2023,
+      "best_fold_rmse": 1.177,
+      "worst_validation_year": 2024,
+      "worst_fold_rmse": 2.5015,
+      "pct_folds_outperform_baseline": 100.0,
+      "baseline_reference": false
+    },
+    "Hist_Gradient_Boosting": {
+      "mean_rmse": 1.7404,
+      "std_rmse": 0.5796,
+      "mean_mae": 0.8958,
+      "std_mae": 0.1458,
+      "mean_r2": 0.4251,
+      "std_r2": 0.1486,
+      "mean_mbe": -0.0631,
+      "std_mbe": 0.1554,
+      "best_validation_year": 2023,
+      "best_fold_rmse": 1.16,
+      "worst_validation_year": 2024,
+      "worst_fold_rmse": 2.4145,
+      "pct_folds_outperform_baseline": 100.0,
+      "baseline_reference": false
+    }
+  },
+  "best_overall_model": "Hist_Gradient_Boosting"
+}

@@ -83,6 +83,22 @@ export async function fetchCounterfactual(): Promise<Record<string, unknown>> {
   return data.data ?? {};
 }
 
+// ── Rolling Window Evaluation (Phase 7) ───────────────────────────────────────
+export async function fetchRollingMetrics(): Promise<Record<string, unknown>> {
+  const { data } = await client.get<ApiResponse<Record<string, unknown>>>('/models/rolling/metrics');
+  return data.data ?? {};
+}
+
+export async function fetchRollingComparison(): Promise<Record<string, unknown>> {
+  const { data } = await client.get<ApiResponse<Record<string, unknown>>>('/models/rolling/comparison');
+  return data.data ?? {};
+}
+
+export async function fetchRollingRobustness(): Promise<Record<string, unknown>> {
+  const { data } = await client.get<ApiResponse<Record<string, unknown>>>('/models/rolling/robustness');
+  return data.data ?? {};
+}
+
 // ── Simulator ─────────────────────────────────────────────────────────────────
 export async function runSimulation(params: {
   delta_ndvi: number;

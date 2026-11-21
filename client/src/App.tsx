@@ -20,6 +20,9 @@ const SpatialExplorer = lazy(() =>
 const ModelBenchmarks = lazy(() =>
   import('./pages/ModelBenchmarks').then((m) => ({ default: m.ModelBenchmarks }))
 );
+const RollingValidation = lazy(() =>
+  import('./pages/RollingValidation').then((m) => ({ default: m.RollingValidation }))
+);
 const Explainability = lazy(() =>
   import('./pages/Explainability').then((m) => ({ default: m.Explainability }))
 );
@@ -76,6 +79,7 @@ export const App: React.FC = () => {
               <Route path="/city-dive" element={<CityDeepDive />} />
               <Route path="/spatial" element={<SpatialExplorer />} />
               <Route path="/models" element={<ModelBenchmarks />} />
+              <Route path="/rolling" element={<RollingValidation />} />
               <Route path="/shap" element={<Explainability />} />
               <Route path="/simulator" element={<CoolingSimulator />} />
               <Route path="*" element={<Navigate to="/" replace />} />

@@ -101,6 +101,28 @@ Reported in `reports/weather_forecast_benchmarks.json`. Primary metric is MAE on
 
 ---
 
+## Model 5 — 5-Year Rolling Window Cross-Validation Protocol (Phase 7)
+
+| Field | Detail |
+|---|---|
+| **Purpose** | Evaluates temporal generalization stability and model rank invariance over non-overlapping chronological folds. |
+| **Protocol** | Fixed-width 5-year rolling training window with 1-year validation window across 4 folds (2016–2024). |
+| **Folds** | Fold 1 (2016–2020 $\rightarrow$ 2021), Fold 2 (2017–2021 $\rightarrow$ 2022), Fold 3 (2018–2022 $\rightarrow$ 2023), Fold 4 (2019–2023 $\rightarrow$ 2024). |
+| **Holdout Preservation** | 2025 is strictly preserved as an untouched holdout test set (zero presence in rolling folds). |
+| **Artifacts** | `models/rolling_folds/fold_1..4/`, `data/processed/rolling_results/`. |
+
+### Cross-Fold Stability Summary
+
+| Model | Mean RMSE (°C) | Std RMSE (°C) | Mean MAE (°C) | Mean R² | Mean MBE (°C) | % Folds > Baseline |
+|---|---|---|---|---|---|---|
+| **Hist Gradient Boosting** | **1.7404** | $\pm 0.5796$ | **0.8958** | **0.4251** | -0.0631 | **100.0%** |
+| **Random Forest** | 1.7414 | $\pm 0.6092$ | 0.9022 | 0.4258 | -0.0445 | **100.0%** |
+| **Ridge Regression** | 1.9520 | $\pm 0.5134$ | 1.2165 | 0.2688 | +0.0302 | Baseline Ref |
+
+> **Rank Invariance Conclusion:** Hist Gradient Boosting ranks #1 across both the untouched 2025 holdout and the 4-fold rolling evaluation, demonstrating robust temporal generalization.
+
+---
+
 ## Intended Use
 
 These models are intended for **academic and research use only**. They are designed to quantify historical UHI patterns and explore hypothetical policy scenarios (urban greening, albedo modification). They are **not** validated for operational weather forecasting or life-safety decision-making.

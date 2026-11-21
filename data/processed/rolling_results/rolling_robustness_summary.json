@@ -1,0 +1,101 @@
+{
+  "cities_evaluated": 42,
+  "indian_cities_count": 24,
+  "international_cities_count": 18,
+  "climate_groups_evaluated": 13,
+  "top_error_cities_hgb": [
+    {
+      "city": "Jaipur",
+      "region": "Indian",
+      "climate_group": "Hot_Desert_SemiArid",
+      "rmse": 6.3848,
+      "mae": 1.6869
+    },
+    {
+      "city": "Mumbai",
+      "region": "Indian",
+      "climate_group": "Tropical_Monsoon",
+      "rmse": 3.4397,
+      "mae": 1.2412
+    },
+    {
+      "city": "Kochi",
+      "region": "Indian",
+      "climate_group": "Tropical_Monsoon",
+      "rmse": 2.8959,
+      "mae": 1.6734
+    },
+    {
+      "city": "Siliguri",
+      "region": "Indian",
+      "climate_group": "Humid_Subtropical",
+      "rmse": 2.6313,
+      "mae": 1.799
+    },
+    {
+      "city": "Bhubaneswar",
+      "region": "Indian",
+      "climate_group": "Tropical_Monsoon",
+      "rmse": 2.5224,
+      "mae": 1.1531
+    }
+  ],
+  "lowest_error_cities_hgb": [
+    {
+      "city": "Beijing",
+      "region": "International",
+      "climate_group": "Continental_Monsoon",
+      "rmse": 0.7625,
+      "mae": 0.6269
+    },
+    {
+      "city": "Riyadh",
+      "region": "International",
+      "climate_group": "Hot_Desert",
+      "rmse": 0.7343,
+      "mae": 0.5236
+    },
+    {
+      "city": "Delhi",
+      "region": "Indian",
+      "climate_group": "Hot_SemiArid",
+      "rmse": 0.6928,
+      "mae": 0.5349
+    },
+    {
+      "city": "Los Angeles",
+      "region": "International",
+      "climate_group": "Mediterranean",
+      "rmse": 0.5452,
+      "mae": 0.4129
+    },
+    {
+      "city": "Cairo",
+      "region": "International",
+      "climate_group": "Hot_Desert",
+      "rmse": 0.4302,
+      "mae": 0.3202
+    }
+  ],
+  "top_error_climate_groups_hgb": [
+    {
+      "climate_group": "Hot_Desert_SemiArid",
+      "rmse": 3.2644,
+      "mae": 0.9581,
+      "sample_count": 191
+    },
+    {
+      "climate_group": "Tropical_Monsoon",
+      "rmse": 2.3592,
+      "mae": 1.1088,
+      "sample_count": 318
+    },
+    {
+      "climate_group": "Tropical_Savanna_Upland",
+      "rmse": 1.6701,
+      "mae": 1.0112,
+      "sample_count": 219
+    }
+  ],
+  "temporal_trend_note": "Performance is stable across 2021-2023 (RMSE 1.16\u20131.37 \u00b0C for tree ensembles) with an acute error spike in 2024 (RMSE ~2.41 \u00b0C) caused by anomalous global summer heatwaves."
+}

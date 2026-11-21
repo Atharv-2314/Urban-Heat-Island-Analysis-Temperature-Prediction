@@ -1,0 +1,13 @@
+fold_id,validation_year,model,rmse,mae,r2,mbe,sample_count
+1,2021,Ridge_Regression,2.1842,1.3712,0.2488,-0.0804,469
+1,2021,Random_Forest,1.958,1.0728,0.3963,-0.0937,469
+1,2021,Hist_Gradient_Boosting,2.0192,1.0981,0.358,-0.198,469
+2,2022,Ridge_Regression,1.5691,1.1307,0.2996,0.2576,489
+2,2022,Random_Forest,1.329,0.81,0.4975,0.0212,489
+2,2022,Hist_Gradient_Boosting,1.3678,0.8028,0.4678,0.0313,489
+3,2023,Ridge_Regression,1.4894,1.1186,0.357,0.0997,496
+3,2023,Random_Forest,1.177,0.7944,0.5984,0.0768,496
+3,2023,Hist_Gradient_Boosting,1.16,0.777,0.61,0.1062,496
+4,2024,Ridge_Regression,2.5654,1.2454,0.17,-0.1562,480
+4,2024,Random_Forest,2.5015,0.9317,0.2109,-0.1824,480
+4,2024,Hist_Gradient_Boosting,2.4145,0.9054,0.2648,-0.1921,480

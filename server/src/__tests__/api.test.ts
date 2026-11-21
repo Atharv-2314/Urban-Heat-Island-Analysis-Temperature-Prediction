@@ -39,6 +39,16 @@ describe('Server Architecture & Data Serving Layer', () => {
     const counterfactual = loadJsonReport<any>(REPORT_PATHS.counterfactual);
     expect(counterfactual.scenario.name).toContain('Moderate');
     expect(counterfactual.global_average_cooling_celsius).toBeGreaterThan(0.2);
+
+    // Phase 7 Rolling Window Report Paths
+    expect(fs.existsSync(REPORT_PATHS.rollingMetrics)).toBe(true);
+    expect(fs.existsSync(REPORT_PATHS.rollingComparison)).toBe(true);
+    expect(fs.existsSync(REPORT_PATHS.rollingRobustness)).toBe(true);
+    expect(fs.existsSync(REPORT_PATHS.rollingFoldsMeta)).toBe(true);
+
+    const rollingMetrics = loadJsonReport<any>(REPORT_PATHS.rollingMetrics);
+    expect(rollingMetrics.best_overall_model).toBe('Hist_Gradient_Boosting');
+    expect(rollingMetrics.stability_metrics.Hist_Gradient_Boosting.mean_rmse).toBeCloseTo(1.7404, 2);
   });
 
   test('Deterministic cache key builder constructs sorted keys', () => {

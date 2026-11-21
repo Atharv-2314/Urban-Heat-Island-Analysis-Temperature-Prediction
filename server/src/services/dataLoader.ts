@@ -28,7 +28,13 @@ export const REPORT_PATHS = {
   climateRisk: path.join(PROJECT_ROOT, 'reports', 'climate_stratified_risk.json'),
   shapExplainability: path.join(PROJECT_ROOT, 'reports', 'shap_explainability.json'),
   counterfactual: path.join(PROJECT_ROOT, 'reports', 'counterfactual_simulation.json'),
+  rollingMetrics: path.join(PROJECT_ROOT, 'data', 'processed', 'rolling_results', 'rolling_evaluation_metrics.json'),
+  rollingComparison: path.join(PROJECT_ROOT, 'data', 'processed', 'rolling_results', 'fixed_vs_rolling_comparison.json'),
+  rollingRobustness: path.join(PROJECT_ROOT, 'data', 'processed', 'rolling_results', 'rolling_robustness_summary.json'),
+  rollingFoldsMeta: path.join(PROJECT_ROOT, 'data', 'processed', 'rolling_results', 'rolling_folds_metadata.json'),
 } as const;
+
+export const ROLLING_DATA_DIR = path.join(PROJECT_ROOT, 'data', 'processed', 'rolling_results');
 
 /**
  * Load a JSON report file synchronously (reports are small, pre-generated).

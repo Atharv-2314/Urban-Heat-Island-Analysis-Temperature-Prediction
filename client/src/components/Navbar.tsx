@@ -10,6 +10,7 @@ import {
   BarChart3,
   Sparkles,
   Sliders,
+  History,
   Activity,
   CheckCircle2,
   AlertCircle,
@@ -34,6 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({ apiStatus = 'checking' }) => {
     { to: '/city-dive', label: 'City Deep-Dive', icon: LineChart },
     { to: '/spatial', label: 'Spatial Grid', icon: Grid },
     { to: '/models', label: 'ML Benchmarks', icon: BarChart3 },
+    { to: '/rolling', label: 'Rolling Window', icon: History },
     { to: '/shap', label: 'Explainability', icon: Sparkles },
     { to: '/simulator', label: 'Cooling Simulator', icon: Sliders },
   ];
