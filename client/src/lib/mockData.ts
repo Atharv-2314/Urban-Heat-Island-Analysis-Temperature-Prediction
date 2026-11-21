@@ -104,6 +104,291 @@ export const INITIAL_RISK_SCORES: RiskScore[] = [
   { city: 'Sapporo', risk_score: 28, risk_tier: 'Low Risk', uhi_intensity: 0.72, climate_group: 'Continental', latitude: 43.0618, longitude: 141.3545 },
 ];
 
+export function generateCityShapMock(cityNameOrScope: string) {
+  const norm = (cityNameOrScope || '').toLowerCase();
+  const baseExpected = 0.2019;
+
+  // Regional Scope: India (24 metros)
+  if (norm === 'india' || norm === 'indian') {
+    const topDrivers = [
+      { feature: 'Urban_Valid_LST_Pixel_Count', label: 'Urban Valid LST Pixel Count', mean_abs_shap: 0.4004, domain: 'Remote Sensing', impact: 'Direct satellite thermal detection fidelity' },
+      { feature: 'relative_humidity', label: 'Relative Humidity (%)', mean_abs_shap: 0.3910, domain: 'Meteorology', impact: 'Monsoonal atmospheric boundary vapor damping' },
+      { feature: 'longitude', label: 'Geographic Longitude', mean_abs_shap: 0.2623, domain: 'Geospatial', impact: 'East-west monsoon trajectory gradient' },
+      { feature: 'relative_humidity_lag1', label: 'Relative Humidity (Lag 1M)', mean_abs_shap: 0.2432, domain: 'Temporal Memory', impact: 'Antecedent soil and moisture boundary persistence' },
+      { feature: 'Rural_Valid_LST_Pixel_Count', label: 'Rural Valid LST Pixel Count', mean_abs_shap: 0.1687, domain: 'Remote Sensing', impact: 'Rural background thermal baseline stability' },
+      { feature: 'latitude', label: 'Geographic Latitude', mean_abs_shap: 0.1352, domain: 'Geospatial', impact: 'Subtropical to tropical solar insolation gradient' },
+      { feature: 'population_density', label: 'Population Density', mean_abs_shap: 0.1264, domain: 'Morphology', impact: 'Dense Indian urban core thermal emissions' },
+      { feature: 'ndwi', label: 'Water Index (NDWI)', mean_abs_shap: 0.1158, domain: 'Green Canopy', impact: 'Monsoon hydrological surface retention' },
+      { feature: 'ndbi', label: 'Built-Up Index (NDBI)', mean_abs_shap: 0.0895, domain: 'Morphology', impact: 'Impervious masonry thermal absorption' },
+      { feature: 'ndvi', label: 'Vegetation Index (NDVI)', mean_abs_shap: 0.0682, domain: 'Green Canopy', impact: 'Tree canopy evapotranspiration cooling' },
+    ];
+
+    const netPredictedUhi = 0.28;
+    const steps = [
+      { feature: 'Urban Valid LST Pixel Count', value: +0.22, direction: 'warming' as const, desc: 'Clear-sky satellite sensing detection', domain: 'Remote Sensing', start: 0.20, end: 0.42 },
+      { feature: 'Relative Humidity (%)', value: -0.15, direction: 'cooling' as const, desc: 'Boundary-layer moisture suppression', domain: 'Meteorology', start: 0.42, end: 0.27 },
+      { feature: 'Geographic Longitude', value: +0.10, direction: 'warming' as const, desc: 'Peninsular continental gradient', domain: 'Geospatial', start: 0.27, end: 0.37 },
+      { feature: 'Built-Up Index (NDBI)', value: +0.08, direction: 'warming' as const, desc: 'High masonry thermal absorption', domain: 'Morphology', start: 0.37, end: 0.45 },
+      { feature: 'Vegetation Index (NDVI)', value: -0.06, direction: 'cooling' as const, desc: 'Evapotranspirative canopy buffer', domain: 'Green Canopy', start: 0.45, end: 0.39 },
+      { feature: 'Other Biophysical Predictors', value: -0.11, direction: 'cooling' as const, desc: 'Remaining 37 features', domain: 'Aggregated', start: 0.39, end: netPredictedUhi },
+    ];
+
+    return {
+      city: 'Indian Cities Cohort (24 Metros)',
+      scope: 'Indian Cities Cohort (24 Metros)',
+      records_analyzed: 278,
+      base_expected: baseExpected,
+      net_predicted_uhi: netPredictedUhi,
+      mean_actual_uhi: 0.33,
+      top_drivers: topDrivers,
+      waterfall: { baseExpected, steps, finalPrediction: netPredictedUhi },
+      driver_cards: {
+        top_global: { title: 'Top Driver', name: topDrivers[0].label, val: `${topDrivers[0].mean_abs_shap.toFixed(4)} °C`, badge: `RANK #1 (${topDrivers[0].mean_abs_shap.toFixed(3)})` },
+        top_meteorology: { title: 'Top Meteorological Driver', name: 'Relative Humidity (%)', val: '0.3910 °C', badge: '0.391 °C' },
+        top_morphology: { title: 'Top Morphology Driver', name: 'Population Density', val: '0.1264 °C', badge: '0.126 °C' },
+        cooling_canopy: { title: 'Cooling Canopy Driver', name: 'Water Index (NDWI)', val: '0.1158 °C', badge: '0.116 °C' },
+      },
+      biophysical_insight: 'For the Indian Cities Cohort (24 Metros), TreeSHAP attributions indicate that Relative Humidity (0.3910 °C) and Urban Clear-Sky Pixel Density (0.4004 °C) overwhelmingly dominate thermal expression, reflecting intense pre-monsoon radiative heatwaves followed by sharp monsoon humidity attenuation.',
+    };
+  }
+
+  // Regional Scope: International (18 metros)
+  if (norm === 'international' || norm === 'intl') {
+    const topDrivers = [
+      { feature: 'Urban_Valid_LST_Pixel_Count', label: 'Urban Valid LST Pixel Count', mean_abs_shap: 0.4531, domain: 'Remote Sensing', impact: 'Direct satellite thermal detection fidelity' },
+      { feature: 'relative_humidity', label: 'Relative Humidity (%)', mean_abs_shap: 0.3298, domain: 'Meteorology', impact: 'Atmospheric boundary vapor thermal damping' },
+      { feature: 'longitude', label: 'Geographic Longitude', mean_abs_shap: 0.3266, domain: 'Geospatial', impact: 'Intercontinental longitudinal thermal gradients' },
+      { feature: 'relative_humidity_lag1', label: 'Relative Humidity (Lag 1M)', mean_abs_shap: 0.1928, domain: 'Temporal Memory', impact: 'Antecedent moisture boundary persistence' },
+      { feature: 'latitude', label: 'Geographic Latitude', mean_abs_shap: 0.1658, domain: 'Geospatial', impact: 'Global latitudinal solar zenith variance' },
+      { feature: 'Rural_Valid_LST_Pixel_Count', label: 'Rural Valid LST Pixel Count', mean_abs_shap: 0.1255, domain: 'Remote Sensing', impact: 'Rural background thermal baseline stability' },
+      { feature: 'ndwi', label: 'Water Index (NDWI)', mean_abs_shap: 0.0983, domain: 'Green Canopy', impact: 'Surface moisture buffer' },
+      { feature: 'ndbi', label: 'Built-Up Index (NDBI)', mean_abs_shap: 0.0832, domain: 'Morphology', impact: 'Impervious masonry heat retention' },
+      { feature: 'population_density', label: 'Population Density', mean_abs_shap: 0.0725, domain: 'Morphology', impact: 'High-density urban core heat' },
+      { feature: 'ndvi', label: 'Vegetation Index (NDVI)', mean_abs_shap: 0.0585, domain: 'Green Canopy', impact: 'Temperate and continental tree canopy' },
+    ];
+
+    const netPredictedUhi = 0.63;
+    const steps = [
+      { feature: 'Urban Valid LST Pixel Count', value: +0.28, direction: 'warming' as const, desc: 'Clear-sky sensing thermal signal', domain: 'Remote Sensing', start: 0.20, end: 0.48 },
+      { feature: 'Geographic Longitude', value: +0.15, direction: 'warming' as const, desc: 'Continental position gradient', domain: 'Geospatial', start: 0.48, end: 0.63 },
+      { feature: 'Relative Humidity (%)', value: -0.10, direction: 'cooling' as const, desc: 'Maritime air mass thermal damping', domain: 'Meteorology', start: 0.63, end: 0.53 },
+      { feature: 'Built-Up Index (NDBI)', value: +0.12, direction: 'warming' as const, desc: 'Concrete & asphalt heat dome', domain: 'Morphology', start: 0.53, end: 0.65 },
+      { feature: 'Vegetation Index (NDVI)', value: -0.08, direction: 'cooling' as const, desc: 'Urban canopy cooling buffer', domain: 'Green Canopy', start: 0.65, end: 0.57 },
+      { feature: 'Other Biophysical Predictors', value: +0.06, direction: 'warming' as const, desc: 'Remaining 37 features', domain: 'Aggregated', start: 0.57, end: netPredictedUhi },
+    ];
+
+    return {
+      city: 'International Cities Cohort (18 Metros)',
+      scope: 'International Cities Cohort (18 Metros)',
+      records_analyzed: 211,
+      base_expected: baseExpected,
+      net_predicted_uhi: netPredictedUhi,
+      mean_actual_uhi: 0.50,
+      top_drivers: topDrivers,
+      waterfall: { baseExpected, steps, finalPrediction: netPredictedUhi },
+      driver_cards: {
+        top_global: { title: 'Top Driver', name: topDrivers[0].label, val: `${topDrivers[0].mean_abs_shap.toFixed(4)} °C`, badge: `RANK #1 (${topDrivers[0].mean_abs_shap.toFixed(3)})` },
+        top_meteorology: { title: 'Top Meteorological Driver', name: 'Relative Humidity (%)', val: '0.3298 °C', badge: '0.330 °C' },
+        top_morphology: { title: 'Top Morphology Driver', name: 'Built-Up Index (NDBI)', val: '0.0832 °C', badge: '0.083 °C' },
+        cooling_canopy: { title: 'Cooling Canopy Driver', name: 'Water Index (NDWI)', val: '0.0983 °C', badge: '0.098 °C' },
+      },
+      biophysical_insight: 'For the International Cities Cohort (18 Metros), Geographic Longitude (0.3266 °C) and Latitude (0.1658 °C) demonstrate significantly higher importance than in the India-only cohort, capturing massive intercontinental gradients between maritime Europe, continental East Asia, and equatorial Americas.',
+    };
+  }
+
+  // Global Scope (42 metros)
+  if (norm === 'global' || norm === 'all') {
+    const topDrivers = [
+      { feature: 'Urban_Valid_LST_Pixel_Count', label: 'Urban Valid LST Pixel Count', mean_abs_shap: 0.4231, domain: 'Remote Sensing', impact: 'Direct satellite thermal detection fidelity' },
+      { feature: 'relative_humidity', label: 'Relative Humidity (%)', mean_abs_shap: 0.3646, domain: 'Meteorology', impact: 'Atmospheric boundary vapor thermal damping' },
+      { feature: 'longitude', label: 'Geographic Longitude', mean_abs_shap: 0.2901, domain: 'Geospatial', impact: 'Regional continental vs maritime longitude gradients' },
+      { feature: 'relative_humidity_lag1', label: 'Relative Humidity (Lag 1M)', mean_abs_shap: 0.2214, domain: 'Temporal Memory', impact: 'Antecedent soil and moisture boundary conditions' },
+      { feature: 'Rural_Valid_LST_Pixel_Count', label: 'Rural Valid LST Pixel Count', mean_abs_shap: 0.1501, domain: 'Remote Sensing', impact: 'Rural background thermal baseline stability' },
+      { feature: 'latitude', label: 'Geographic Latitude', mean_abs_shap: 0.1487, domain: 'Geospatial', impact: 'Solar zenith angle and latitudinal insolation' },
+      { feature: 'ndwi', label: 'Moisture Index (NDWI)', mean_abs_shap: 0.1083, domain: 'Green Canopy', impact: 'Surface moisture retention and latent heat absorption' },
+      { feature: 'population_density', label: 'Population Density', mean_abs_shap: 0.1031, domain: 'Morphology', impact: 'Anthropogenic heat emissions and compact fabric' },
+      { feature: 'ndbi', label: 'Built-Up Index (NDBI)', mean_abs_shap: 0.0868, domain: 'Morphology', impact: 'Direct sensible heat storage from impervious masonry' },
+      { feature: 'ndvi', label: 'Vegetation Index (NDVI)', mean_abs_shap: 0.0640, domain: 'Green Canopy', impact: 'Canopy evapotranspirative cooling buffer' },
+    ];
+
+    const netPredictedUhi = 0.43;
+    const steps = [
+      { feature: 'Urban Valid LST Pixel Count', value: +0.25, direction: 'warming' as const, desc: 'Clear-sky sensing thermal signal', domain: 'Remote Sensing', start: 0.20, end: 0.45 },
+      { feature: 'Relative Humidity (%)', value: -0.12, direction: 'cooling' as const, desc: 'Atmospheric boundary vapor damping', domain: 'Meteorology', start: 0.45, end: 0.33 },
+      { feature: 'Geographic Longitude', value: +0.12, direction: 'warming' as const, desc: 'Continental position gradient', domain: 'Geospatial', start: 0.33, end: 0.45 },
+      { feature: 'Built-Up Index (NDBI)', value: +0.10, direction: 'warming' as const, desc: 'Impervious masonry thermal retention', domain: 'Morphology', start: 0.45, end: 0.55 },
+      { feature: 'Vegetation Index (NDVI)', value: -0.07, direction: 'cooling' as const, desc: 'Evapotranspirative tree cooling', domain: 'Green Canopy', start: 0.55, end: 0.48 },
+      { feature: 'Other Biophysical Predictors', value: -0.05, direction: 'cooling' as const, desc: 'Remaining 37 features', domain: 'Aggregated', start: 0.48, end: netPredictedUhi },
+    ];
+
+    return {
+      city: 'Global 42-City Cohort',
+      scope: 'Global 42-City Cohort',
+      records_analyzed: 489,
+      base_expected: baseExpected,
+      net_predicted_uhi: netPredictedUhi,
+      mean_actual_uhi: 0.40,
+      top_drivers: topDrivers,
+      waterfall: { baseExpected, steps, finalPrediction: netPredictedUhi },
+      driver_cards: {
+        top_global: { title: 'Top Driver', name: topDrivers[0].label, val: `${topDrivers[0].mean_abs_shap.toFixed(4)} °C`, badge: `RANK #1 (${topDrivers[0].mean_abs_shap.toFixed(3)})` },
+        top_meteorology: { title: 'Top Meteorological Driver', name: 'Relative Humidity (%)', val: '0.3646 °C', badge: '0.365 °C' },
+        top_morphology: { title: 'Top Morphology Driver', name: 'Population Density', val: '0.1031 °C', badge: '0.103 °C' },
+        cooling_canopy: { title: 'Cooling Canopy Driver', name: 'Moisture Index (NDWI)', val: '0.1083 °C', badge: '0.108 °C' },
+      },
+      biophysical_insight: 'Across all 42 Global Metros (489 holdout test records), TreeSHAP attributions reveal that clear-sky thermal sensing pixel fidelity (0.4231 °C) and atmospheric relative humidity (0.3646 °C) form the primary universal axis controlling observed surface urban heat island intensity.',
+    };
+  }
+
+  // Individual City Mode
+  const city = INITIAL_CITIES.find((c) => c.city.toLowerCase() === norm) || INITIAL_CITIES[0];
+  const isArid = city.climate_group === 'Arid';
+  const isTropical = city.climate_group === 'Tropical';
+
+  // City-specific custom driver rankings
+  const topDrivers = isArid
+    ? [
+        { feature: 'Urban_Valid_LST_Pixel_Count', label: 'Urban Valid LST Pixel Count', mean_abs_shap: 0.4508, domain: 'Remote Sensing', impact: 'Direct satellite thermal detection fidelity' },
+        { feature: 'relative_humidity', label: 'Relative Humidity (%)', mean_abs_shap: 0.3374, domain: 'Meteorology', impact: 'Atmospheric boundary vapor thermal damping' },
+        { feature: 'latitude', label: 'Geographic Latitude', mean_abs_shap: 0.2579, domain: 'Geospatial', impact: 'Solar zenith angle and energy balance' },
+        { feature: 'relative_humidity_lag1', label: 'Relative Humidity (Lag 1M)', mean_abs_shap: 0.2482, domain: 'Temporal Memory', impact: 'Antecedent boundary-layer moisture persistence' },
+        { feature: 'Rural_Valid_LST_Pixel_Count', label: 'Rural Valid LST Pixel Count', mean_abs_shap: 0.1895, domain: 'Remote Sensing', impact: 'Rural background thermal baseline stability' },
+        { feature: 'population_density', label: 'Population Density', mean_abs_shap: 0.1876, domain: 'Morphology', impact: 'Anthropogenic heat emissions and compact fabric' },
+        { feature: 'ndbi', label: 'Built-Up Index (NDBI)', mean_abs_shap: 0.0975, domain: 'Morphology', impact: 'Direct sensible heat storage from impervious masonry' },
+        { feature: 'air_temperature', label: '2m Ambient Air Temp (°C)', mean_abs_shap: 0.0809, domain: 'Meteorology', impact: 'Background synoptic macroclimate temperature' },
+        { feature: 'longitude', label: 'Geographic Longitude', mean_abs_shap: 0.0800, domain: 'Geospatial', impact: 'Continental position vs maritime moderating influence' },
+        { feature: 'wind_speed', label: 'Wind Speed (m/s)', mean_abs_shap: 0.0767, domain: 'Meteorology', impact: 'Advective dispersion of urban canopy heat' },
+      ]
+    : isTropical
+    ? [
+        { feature: 'Urban_Valid_LST_Pixel_Count', label: 'Urban Valid LST Pixel Count', mean_abs_shap: 0.5210, domain: 'Remote Sensing', impact: 'Direct satellite thermal detection fidelity' },
+        { feature: 'relative_humidity', label: 'Relative Humidity (%)', mean_abs_shap: 0.3840, domain: 'Meteorology', impact: 'High atmospheric moisture damping UHI' },
+        { feature: 'total_precipitation', label: 'Total Precipitation (mm)', mean_abs_shap: 0.2190, domain: 'Meteorology', impact: 'Monsoonal evaporative cooling' },
+        { feature: 'relative_humidity_lag1', label: 'Relative Humidity (Lag 1M)', mean_abs_shap: 0.1950, domain: 'Temporal Memory', impact: 'Antecedent moisture boundary layer' },
+        { feature: 'Rural_Valid_LST_Pixel_Count', label: 'Rural Valid LST Pixel Count', mean_abs_shap: 0.1420, domain: 'Remote Sensing', impact: 'Rural background thermal baseline' },
+        { feature: 'longitude', label: 'Geographic Longitude', mean_abs_shap: 0.1280, domain: 'Geospatial', impact: 'Maritime proximity effect' },
+        { feature: 'ndvi', label: 'Vegetation Index (NDVI)', mean_abs_shap: 0.1190, domain: 'Green Canopy', impact: 'Dense tropical canopy evapotranspiration' },
+        { feature: 'ndbi', label: 'Built-Up Index (NDBI)', mean_abs_shap: 0.0980, domain: 'Morphology', impact: 'Concrete impervious heat dome' },
+        { feature: 'population_density', label: 'Population Density', mean_abs_shap: 0.0850, domain: 'Morphology', impact: 'High-density urban core heat' },
+        { feature: 'built_veg_ratio', label: 'Built-to-Vegetation Ratio', mean_abs_shap: 0.0760, domain: 'Morphology', impact: 'Built vs greenery imbalance' },
+      ]
+    : [
+        { feature: 'Urban_Valid_LST_Pixel_Count', label: 'Urban Valid LST Pixel Count', mean_abs_shap: 0.4870, domain: 'Remote Sensing', impact: 'Direct satellite thermal detection fidelity' },
+        { feature: 'longitude', label: 'Geographic Longitude', mean_abs_shap: 0.3548, domain: 'Geospatial', impact: 'Continental position vs maritime moderating influence' },
+        { feature: 'relative_humidity', label: 'Relative Humidity (%)', mean_abs_shap: 0.1807, domain: 'Meteorology', impact: 'Atmospheric boundary vapor thermal damping' },
+        { feature: 'relative_humidity_lag1', label: 'Relative Humidity (Lag 1M)', mean_abs_shap: 0.1483, domain: 'Temporal Memory', impact: 'Antecedent boundary-layer moisture persistence' },
+        { feature: 'Rural_Valid_LST_Pixel_Count', label: 'Rural Valid LST Pixel Count', mean_abs_shap: 0.1450, domain: 'Remote Sensing', impact: 'Rural background thermal baseline stability' },
+        { feature: 'latitude', label: 'Geographic Latitude', mean_abs_shap: 0.1162, domain: 'Geospatial', impact: 'Solar zenith angle and energy balance' },
+        { feature: 'solar_radiation', label: 'Surface Solar Radiation', mean_abs_shap: 0.1047, domain: 'Meteorology', impact: 'Seasonal shortwave insolation driver' },
+        { feature: 'ndbi', label: 'Built-Up Index (NDBI)', mean_abs_shap: 0.0978, domain: 'Morphology', impact: 'Impervious masonry heat retention' },
+        { feature: 'total_precipitation_lag1', label: 'Precipitation (Lag 1M)', mean_abs_shap: 0.0912, domain: 'Temporal Memory', impact: 'Soil moisture buffer persistence' },
+        { feature: 'population_density', label: 'Population Density', mean_abs_shap: 0.0568, domain: 'Morphology', impact: 'Urban compact heat emissions' },
+      ];
+
+  const netPredictedUhi = isArid ? 0.49 : isTropical ? 0.38 : 0.46;
+  const meanActualUhi = isArid ? 0.96 : isTropical ? 0.62 : 0.26;
+
+  // Realistic city waterfall steps
+  const steps = [
+    {
+      feature: topDrivers[0].label,
+      value: isArid ? +0.32 : isTropical ? -0.28 : +0.24,
+      direction: isArid ? ('warming' as const) : isTropical ? ('cooling' as const) : ('warming' as const),
+      desc: topDrivers[0].impact,
+      domain: topDrivers[0].domain,
+      start: 0.20,
+      end: isArid ? 0.52 : isTropical ? -0.08 : 0.44,
+    },
+    {
+      feature: topDrivers[1].label,
+      value: isArid ? +0.18 : isTropical ? +0.22 : -0.15,
+      direction: isArid ? ('warming' as const) : isTropical ? ('warming' as const) : ('cooling' as const),
+      desc: topDrivers[1].impact,
+      domain: topDrivers[1].domain,
+      start: isArid ? 0.52 : isTropical ? -0.08 : 0.44,
+      end: isArid ? 0.70 : isTropical ? 0.14 : 0.29,
+    },
+    {
+      feature: 'Built-Up Index (NDBI)',
+      value: isArid ? +0.12 : isTropical ? +0.15 : +0.11,
+      direction: 'warming' as const,
+      desc: 'Direct thermal absorption from impervious masonry surfaces',
+      domain: 'Morphology',
+      start: isArid ? 0.70 : isTropical ? 0.14 : 0.29,
+      end: isArid ? 0.82 : isTropical ? 0.29 : 0.40,
+    },
+    {
+      feature: 'Vegetation Index (NDVI)',
+      value: isArid ? -0.08 : isTropical ? -0.20 : -0.12,
+      direction: 'cooling' as const,
+      desc: 'Evaporative cooling from urban greenery and canopy cover',
+      domain: 'Green Canopy',
+      start: isArid ? 0.82 : isTropical ? 0.29 : 0.40,
+      end: isArid ? 0.74 : isTropical ? 0.09 : 0.28,
+    },
+    {
+      feature: 'Wind Speed',
+      value: -0.10,
+      direction: 'cooling' as const,
+      desc: 'Advective dispersion of urban boundary heat dome',
+      domain: 'Meteorology',
+      start: isArid ? 0.74 : isTropical ? 0.09 : 0.28,
+      end: isArid ? 0.64 : isTropical ? -0.01 : 0.18,
+    },
+    {
+      feature: 'Other Biophysical Predictors',
+      value: isArid ? -0.15 : isTropical ? +0.39 : +0.28,
+      direction: isArid ? ('cooling' as const) : ('warming' as const),
+      desc: 'Net cumulative attribution across remaining 37 features',
+      domain: 'Aggregated',
+      start: isArid ? 0.64 : isTropical ? -0.01 : 0.18,
+      end: netPredictedUhi,
+    },
+  ];
+
+  return {
+    city: city.city,
+    scope: city.city,
+    records_analyzed: 12,
+    base_expected: baseExpected,
+    net_predicted_uhi: netPredictedUhi,
+    mean_actual_uhi: meanActualUhi,
+    top_drivers: topDrivers,
+    waterfall: {
+      baseExpected,
+      steps,
+      finalPrediction: netPredictedUhi,
+    },
+    driver_cards: {
+      top_global: {
+        title: 'Top Driver',
+        name: topDrivers[0].label,
+        val: `${topDrivers[0].mean_abs_shap.toFixed(4)} °C`,
+        badge: `RANK #1 (${topDrivers[0].mean_abs_shap.toFixed(3)})`,
+      },
+      top_meteorology: {
+        title: 'Top Meteorological Driver',
+        name: topDrivers.find((d) => d.domain === 'Meteorology')?.label || 'Relative Humidity',
+        val: `${(topDrivers.find((d) => d.domain === 'Meteorology')?.mean_abs_shap || 0.35).toFixed(4)} °C`,
+        badge: `${(topDrivers.find((d) => d.domain === 'Meteorology')?.mean_abs_shap || 0.35).toFixed(3)} °C`,
+      },
+      top_morphology: {
+        title: 'Top Morphology Driver',
+        name: topDrivers.find((d) => d.domain === 'Morphology')?.label || 'Built-Up Index (NDBI)',
+        val: `${(topDrivers.find((d) => d.domain === 'Morphology')?.mean_abs_shap || 0.12).toFixed(4)} °C`,
+        badge: `${(topDrivers.find((d) => d.domain === 'Morphology')?.mean_abs_shap || 0.12).toFixed(3)} °C`,
+      },
+      cooling_canopy: {
+        title: 'Cooling Canopy Driver',
+        name: 'Vegetation Index (NDVI)',
+        val: `${(isTropical ? 0.1190 : isArid ? 0.0540 : 0.0780).toFixed(4)} °C`,
+        badge: `${(isTropical ? 0.119 : isArid ? 0.054 : 0.078).toFixed(3)} °C`,
+      },
+    },
+    biophysical_insight: `For ${city.city} (${city.climate_group}), TreeSHAP attribution demonstrates that ${topDrivers[0].label} is the primary driver (mean |SHAP| = ${topDrivers[0].mean_abs_shap.toFixed(4)} °C). Net model prediction indicates an average UHI intensity of +${netPredictedUhi.toFixed(2)} °C (baseline: +${baseExpected.toFixed(2)} °C). Built environment thermal accumulation is strongly modulated by ambient moisture and canopy cover.`,
+  };
+}
+
 export const TOP_SHAP_DRIVERS = [
   { feature: 'Urban_Valid_LST_Pixel_Count', label: 'Urban Valid LST Pixel Count', mean_abs_shap: 0.4231, domain: 'Remote Sensing', impact: 'High positive impact on UHI detection reliability' },
   { feature: 'relative_humidity', label: 'Relative Humidity (%)', mean_abs_shap: 0.3646, domain: 'Meteorology', impact: 'Strong negative interaction: dry air amplifies thermal storage' },

@@ -1,4 +1,4 @@
-﻿# Urban Heat Island (UHI) Project: Implementation Checklist
+# Urban Heat Island (UHI) Project: Implementation Checklist
 
 > **Scope**: 42 Global Cities (24 Indian + 18 International) | 2016–2025 | 10-Year Study  
 > **Target**: $\text{UHI Intensity} = \text{LST}_{\text{urban}} - \text{LST}_{\text{rural}}$  
@@ -395,3 +395,85 @@ TECH STACK SWAP: Streamlit -> React + Node.js + TypeScript + Tailwind + Anthropi
 6. Automated backend, frontend, and data-validation tests.
 7. Verified City Deep Dive page across representative Indian and international cities.
 8. Updated technical documentation.
+
+
+---
+
+## Phase 9: Dynamic, City-Specific & Region-Aware SHAP Explainability (Milestones 36–41)
+
+**Objective:** Upgrade the existing SHAP Interpretability page so that feature attributions dynamically respond to the selected city and geographical filters. Replace the current static global SHAP aggregation with context-aware SHAP analysis for individual cities, Indian cities, international cities, or the complete 42-city dataset.
+
+**Core Requirement:**
+
+The SHAP page must dynamically calculate and display feature importance based on the currently selected geographical scope. The same trained HistGradientBoosting champion model and TreeSHAP methodology should be used consistently across the different scopes.
+
+---
+
+- [x] **Milestone 36: SHAP Data Pipeline & Existing Implementation Audit**
+  - [x] Inspect the existing SHAP calculation and visualization pipeline.
+  - [x] Identify where SHAP values are generated, stored, aggregated, and passed to the frontend.
+  - [x] Investigate why the Top 10 Global Drivers chart remains unchanged when the selected metro changes.
+  - [x] Determine whether the current SHAP values are precomputed across all 504 test-month observations.
+  - [x] Verify how city identifiers, country names, and geographical classifications are represented in the SHAP input dataset.
+  - [x] Establish a reliable mapping of all 42 cities into Indian and international groups.
+  - [x] Verify that the SHAP dataset and prediction dataset use consistent city identifiers and observation indices.
+
+- [x] **Milestone 37: City-Specific SHAP Attribution**
+  - [x] Make SHAP calculations responsive to the selected metro.
+  - [x] When an individual city is selected, calculate feature attributions using observations belonging only to that city.
+  - [x] Generate the Top 10 feature importance ranking using the selected city's mean absolute SHAP values.
+  - [x] Update the SHAP waterfall attribution using the selected city's observations.
+  - [x] Ensure the expected baseline value and final prediction correspond to the selected city and observation.
+  - [x] Update the driver cards, feature rankings, and supporting biophysical insights based on the selected city.
+  - [x] Ensure that changing the selected city refreshes all relevant SHAP visualizations.
+
+- [x] **Milestone 38: India-Only SHAP Aggregation**
+  - [x] Introduce a geographical scope for Indian cities.
+  - [x] When the India-only scope is selected, aggregate SHAP values across the Indian cities in the dataset.
+  - [x] Calculate mean absolute SHAP values for every feature using only the selected geographical subset.
+  - [x] Generate a new Top 10 feature importance ranking for the Indian-city subset.
+  - [x] Update meteorological, urban morphology, remote sensing, and green canopy driver summaries.
+  - [x] Ensure that international-city observations are excluded from the India-only aggregation.
+
+- [x] **Milestone 39: International-Only SHAP Aggregation**
+  - [x] Introduce a geographical scope for international cities.
+  - [x] When the international-only scope is selected, aggregate SHAP values across international cities in the dataset.
+  - [x] Calculate mean absolute SHAP values using only international-city observations.
+  - [x] Generate an independent Top 10 feature importance ranking for the international subset.
+  - [x] Update the driver cards and biophysical interpretation based on international-city SHAP results.
+  - [x] Ensure that Indian-city observations are excluded from the international-only aggregation.
+
+- [x] **Milestone 40: Combined Global SHAP Aggregation**
+  - [x] Support simultaneous selection of Indian and international cities.
+  - [x] When both geographical groups are selected, aggregate SHAP values across all 42 cities.
+  - [x] Reproduce the complete-dataset global SHAP ranking.
+  - [x] Ensure that the global result uses the same observation population and aggregation methodology as the selected geographical scope.
+  - [x] Allow the user to compare global, India-only, and international-only feature importance.
+  - [x] Verify that the combined result is consistent with the global SHAP analysis when all cities are included.
+
+- [x] **Milestone 41: Dynamic SHAP Dashboard Integration & Validation**
+  - [x] Integrate geographical scope selection into the existing SHAP page.
+  - [x] Ensure the selected metro and geographical scope are reflected in the visualization titles and labels.
+  - [x] Update the Top 10 Global Drivers chart to display context-aware feature importance.
+  - [x] Update the SHAP waterfall attribution and expected baseline according to the selected city or aggregation context.
+  - [x] Dynamically update the driver ranking cards and biophysical insights.
+  - [x] Display the number of cities and observations included in the current SHAP calculation.
+  - [x] Add loading, empty-data, and calculation-error states.
+  - [x] Prevent stale SHAP results from remaining visible after changing the geographical selection.
+  - [x] Test city-specific SHAP calculations using representative Indian and international cities.
+  - [x] Verify India-only, international-only, and combined 42-city results independently.
+  - [x] Confirm that changing geographical scope genuinely changes the underlying SHAP aggregation rather than merely changing chart labels.
+  - [x] Validate the SHAP outputs against independently calculated TreeSHAP values.
+  - [x] Ensure that the existing SHAP page layout, accessibility, and responsive behaviour are preserved.
+
+---
+
+**Expected Deliverables:**
+1. Dynamic city-specific SHAP explanations.
+2. India-only aggregated SHAP feature importance.
+3. International-only aggregated SHAP feature importance.
+4. Combined global SHAP feature importance across all 42 cities.
+5. Context-aware waterfall attribution and driver cards.
+6. Dynamic geographical filtering and visualization updates.
+7. Validated SHAP calculations and regression tests.
+8. Updated biophysical interpretation based on the selected geographical scope.

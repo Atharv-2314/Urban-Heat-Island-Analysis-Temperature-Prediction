@@ -4,6 +4,7 @@
 import { cacheService } from '../services/cache';
 import { REPORT_PATHS, DATA_PATHS, loadJsonReport, readParquet } from '../services/dataLoader';
 import { normalizeMonthlyRecord } from '../routes/monthly';
+import { computeShapAttribution, INDIAN_CITIES } from '../routes/models';
 import fs from 'fs';
 
 describe('Server Architecture & Data Serving Layer', () => {
@@ -167,6 +168,92 @@ describe('Server Architecture & Data Serving Layer', () => {
       const meanUhi = validUhis.reduce((a, b) => a + b, 0) / validUhis.length;
       expect(meanUhi).toBeGreaterThanOrEqual(config.expectedMeanRange[0]);
       expect(meanUhi).toBeLessThanOrEqual(config.expectedMeanRange[1]);
+    }
+  }, 30000);
+
+  test('Milestone 37: City-specific SHAP attribution computation produces responsive rankings and closed waterfall', async () => {
+    const delhiRecords = await readParquet<Record<string, any>>(DATA_PATHS.shapValues, {
+      filters: { city: 'delhi' },
+    });
+    expect(delhiRecords.length).toBe(11);
+
+    const delhiShap = computeShapAttribution(delhiRecords, 'Delhi');
+    expect(delhiShap.city).toBe('Delhi');
+    expect(delhiShap.records_analyzed).toBe(11);
+    expect(delhiShap.top_drivers.length).toBe(10);
+    expect(delhiShap.base_expected).toBeCloseTo(0.2019, 3);
+    expect(delhiShap.waterfall.steps.length).toBeGreaterThan(0);
+    expect(delhiShap.net_predicted_uhi).toBeCloseTo(0.12, 1);
+
+    const ahmedabadRecords = await readParquet<Record<string, any>>(DATA_PATHS.shapValues, {
+      filters: { city: 'ahmedabad' },
+    });
+    const ahmedabadShap = computeShapAttribution(ahmedabadRecords, 'Ahmedabad');
+    expect(ahmedabadShap.city).toBe('Ahmedabad');
+    expect(ahmedabadShap.records_analyzed).toBe(12);
+    expect(ahmedabadShap.top_drivers[0].feature).toBe('Urban_Valid_LST_Pixel_Count');
+    expect(ahmedabadShap.net_predicted_uhi).toBeCloseTo(0.49, 1);
+
+    // Verify distinct drivers between Delhi and Ahmedabad
+    expect(delhiShap.top_drivers[0].feature).not.toBe(ahmedabadShap.top_drivers[0].feature);
+  }, 30000);
+
+  test('Milestones 38-40: Dynamic Regional & Combined Global SHAP Aggregations', async () => {
+    const allRecords = await readParquet<Record<string, any>>(DATA_PATHS.shapValues);
+    expect(allRecords.length).toBe(489);
+
+    // Milestone 38: India-only aggregation (24 metros, 278 observations)
+    const indiaRecords = allRecords.filter((r) => INDIAN_CITIES.has(String(r.city).toLowerCase()));
+    expect(indiaRecords.length).toBe(278);
+    const indiaShap = computeShapAttribution(indiaRecords, 'Indian Cities Cohort (24 Metros)');
+    expect(indiaShap.records_analyzed).toBe(278);
+    expect(indiaShap.top_drivers.length).toBe(10);
+    expect(indiaShap.top_drivers[0].feature).toBe('Urban_Valid_LST_Pixel_Count');
+    expect(indiaShap.top_drivers[1].feature).toBe('relative_humidity');
+    expect(indiaShap.top_drivers[1].mean_abs_shap).toBeCloseTo(0.391, 2);
+    expect(indiaShap.net_predicted_uhi).toBeCloseTo(0.28, 2);
+
+    // Milestone 39: International-only aggregation (18 metros, 211 observations)
+    const intlRecords = allRecords.filter((r) => !INDIAN_CITIES.has(String(r.city).toLowerCase()));
+    expect(intlRecords.length).toBe(211);
+    const intlShap = computeShapAttribution(intlRecords, 'International Cities Cohort (18 Metros)');
+    expect(intlShap.records_analyzed).toBe(211);
+    expect(intlShap.top_drivers.length).toBe(10);
+    expect(intlShap.top_drivers[0].feature).toBe('Urban_Valid_LST_Pixel_Count');
+    expect(intlShap.top_drivers[1].feature).toBe('relative_humidity');
+    expect(intlShap.top_drivers[2].feature).toBe('longitude');
+    expect(intlShap.net_predicted_uhi).toBeCloseTo(0.63, 2);
+
+    // Verify mutual exclusion and complete partitioning
+    expect(indiaRecords.length + intlRecords.length).toBe(489);
+    for (const r of indiaRecords) {
+      expect(INDIAN_CITIES.has(String(r.city).toLowerCase())).toBe(true);
+    }
+    for (const r of intlRecords) {
+      expect(INDIAN_CITIES.has(String(r.city).toLowerCase())).toBe(false);
+    }
+
+    // Milestone 40: Combined Global aggregation (42 metros, 489 observations)
+    const globalShap = computeShapAttribution(allRecords, 'Global 42-City Cohort');
+    expect(globalShap.records_analyzed).toBe(489);
+    expect(globalShap.top_drivers.length).toBe(10);
+    expect(globalShap.top_drivers[0].feature).toBe('Urban_Valid_LST_Pixel_Count');
+    expect(globalShap.top_drivers[0].mean_abs_shap).toBeCloseTo(0.4231, 2);
+    expect(globalShap.top_drivers[1].feature).toBe('relative_humidity');
+    expect(globalShap.top_drivers[1].mean_abs_shap).toBeCloseTo(0.3646, 2);
+    expect(globalShap.top_drivers[2].feature).toBe('longitude');
+    expect(globalShap.top_drivers[2].mean_abs_shap).toBeCloseTo(0.2901, 2);
+    expect(globalShap.top_drivers[3].feature).toBe('relative_humidity_lag1');
+    expect(globalShap.top_drivers[3].mean_abs_shap).toBeCloseTo(0.2214, 2);
+    expect(globalShap.top_drivers[4].feature).toBe('Rural_Valid_LST_Pixel_Count');
+    expect(globalShap.top_drivers[4].mean_abs_shap).toBeCloseTo(0.1501, 2);
+    expect(globalShap.net_predicted_uhi).toBeCloseTo(0.43, 2);
+
+    // Verify waterfall additive closure across scopes
+    for (const res of [indiaShap, intlShap, globalShap]) {
+      expect(res.waterfall.baseExpected).toBeCloseTo(0.2019, 3);
+      const last = res.waterfall.steps[res.waterfall.steps.length - 1];
+      expect(last.end).toBeCloseTo(res.waterfall.finalPrediction, 1);
     }
   }, 30000);
 

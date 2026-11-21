@@ -67,9 +67,17 @@ export async function fetchRiskScores(): Promise<RiskScore[]> {
   return data.data ?? [];
 }
 
-export async function fetchShapData(city?: string): Promise<Record<string, unknown>> {
-  const params = city ? { city } : {};
-  const { data } = await client.get<ApiResponse<Record<string, unknown>>>('/models/shap', { params });
+export async function fetchShapData(
+  params?: { city?: string; scope?: string } | string
+): Promise<Record<string, any>> {
+  let queryParams: Record<string, string> = {};
+  if (typeof params === 'string') {
+    queryParams = { city: params };
+  } else if (params) {
+    if (params.city) queryParams.city = params.city;
+    if (params.scope) queryParams.scope = params.scope;
+  }
+  const { data } = await client.get<ApiResponse<Record<string, any>>>('/models/shap', { params: queryParams });
   return data.data ?? {};
 }
 

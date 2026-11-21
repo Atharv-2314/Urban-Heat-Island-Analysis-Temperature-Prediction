@@ -6,7 +6,7 @@ import { render, screen } from '@testing-library/react';
 import { MetricCard } from '../components/MetricCard';
 import { StatusBadge } from '../components/StatusBadge';
 import { PageHeader } from '../components/PageHeader';
-import { INITIAL_CITIES, INITIAL_MODEL_METRICS } from '../lib/mockData';
+import { INITIAL_CITIES, INITIAL_MODEL_METRICS, generateCityShapMock } from '../lib/mockData';
 import { getUhiViridisColor, getAccessibleTextColor } from '../lib/palette';
 
 describe('Frontend UI Component Library & Accessibility Tests', () => {
@@ -395,5 +395,70 @@ describe('Frontend UI Component Library & Accessibility Tests', () => {
     expect(safeMapped[1].uhi).toBeNull();
     expect(safeMapped[1].lst_urban).toBeNull();
     expect(safeMapped[1].lst_rural).toBeNull();
+  });
+
+  it('validates city-specific dynamic TreeSHAP attribution and waterfall closure (Milestone 37)', () => {
+    const aridShap = generateCityShapMock('Ahmedabad');
+    const tropicalShap = generateCityShapMock('Mumbai');
+    const temperateShap = generateCityShapMock('London');
+
+    // 1. Verify city metadata and scope
+    expect(aridShap.city).toBe('Ahmedabad');
+    expect(tropicalShap.city).toBe('Mumbai');
+    expect(temperateShap.city).toBe('London');
+
+    // 2. Verify top 10 drivers are present and sorted descending by mean |SHAP|
+    expect(aridShap.top_drivers.length).toBe(10);
+    expect(tropicalShap.top_drivers.length).toBe(10);
+    for (let i = 0; i < aridShap.top_drivers.length - 1; i++) {
+      expect(aridShap.top_drivers[i].mean_abs_shap).toBeGreaterThanOrEqual(aridShap.top_drivers[i + 1].mean_abs_shap);
+    }
+
+    // 3. Verify driver differences between climates
+    expect(aridShap.top_drivers[0].mean_abs_shap).not.toBe(tropicalShap.top_drivers[0].mean_abs_shap);
+    expect(aridShap.driver_cards.top_global.name).toBe(aridShap.top_drivers[0].label);
+
+    // 4. Verify waterfall additive closure: steps start at baseline and reach final prediction
+    expect(aridShap.waterfall.baseExpected).toBeCloseTo(0.2019, 2);
+    const lastStep = aridShap.waterfall.steps[aridShap.waterfall.steps.length - 1];
+    expect(lastStep.end).toBeCloseTo(aridShap.waterfall.finalPrediction, 1);
+
+    // 5. Verify biophysical insights are customized per city
+    expect(aridShap.biophysical_insight).toContain('Ahmedabad');
+    expect(tropicalShap.biophysical_insight).toContain('Mumbai');
+  });
+
+  it('validates regional (India-only, Intl-only) and combined global SHAP aggregations (Milestones 38, 39, 40)', () => {
+    const indiaShap = generateCityShapMock('india');
+    const intlShap = generateCityShapMock('international');
+    const globalShap = generateCityShapMock('global');
+
+    // 1. Observation population
+    expect(indiaShap.records_analyzed).toBe(278);
+    expect(intlShap.records_analyzed).toBe(211);
+    expect(globalShap.records_analyzed).toBe(489);
+    expect(indiaShap.records_analyzed + intlShap.records_analyzed).toBe(489);
+
+    // 2. India-only: relative humidity has higher impact (0.3910 vs 0.3298 in intl)
+    const indiaRh = indiaShap.top_drivers.find((d: any) => d.feature === 'relative_humidity');
+    const intlRh = intlShap.top_drivers.find((d: any) => d.feature === 'relative_humidity');
+    expect(indiaRh?.mean_abs_shap).toBeGreaterThan(intlRh?.mean_abs_shap || 0);
+
+    // 3. International: longitude has higher impact (0.3266 vs 0.2623 in india)
+    const indiaLon = indiaShap.top_drivers.find((d: any) => d.feature === 'longitude');
+    const intlLon = intlShap.top_drivers.find((d: any) => d.feature === 'longitude');
+    expect(intlLon?.mean_abs_shap).toBeGreaterThan(indiaLon?.mean_abs_shap || 0);
+
+    // 4. Combined Global reproduces exact benchmarks
+    expect(globalShap.top_drivers[0].mean_abs_shap).toBeCloseTo(0.4231, 3);
+    expect(globalShap.top_drivers[1].mean_abs_shap).toBeCloseTo(0.3646, 3);
+    expect(globalShap.waterfall.finalPrediction).toBeCloseTo(0.43, 2);
+
+    // 5. All waterfalls start at baseline 0.2019 and reach net predicted UHI
+    for (const s of [indiaShap, intlShap, globalShap]) {
+      expect(s.waterfall.baseExpected).toBeCloseTo(0.2019, 2);
+      const lastStep = s.waterfall.steps[s.waterfall.steps.length - 1];
+      expect(lastStep.end).toBeCloseTo(s.waterfall.finalPrediction, 1);
+    }
   });
 });
