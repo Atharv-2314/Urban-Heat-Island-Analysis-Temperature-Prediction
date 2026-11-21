@@ -16,20 +16,25 @@ export interface MonthlyDataRecord {
   city: string;
   year: number;
   month: number;
-  uhi_intensity: number;
-  lst_urban: number;
-  lst_rural: number;
-  ndvi: number;
-  ndbi: number;
-  ndwi: number;
-  temperature_2m: number;
+  uhi_intensity: number | null;
+  lst_urban: number | null;
+  lst_rural: number | null;
+  ndvi: number | null;
+  ndbi: number | null;
+  ndwi: number | null;
+  temperature_2m: number | null;
   relative_humidity: number;
   wind_speed: number;
   total_precipitation: number;
-  cloud_cover?: number;
+  cloud_cover?: number | null;
   climate_group: string;
   latitude: number;
   longitude: number;
+  // Aliases for backwards and cross compatibility
+  uhi?: number | null;
+  lst?: number | null;
+  rural_lst?: number | null;
+  air_temperature?: number | null;
 }
 
 export interface ModelMetrics {

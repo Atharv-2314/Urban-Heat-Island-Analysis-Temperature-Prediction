@@ -1,4 +1,4 @@
-# Urban Heat Island (UHI) Project: Implementation Checklist
+﻿# Urban Heat Island (UHI) Project: Implementation Checklist
 
 > **Scope**: 42 Global Cities (24 Indian + 18 International) | 2016–2025 | 10-Year Study  
 > **Target**: $\text{UHI Intensity} = \text{LST}_{\text{urban}} - \text{LST}_{\text{rural}}$  
@@ -286,3 +286,112 @@ TECH STACK SWAP: Streamlit -> React + Node.js + TypeScript + Tailwind + Anthropi
 5. Fixed-split versus rolling-window comparative report.
 6. Dedicated Temporal Robustness dashboard page.
 7. Updated methodology and research documentation.
+
+---
+
+## Phase 8: City Deep Dive Page — Data Integrity & Visualization Repair (Milestones 30–35)
+
+**Objective:** Resolve the data-flow and schema inconsistencies affecting the City Deep Dive page. Restore the 10-year surface temperature and UHI time series, the 10-year climatological seasonal cycle, and the heatwave anomaly matrix. Ensure that the backend data, frontend transformations, and visualization components use a consistent and validated data structure.
+
+**Scope:**
+- Repair the existing City Deep Dive implementation without rebuilding the page.
+- Preserve the existing dataset, city coverage, historical period (2016–2025), and visualization layout wherever possible.
+- Address the identified backend–frontend schema mismatch.
+- Ensure missing and invalid observations are handled explicitly rather than silently converted into misleading values.
+- Add tests to prevent the same issues from recurring.
+
+---
+
+- [x] **Milestone 30: Backend–Frontend Data Contract Alignment**
+  - [x] Inspect the complete data flow from `data/processed/monthly_level/uhi_monthly_clean.parquet` to the City Deep Dive frontend.
+  - [x] Verify the actual schema and data types of the monthly Parquet dataset.
+  - [x] Inspect the response structure of `GET /api/monthly/city/:cityName`.
+  - [x] Reconcile the backend response keys with the frontend `MonthlyDataRecord` interface.
+  - [x] Resolve the identified naming inconsistencies:
+    - `uhi` vs. `uhi_intensity`
+    - `lst` vs. `lst_urban`
+    - `rural_lst` vs. `lst_rural`
+    - `air_temperature` vs. `temperature_2m`
+  - [x] Verify that the API returns the expected fields for every supported city.
+  - [x] Check that `year` and `month` are consistently represented as valid numeric values.
+  - [x] Verify that missing values, nulls, and non-finite numeric values are handled consistently during serialization.
+  - [x] Confirm that the frontend receives the expected records rather than falling back to mock data or an incompatible response structure.
+
+- [x] **Milestone 31: Repair the 10-Year Surface Temperature and UHI Time Series**
+  - [x] Inspect the `chartData` transformation in `CityDeepDive.tsx`.
+  - [x] Ensure that UHI intensity and urban/rural land surface temperature values are mapped from the correct API fields.
+  - [x] Verify that the time-series records are chronologically ordered by year and month.
+  - [x] Check for duplicate months, missing months, and invalid observations.
+  - [x] Verify that the chart receives valid numerical values for its configured data keys.
+  - [x] Inspect the Recharts `LineChart`, `Line`, axes, and tooltip configurations.
+  - [x] Ensure that missing observations do not cause the entire chart or unrelated series to disappear.
+  - [x] Verify that urban LST, rural LST, and UHI intensity are represented using appropriate axes and units.
+  - [x] Test the visualization using multiple cities, including cities with incomplete monthly observations.
+  - [x] Confirm that the graph displays the expected historical time series across the available 10-year period.
+
+- [x] **Milestone 32: Repair the 10-Year Climatological Seasonal Cycle**
+  - [x] Inspect the `seasonalProfile` aggregation logic in `CityDeepDive.tsx`.
+  - [x] Verify that all available years are grouped into the correct calendar-month buckets.
+  - [x] Ensure that UHI, urban LST, and rural LST values are read from the correct fields.
+  - [x] Investigate how null, undefined, and non-finite values affect monthly averages.
+  - [x] Verify that monthly averages are calculated using valid observations rather than invalid values.
+  - [x] Check that months with insufficient or unavailable observations are represented explicitly.
+  - [x] Verify that the aggregation produces the expected 12 monthly seasonal entries.
+  - [x] Inspect the Recharts `BarChart` and its configured data keys.
+  - [x] Confirm that the seasonal cycle displays meaningful monthly averages for UHI and surface temperature.
+  - [x] Validate the seasonal profile against independently calculated monthly summaries from the underlying dataset.
+
+- [x] **Milestone 33: Repair the Heatwave Anomaly Matrix**
+  - [x] Trace the anomaly calculation from the monthly API records to the rendered matrix.
+  - [x] Resolve the incorrect UHI field access responsible for the invalid overall mean.
+  - [x] Verify the calculation of the overall UHI baseline used by the anomaly matrix.
+  - [x] Inspect the handling of missing monthly observations during baseline calculation.
+  - [x] Verify that the anomaly for each year-month cell is calculated relative to the intended baseline.
+  - [x] Check whether the baseline should be city-wide across the full study period or based on a different explicitly defined reference period; document the selected methodology.
+  - [x] Investigate whether missing records, incomplete months, or invalid values are incorrectly converted into zero.
+  - [x] Ensure that unavailable observations remain distinguishable from genuine zero anomalies.
+  - [x] Verify that valid anomaly values remain finite throughout the calculation and formatting process.
+  - [x] Inspect the matrix's colour-scale logic, cell formatting, and tooltip values.
+  - [x] Confirm that positive, negative, zero, and missing anomalies are represented correctly.
+  - [x] Validate selected anomaly cells against manually calculated values from the source dataset.
+
+- [x] **Milestone 34: Frontend Rendering, Loading & Error-State Validation**
+  - [x] Inspect the three visualization components for assumptions about non-empty datasets.
+  - [x] Verify that Recharts receives the expected array structure and numerical data keys.
+  - [x] Check whether chart rendering is affected by `undefined`, `null`, `NaN`, or infinite values.
+  - [x] Verify the page's loading, API-error, empty-data, and partial-data states.
+  - [x] Ensure that an unavailable metric does not unnecessarily hide other valid metrics.
+  - [x] Verify that changing the selected city triggers the correct API request and refreshes all three visualizations.
+  - [x] Check that stale data from a previously selected city is not displayed after a new request.
+  - [x] Verify responsive rendering and chart dimensions across supported screen sizes.
+  - [x] Confirm that the page does not silently display mock or stale data when the live API fails.
+
+- [x] **Milestone 35: Regression Testing & City Deep Dive Release Validation**
+  - [x] Add backend tests for the monthly city API response schema.
+  - [x] Add data-validation tests for required columns, data types, date fields, and numeric values.
+  - [x] Add tests for chronological sorting and monthly aggregation.
+  - [x] Add tests for seasonal averages, including months with missing observations.
+  - [x] Add tests for anomaly baseline calculations and missing-value handling.
+  - [x] Add frontend tests verifying that the three visualizations receive valid datasets.
+  - [x] Test the complete City Deep Dive data flow using representative cities:
+    - Delhi
+    - Ahmedabad
+    - Bengaluru
+    - At least one international city
+  - [x] Verify that all three visualizations work for cities with complete and incomplete historical records.
+  - [x] Compare displayed values with independently calculated summaries from the cleaned Parquet dataset.
+  - [x] Run the existing application regression tests to ensure other dashboard pages remain unaffected.
+  - [x] Update project documentation with the resolved schema contract and visualization data requirements.
+  - [x] Record the validation results and mark the City Deep Dive repair as complete only after all three visualizations pass.
+
+---
+
+**Expected Deliverables:**
+1. Consistent and validated backend–frontend monthly data contract.
+2. Restored 10-year surface temperature and UHI time-series visualization.
+3. Restored 10-year climatological seasonal-cycle visualization.
+4. Correctly calculated and rendered heatwave anomaly matrix.
+5. Explicit missing-data and invalid-value handling.
+6. Automated backend, frontend, and data-validation tests.
+7. Verified City Deep Dive page across representative Indian and international cities.
+8. Updated technical documentation.

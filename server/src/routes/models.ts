@@ -171,7 +171,7 @@ router.get('/rolling/robustness', (_req: Request, res: Response, next: NextFunct
 /** GET /api/models/rolling/export/:type — Export CSV files for rolling metrics, comparisons, or predictions */
 router.get('/rolling/export/:type', (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { type } = req.params;
+    const type = String(req.params.type);
     const fileMap: Record<string, string> = {
       'metrics': 'rolling_evaluation_metrics.csv',
       'stability': 'rolling_stability_summary.csv',

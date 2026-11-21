@@ -103,11 +103,14 @@ import pandas as pd, json, sys
 try:
     df = pd.read_parquet(r"${escapedPath}", engine="pyarrow"${options.columns ? `, columns=${cols}` : ''})
     
-    # Apply equality filters
+    # Apply equality filters (case-insensitive for string columns)
     filter_dict = ${filters}
     for col, val in filter_dict.items():
         if col in df.columns:
-            df = df[df[col] == val]
+            if isinstance(val, str) and (df[col].dtype == object or str(df[col].dtype).startswith('str')):
+                df = df[df[col].astype(str).str.lower() == str(val).lower()]
+            else:
+                df = df[df[col] == val]
     
     # Pagination
     offset = ${offset}
@@ -118,7 +121,7 @@ try:
         df = df.iloc[:int(limit)]
     
     # Round floats to 4 decimals for compact JSON
-    float_cols = df.select_dtypes(include='float').columns
+    float_cols = df.select_dtypes(include=['float', 'float32', 'float64']).columns
     df[float_cols] = df[float_cols].round(4)
     
     print(df.to_json(orient='records', date_format='iso'))

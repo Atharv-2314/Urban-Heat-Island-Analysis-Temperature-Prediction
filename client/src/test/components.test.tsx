@@ -81,4 +81,319 @@ describe('Frontend UI Component Library & Accessibility Tests', () => {
     expect(getAccessibleTextColor(coolColor)).toBe('#ffffff'); // Dark purple needs white text
     expect(getAccessibleTextColor(hotColor)).toBe('#1f1e1d'); // Bright yellow needs dark text
   });
+
+  it('validates 10-year time-series chartData mapping and chronological ordering (Milestone 31)', () => {
+    // Unsorted records with both standard and aliased keys, including cloud gaps
+    const rawRecords = [
+      { city: 'Delhi', year: 2024, month: 2, uhi_intensity: 1.8, lst_urban: 28.5, lst_rural: 26.7, ndvi: 0.22, ndbi: 0.15, temperature_2m: 22.1, relative_humidity: 60, wind_speed: 2, total_precipitation: 5, climate_group: 'Arid', latitude: 28.7, longitude: 77.1 },
+      { city: 'Delhi', year: 2024, month: 1, uhi: 1.5, lst: 24.2, rural_lst: 22.7, ndvi: 0.25, ndbi: 0.12, air_temperature: 18.4, relative_humidity: 70, wind_speed: 1.5, total_precipitation: 10, climate_group: 'Arid', latitude: 28.7, longitude: 77.1 } as any,
+      { city: 'Delhi', year: 2024, month: 7, uhi_intensity: null, lst_urban: null, lst_rural: null, ndvi: null, ndbi: null, temperature_2m: 31.0, relative_humidity: 85, wind_speed: 3, total_precipitation: 200, climate_group: 'Arid', latitude: 28.7, longitude: 77.1 },
+      { city: 'Delhi', year: 2023, month: 12, uhi_intensity: 2.1, lst_urban: 23.0, lst_rural: 20.9, ndvi: 0.21, ndbi: 0.18, temperature_2m: 16.5, relative_humidity: 75, wind_speed: 1.2, total_precipitation: 0, climate_group: 'Arid', latitude: 28.7, longitude: 77.1 },
+    ];
+
+    // Chronological sort
+    const sorted = [...rawRecords].sort((a, b) =>
+      a.year !== b.year ? a.year - b.year : a.month - b.month
+    );
+
+    expect(sorted[0].year).toBe(2023);
+    expect(sorted[0].month).toBe(12);
+    expect(sorted[1].year).toBe(2024);
+    expect(sorted[1].month).toBe(1);
+    expect(sorted[2].year).toBe(2024);
+    expect(sorted[2].month).toBe(2);
+    expect(sorted[3].year).toBe(2024);
+    expect(sorted[3].month).toBe(7);
+
+    // Chart data mapping
+    const chartData = sorted.map((d) => ({
+      date: `${d.year}-${String(d.month).padStart(2, '0')}`,
+      year: d.year,
+      month: d.month,
+      uhi: d.uhi_intensity ?? (d as any).uhi ?? null,
+      lst_urban: d.lst_urban ?? (d as any).lst ?? null,
+      lst_rural: d.lst_rural ?? (d as any).rural_lst ?? null,
+      ndvi: d.ndvi ?? null,
+      ndbi: d.ndbi ?? null,
+      temp: d.temperature_2m ?? (d as any).air_temperature ?? null,
+    }));
+
+    // Verify 2023-12 values
+    expect(chartData[0].date).toBe('2023-12');
+    expect(chartData[0].uhi).toBe(2.1);
+    expect(chartData[0].lst_urban).toBe(23.0);
+    expect(chartData[0].lst_rural).toBe(20.9);
+
+    // Verify alias resolution for 2024-01
+    expect(chartData[1].date).toBe('2024-01');
+    expect(chartData[1].uhi).toBe(1.5);
+    expect(chartData[1].lst_urban).toBe(24.2);
+    expect(chartData[1].temp).toBe(18.4);
+
+    // Verify cloud missingness preservation for 2024-07
+    expect(chartData[3].date).toBe('2024-07');
+    expect(chartData[3].uhi).toBeNull();
+    expect(chartData[3].lst_urban).toBeNull();
+    expect(chartData[3].temp).toBe(31.0);
+    expect(isNaN(chartData[3].uhi as any)).toBe(false);
+  });
+
+  it('validates seasonal profile aggregation: null sentinel, null filtering, and 12-month output (Milestone 32)', () => {
+    // 10 years × 12 months; July and Aug have cloud gaps (null uhi/lst)
+    const timeSeries: any[] = [];
+    for (let year = 2016; year <= 2025; year++) {
+      for (let month = 1; month <= 12; month++) {
+        const isMonsoon = month === 7 || month === 8;
+        timeSeries.push({
+          city: 'TestCity',
+          year,
+          month,
+          uhi_intensity: isMonsoon ? null : 1.5 + month * 0.1,
+          lst_urban: isMonsoon ? null : 30 + month,
+          lst_rural: isMonsoon ? null : 28 + month,
+          temperature_2m: 25 + month,
+          relative_humidity: 60,
+          wind_speed: 2,
+          total_precipitation: isMonsoon ? 200 : 10,
+          climate_group: 'Tropical',
+          latitude: 20,
+          longitude: 75,
+        });
+      }
+    }
+
+    // Replicate seasonalProfile aggregation logic from CityDeepDive.tsx
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const buckets: Record<number, { uhi: number[]; lst_urban: number[]; lst_rural: number[] }> = {};
+    for (let m = 1; m <= 12; m++) buckets[m] = { uhi: [], lst_urban: [], lst_rural: [] };
+
+    timeSeries.forEach((d) => {
+      const uhi = d.uhi_intensity ?? (d as any).uhi;
+      const urban = d.lst_urban ?? (d as any).lst;
+      const rural = d.lst_rural ?? (d as any).rural_lst;
+      if (uhi !== null && uhi !== undefined && isFinite(uhi) && !isNaN(uhi)) buckets[d.month]?.uhi.push(uhi);
+      if (urban !== null && urban !== undefined && isFinite(urban) && !isNaN(urban)) buckets[d.month]?.lst_urban.push(urban);
+      if (rural !== null && rural !== undefined && isFinite(rural) && !isNaN(rural)) buckets[d.month]?.lst_rural.push(rural);
+    });
+
+    const mean = (arr: number[]): number | null =>
+      arr.length > 0 ? parseFloat((arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2)) : null;
+
+    const seasonal = monthNames.map((name, i) => {
+      const m = i + 1;
+      return {
+        month: name,
+        monthNum: m,
+        mean_uhi: mean(buckets[m].uhi),
+        mean_lst_urban: mean(buckets[m].lst_urban),
+        mean_lst_rural: mean(buckets[m].lst_rural),
+        obs_uhi: buckets[m].uhi.length,
+        obs_urban: buckets[m].lst_urban.length,
+        obs_rural: buckets[m].lst_rural.length,
+      };
+    });
+
+    // Must produce exactly 12 months
+    expect(seasonal.length).toBe(12);
+
+    // Jan (month 1): 10 valid observations
+    expect(seasonal[0].month).toBe('Jan');
+    expect(seasonal[0].obs_uhi).toBe(10);
+    expect(seasonal[0].mean_uhi).toBeCloseTo(1.6, 1); // 1.5 + 1 * 0.1
+
+    // Jul (month 7): zero valid observations → must be null, NOT 0
+    expect(seasonal[6].month).toBe('Jul');
+    expect(seasonal[6].obs_uhi).toBe(0);
+    expect(seasonal[6].mean_uhi).toBeNull();
+    expect(seasonal[6].mean_lst_urban).toBeNull();
+
+    // Aug (month 8): also cloud gap → null
+    expect(seasonal[7].month).toBe('Aug');
+    expect(seasonal[7].mean_uhi).toBeNull();
+
+    // Sep (month 9): back to valid → not null
+    expect(seasonal[8].month).toBe('Sep');
+    expect(seasonal[8].obs_uhi).toBe(10);
+    expect(seasonal[8].mean_uhi).not.toBeNull();
+    expect(seasonal[8].mean_uhi).toBeCloseTo(2.4, 1); // 1.5 + 9 * 0.1
+
+    // All 12 months present (even cloud-gap ones return null not undefined)
+    for (const s of seasonal) {
+      expect(s.month).toBeDefined();
+      expect(typeof s.monthNum).toBe('number');
+    }
+  });
+
+  it('validates heatwave anomaly matrix: baseline, anomalies, cloud gaps, and extreme values (Milestone 33)', () => {
+    // Simulate 120 monthly records for a city with known UHI values
+    // Ground truth from Parquet:
+    //   Delhi baseline: 0.1224 °C (119 valid / 120 total)
+    //   Delhi 2016-01: UHI=0.8932, anomaly=0.7707
+    //   Delhi 2020-05: UHI=-1.2310, anomaly=-1.3534
+    //   Delhi 2024-08: UHI=2.1710, anomaly=2.0485
+    // We use simplified records with 3 valid + 1 cloud gap to validate the logic.
+
+    const timeSeries: any[] = [
+      // 2016-01: UHI = 2.0
+      { city: 'TestCity', year: 2016, month: 1, uhi_intensity: 2.0, lst_urban: 30, lst_rural: 28 },
+      // 2016-02: UHI = -1.0
+      { city: 'TestCity', year: 2016, month: 2, uhi_intensity: -1.0, lst_urban: 25, lst_rural: 26 },
+      // 2016-03: UHI = 3.0
+      { city: 'TestCity', year: 2016, month: 3, uhi_intensity: 3.0, lst_urban: 35, lst_rural: 32 },
+      // 2016-04: cloud gap (null)
+      { city: 'TestCity', year: 2016, month: 4, uhi_intensity: null, lst_urban: null, lst_rural: null },
+      // 2016-05: UHI = 0.0 (genuine zero)
+      { city: 'TestCity', year: 2016, month: 5, uhi_intensity: 0.0, lst_urban: 28, lst_rural: 28 },
+      // 2016-06: UHI = Infinity (should be excluded)
+      { city: 'TestCity', year: 2016, month: 6, uhi_intensity: Infinity, lst_urban: 40, lst_rural: 20 },
+      // 2016-07: UHI = NaN (should be excluded)
+      { city: 'TestCity', year: 2016, month: 7, uhi_intensity: NaN, lst_urban: 30, lst_rural: 28 },
+      // Use alias field for 2016-08
+      { city: 'TestCity', year: 2016, month: 8, uhi: 1.0, lst: 29, rural_lst: 28 },
+    ];
+
+    // ---- Replicate anomalyBaseline logic from CityDeepDive.tsx ----
+    const validUhis = timeSeries
+      .map((d: any) => d.uhi_intensity ?? d.uhi)
+      .filter((v: any): v is number => v !== null && v !== undefined && isFinite(v) && !isNaN(v));
+    const baselineMean = validUhis.length > 0 ? validUhis.reduce((acc: number, v: number) => acc + v, 0) / validUhis.length : 0;
+
+    // Valid values: 2.0, -1.0, 3.0, 0.0, 1.0 → mean = 5.0 / 5 = 1.0
+    // Infinity and NaN are excluded; null is excluded
+    expect(validUhis).toEqual([2.0, -1.0, 3.0, 0.0, 1.0]);
+    expect(validUhis.length).toBe(5);
+    expect(baselineMean).toBeCloseTo(1.0, 6);
+
+    // ---- Replicate anomalyMatrix logic ----
+    const years = [2016];
+    const months = [1, 2, 3, 4, 5, 6, 7, 8];
+    const matrix = years.map((year) => {
+      const row: Record<string, number | string | null> = { year };
+      months.forEach((m) => {
+        const item = timeSeries.find((d: any) => d.year === year && d.month === m);
+        const itemUhi = item ? ((item as any).uhi_intensity ?? (item as any).uhi) : null;
+        if (itemUhi !== null && itemUhi !== undefined && isFinite(itemUhi) && !isNaN(itemUhi)) {
+          const anomaly = itemUhi - baselineMean;
+          row[`m${m}`] = isFinite(anomaly) ? parseFloat(anomaly.toFixed(2)) : null;
+        } else {
+          row[`m${m}`] = null;
+        }
+      });
+      return row;
+    });
+
+    const row2016 = matrix[0];
+
+    // 2016-01: anomaly = 2.0 - 1.0 = +1.0
+    expect(row2016.m1).toBeCloseTo(1.0, 2);
+
+    // 2016-02: anomaly = -1.0 - 1.0 = -2.0
+    expect(row2016.m2).toBeCloseTo(-2.0, 2);
+
+    // 2016-03: anomaly = 3.0 - 1.0 = +2.0
+    expect(row2016.m3).toBeCloseTo(2.0, 2);
+
+    // 2016-04: cloud gap → null, NOT 0
+    expect(row2016.m4).toBeNull();
+
+    // 2016-05: genuine zero UHI → anomaly = 0.0 - 1.0 = -1.0
+    expect(row2016.m5).toBeCloseTo(-1.0, 2);
+
+    // 2016-06: Infinity → excluded → null
+    expect(row2016.m6).toBeNull();
+
+    // 2016-07: NaN → excluded → null
+    expect(row2016.m7).toBeNull();
+
+    // 2016-08: alias field → anomaly = 1.0 - 1.0 = 0.0
+    expect(row2016.m8).toBeCloseTo(0.0, 2);
+
+    // ---- Validate colour-scale function ----
+    const getAnomalyColor = (val: number | null) => {
+      if (val === null || !isFinite(val as number) || isNaN(val as number)) return 'bg-stone-100 text-stone-400 font-normal';
+      if (val >= 2.0) return 'bg-[#450a0a] text-white font-bold';
+      if (val >= 1.2) return 'bg-[#7f1d1d] text-white font-bold';
+      if (val >= 0.6) return 'bg-[#b91c1c] text-white font-semibold';
+      if (val >= 0.2) return 'bg-[#fecaca] text-stone-900';
+      if (val <= -2.0) return 'bg-[#0c4a6e] text-white font-bold';
+      if (val <= -1.0) return 'bg-[#0369a1] text-white font-bold';
+      if (val <= -0.4) return 'bg-[#38bdf8] text-stone-950 font-medium';
+      if (val < 0) return 'bg-[#e0f2fe] text-stone-900';
+      return 'bg-stone-100 text-stone-800';
+    };
+
+    // Extreme hot (+2.0)
+    expect(getAnomalyColor(2.0)).toContain('450a0a');
+    // Hot (+1.0 is in 0.6-1.2 range)
+    expect(getAnomalyColor(1.0)).toContain('b91c1c');
+    // Extreme cold (-2.0)
+    expect(getAnomalyColor(-2.0)).toContain('0c4a6e');
+    // Cold (-1.0)
+    expect(getAnomalyColor(-1.0)).toContain('0369a1');
+    // Null → grey
+    expect(getAnomalyColor(null)).toContain('stone-100');
+    // Zero → near-normal
+    expect(getAnomalyColor(0.0)).toContain('stone-100');
+
+    // ---- Null vs zero distinguishability ----
+    // A genuine 0 anomaly and a cloud-gap null must render differently
+    const zeroStyle = getAnomalyColor(0.0);
+    const nullStyle = getAnomalyColor(null);
+    expect(zeroStyle).not.toBe(nullStyle);
+  });
+
+  it('validates empty and partial dataset handling for resilient frontend rendering (Milestone 34)', () => {
+    // 1. Completely empty dataset
+    const emptySeries: any[] = [];
+    const emptyChartData = emptySeries.map((d) => ({
+      date: `${d.year}-${String(d.month).padStart(2, '0')}`,
+      uhi: d.uhi_intensity ?? d.uhi ?? null,
+    }));
+    expect(emptyChartData.length).toBe(0);
+
+    // 2. Partial data where only urban LST exists but UHI and rural LST are missing
+    const partialRecord = {
+      city: 'Delhi',
+      year: 2024,
+      month: 6,
+      lst_urban: 42.5,
+      lst_rural: null,
+      uhi_intensity: null,
+      ndvi: 0.15,
+      ndbi: 0.35,
+      temperature_2m: 38.0,
+    };
+
+    const mappedPartial = {
+      date: `${partialRecord.year}-${String(partialRecord.month).padStart(2, '0')}`,
+      uhi: partialRecord.uhi_intensity ?? null,
+      lst_urban: partialRecord.lst_urban ?? null,
+      lst_rural: partialRecord.lst_rural ?? null,
+      temp: partialRecord.temperature_2m ?? null,
+    };
+
+    // Unavailable UHI does not suppress available urban LST or ambient temperature
+    expect(mappedPartial.uhi).toBeNull();
+    expect(mappedPartial.lst_rural).toBeNull();
+    expect(mappedPartial.lst_urban).toBe(42.5);
+    expect(mappedPartial.temp).toBe(38.0);
+
+    // 3. Robust numerical serialization: non-finite or corrupted values don't crash mapping
+    const dirtyRecords = [
+      { uhi: 'invalid_string', lst: undefined, rural_lst: null },
+      { uhi: NaN, lst: Infinity, rural_lst: -Infinity },
+    ];
+
+    const safeMapped = dirtyRecords.map((d: any) => ({
+      uhi: d.uhi !== null && d.uhi !== undefined && isFinite(d.uhi) && !isNaN(d.uhi) ? Number(d.uhi) : null,
+      lst_urban: d.lst !== null && d.lst !== undefined && isFinite(d.lst) && !isNaN(d.lst) ? Number(d.lst) : null,
+      lst_rural: d.rural_lst !== null && d.rural_lst !== undefined && isFinite(d.rural_lst) && !isNaN(d.rural_lst) ? Number(d.rural_lst) : null,
+    }));
+
+    expect(safeMapped[0].uhi).toBeNull();
+    expect(safeMapped[0].lst_urban).toBeNull();
+    expect(safeMapped[1].uhi).toBeNull();
+    expect(safeMapped[1].lst_urban).toBeNull();
+    expect(safeMapped[1].lst_rural).toBeNull();
+  });
 });

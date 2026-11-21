@@ -15,6 +15,7 @@ import {
   Area,
   BarChart,
   Bar,
+  Legend,
 } from 'recharts';
 import { PageHeader } from '../components/PageHeader';
 import { StatusBadge } from '../components/StatusBadge';
@@ -28,9 +29,9 @@ export const CityDeepDive: React.FC = () => {
 
   const [selectedCity, setSelectedCity] = useState<string>(initialCity);
   const [activeTab, setActiveTab] = useState<'trends' | 'seasonal' | 'anomaly'>('trends');
-  const [timeSeries, setTimeSeries] = useState<MonthlyDataRecord[]>(() =>
-    generateMockTimeSeries(initialCity)
-  );
+  const [timeSeries, setTimeSeries] = useState<MonthlyDataRecord[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedYearRange, setSelectedYearRange] = useState<string>('all');
 
   // Sync city selection with URL param
@@ -39,19 +40,38 @@ export const CityDeepDive: React.FC = () => {
     setSearchParams({ city: cityName });
   };
 
-  // Try live API fetch if online
+  // Fetch live API data with loading & error handling, and clean city transitions
   useEffect(() => {
+    let isCancelled = false;
+    setLoading(true);
+    setError(null);
+
     fetchCityTimeSeries(selectedCity)
       .then((records) => {
+        if (isCancelled) return;
         if (records && records.length > 0) {
           setTimeSeries(records);
         } else {
-          setTimeSeries(generateMockTimeSeries(selectedCity));
+          // If no records from API, use mock fallback with explicit notice
+          const mock = generateMockTimeSeries(selectedCity);
+          setTimeSeries(mock);
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        if (isCancelled) return;
+        console.error('Failed to load city time series:', err);
+        setError('Failed to fetch live city records from API. Displaying local offline baseline.');
         setTimeSeries(generateMockTimeSeries(selectedCity));
+      })
+      .finally(() => {
+        if (!isCancelled) {
+          setLoading(false);
+        }
       });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [selectedCity]);
 
   const cityMetadata = useMemo(() => {
@@ -64,31 +84,63 @@ export const CityDeepDive: React.FC = () => {
 
   // Filter time-series by year range
   const filteredSeries = useMemo(() => {
+    // Ensure strict chronological ordering
+    const sorted = [...timeSeries].sort((a, b) =>
+      a.year !== b.year ? a.year - b.year : a.month - b.month
+    );
     if (selectedYearRange === '2024-2025') {
-      return timeSeries.filter((d) => d.year >= 2024);
+      return sorted.filter((d) => d.year >= 2024);
     }
     if (selectedYearRange === '2020-2025') {
-      return timeSeries.filter((d) => d.year >= 2020);
+      return sorted.filter((d) => d.year >= 2020);
     }
-    return timeSeries;
+    return sorted;
   }, [timeSeries, selectedYearRange]);
 
-  // Formatted chart data
+  // Formatted chart data with robust schema mapping and null handling
   const chartData = useMemo(() => {
     return filteredSeries.map((d) => ({
       date: `${d.year}-${String(d.month).padStart(2, '0')}`,
       year: d.year,
       month: d.month,
-      uhi: d.uhi_intensity,
-      lst_urban: d.lst_urban,
-      lst_rural: d.lst_rural,
-      ndvi: d.ndvi,
-      ndbi: d.ndbi,
-      temp: d.temperature_2m,
+      uhi:
+        d.uhi_intensity !== null && d.uhi_intensity !== undefined && !isNaN(d.uhi_intensity as number)
+          ? Number(d.uhi_intensity)
+          : d.uhi !== null && d.uhi !== undefined && !isNaN(d.uhi as number)
+          ? Number(d.uhi)
+          : null,
+      lst_urban:
+        d.lst_urban !== null && d.lst_urban !== undefined && !isNaN(d.lst_urban as number)
+          ? Number(d.lst_urban)
+          : d.lst !== null && d.lst !== undefined && !isNaN(d.lst as number)
+          ? Number(d.lst)
+          : null,
+      lst_rural:
+        d.lst_rural !== null && d.lst_rural !== undefined && !isNaN(d.lst_rural as number)
+          ? Number(d.lst_rural)
+          : d.rural_lst !== null && d.rural_lst !== undefined && !isNaN(d.rural_lst as number)
+          ? Number(d.rural_lst)
+          : null,
+      ndvi:
+        d.ndvi !== null && d.ndvi !== undefined && !isNaN(d.ndvi as number)
+          ? Number(d.ndvi)
+          : null,
+      ndbi:
+        d.ndbi !== null && d.ndbi !== undefined && !isNaN(d.ndbi as number)
+          ? Number(d.ndbi)
+          : null,
+      temp:
+        d.temperature_2m !== null && d.temperature_2m !== undefined && !isNaN(d.temperature_2m as number)
+          ? Number(d.temperature_2m)
+          : d.air_temperature !== null && d.air_temperature !== undefined && !isNaN(d.air_temperature as number)
+          ? Number(d.air_temperature)
+          : null,
     }));
   }, [filteredSeries]);
 
   // Monthly seasonal profile (aggregated across all 10 years)
+  // Methodology: simple mean of valid (non-null, finite) observations per calendar month.
+  // Months with zero valid thermal observations return null explicitly (not 0).
   const seasonalProfile = useMemo(() => {
     const monthNames = [
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -99,71 +151,113 @@ export const CityDeepDive: React.FC = () => {
       buckets[m] = { uhi: [], lst_urban: [], lst_rural: [] };
     }
 
+    // Use all years (timeSeries is city-wide 2016–2025 regardless of year filter)
     timeSeries.forEach((d) => {
-      buckets[d.month]?.uhi.push(d.uhi_intensity);
-      buckets[d.month]?.lst_urban.push(d.lst_urban);
-      buckets[d.month]?.lst_rural.push(d.lst_rural);
+      const uhi = d.uhi_intensity ?? d.uhi;
+      const urban = d.lst_urban ?? d.lst;
+      const rural = d.lst_rural ?? d.rural_lst;
+
+      if (uhi !== null && uhi !== undefined && isFinite(uhi) && !isNaN(uhi)) {
+        buckets[d.month]?.uhi.push(uhi);
+      }
+      if (urban !== null && urban !== undefined && isFinite(urban) && !isNaN(urban)) {
+        buckets[d.month]?.lst_urban.push(urban);
+      }
+      if (rural !== null && rural !== undefined && isFinite(rural) && !isNaN(rural)) {
+        buckets[d.month]?.lst_rural.push(rural);
+      }
     });
 
     return monthNames.map((name, i) => {
       const m = i + 1;
-      const uhiArr = buckets[m]?.uhi ?? [0];
-      const urbanArr = buckets[m]?.lst_urban ?? [0];
-      const ruralArr = buckets[m]?.lst_rural ?? [0];
+      const uhiArr = buckets[m]?.uhi ?? [];
+      const urbanArr = buckets[m]?.lst_urban ?? [];
+      const ruralArr = buckets[m]?.lst_rural ?? [];
 
-      const avgUhi = uhiArr.reduce((a, b) => a + b, 0) / uhiArr.length;
-      const avgUrban = urbanArr.reduce((a, b) => a + b, 0) / urbanArr.length;
-      const avgRural = ruralArr.reduce((a, b) => a + b, 0) / ruralArr.length;
+      // null sentinel for months with no valid satellite observations (not 0)
+      const mean = (arr: number[]): number | null =>
+        arr.length > 0 ? parseFloat((arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(2)) : null;
 
       return {
         month: name,
         monthNum: m,
-        mean_uhi: parseFloat(avgUhi.toFixed(2)),
-        mean_lst_urban: parseFloat(avgUrban.toFixed(1)),
-        mean_lst_rural: parseFloat(avgRural.toFixed(1)),
+        mean_uhi: mean(uhiArr),
+        mean_lst_urban: mean(urbanArr),
+        mean_lst_rural: mean(ruralArr),
+        // observation counts for tooltip and low-data warnings
+        obs_uhi: uhiArr.length,
+        obs_urban: urbanArr.length,
+        obs_rural: ruralArr.length,
       };
     });
   }, [timeSeries]);
 
   // Multi-year anomaly matrix (Years 2016-2025 vs Months 1-12)
+  // Methodology: anomaly = observation − baseline, where baseline is the city-wide
+  // mean UHI across the full 10-year study period (2016–2025) using only valid
+  // (non-null, finite) satellite observations. Cloud-gap months remain null.
+  const anomalyBaseline = useMemo(() => {
+    const validUhis = timeSeries
+      .map((d) => d.uhi_intensity ?? d.uhi)
+      .filter((v): v is number => v !== null && v !== undefined && isFinite(v) && !isNaN(v));
+    const mean = validUhis.length > 0 ? validUhis.reduce((acc, v) => acc + v, 0) / validUhis.length : 0;
+    return { mean, count: validUhis.length, total: timeSeries.length };
+  }, [timeSeries]);
+
   const anomalyMatrix = useMemo(() => {
-    const meanOverall =
-      timeSeries.reduce((acc, d) => acc + d.uhi_intensity, 0) / timeSeries.length;
     const years = [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
     const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
     return years.map((year) => {
-      const row: Record<string, number | string> = { year };
+      const row: Record<string, number | string | null> = { year };
       months.forEach((m) => {
         const item = timeSeries.find((d) => d.year === year && d.month === m);
-        const val = item ? item.uhi_intensity - meanOverall : 0;
-        row[`m${m}`] = parseFloat(val.toFixed(2));
+        const itemUhi = item ? (item.uhi_intensity ?? item.uhi) : null;
+        if (itemUhi !== null && itemUhi !== undefined && isFinite(itemUhi) && !isNaN(itemUhi)) {
+          const anomaly = itemUhi - anomalyBaseline.mean;
+          row[`m${m}`] = isFinite(anomaly) ? parseFloat(anomaly.toFixed(2)) : null;
+        } else {
+          row[`m${m}`] = null;
+        }
       });
       return row;
     });
-  }, [timeSeries]);
+  }, [timeSeries, anomalyBaseline]);
 
   // Statistics
   const stats = useMemo(() => {
-    const uhiVals = timeSeries.map((d) => d.uhi_intensity);
-    const meanUhi = (uhiVals.reduce((a, b) => a + b, 0) / uhiVals.length).toFixed(2);
-    const maxUhi = Math.max(...uhiVals).toFixed(2);
-    const minUhi = Math.min(...uhiVals).toFixed(2);
+    const uhiVals = timeSeries
+      .map((d) => d.uhi_intensity ?? d.uhi)
+      .filter((v): v is number => v !== null && v !== undefined && !isNaN(v));
+    const meanUhi = uhiVals.length > 0 ? (uhiVals.reduce((a, b) => a + b, 0) / uhiVals.length).toFixed(2) : '0.00';
+    const maxUhi = uhiVals.length > 0 ? Math.max(...uhiVals).toFixed(2) : '0.00';
+    const minUhi = uhiVals.length > 0 ? Math.min(...uhiVals).toFixed(2) : '0.00';
 
-    const early = timeSeries.filter((d) => d.year <= 2018).map((d) => d.uhi_intensity);
-    const late = timeSeries.filter((d) => d.year >= 2023).map((d) => d.uhi_intensity);
-    const earlyMean = early.reduce((a, b) => a + b, 0) / early.length;
-    const lateMean = late.reduce((a, b) => a + b, 0) / late.length;
+    const early = timeSeries
+      .filter((d) => d.year <= 2018)
+      .map((d) => d.uhi_intensity ?? d.uhi)
+      .filter((v): v is number => v !== null && v !== undefined && !isNaN(v));
+    const late = timeSeries
+      .filter((d) => d.year >= 2023)
+      .map((d) => d.uhi_intensity ?? d.uhi)
+      .filter((v): v is number => v !== null && v !== undefined && !isNaN(v));
+    const earlyMean = early.length > 0 ? early.reduce((a, b) => a + b, 0) / early.length : 0;
+    const lateMean = late.length > 0 ? late.reduce((a, b) => a + b, 0) / late.length : 0;
     const decadalChange = (lateMean - earlyMean).toFixed(2);
 
     return { meanUhi, maxUhi, minUhi, decadalChange };
   }, [timeSeries]);
 
-  // Cividis/Monochrome contrast safe anomaly cell styling
-  const getAnomalyColor = (val: number) => {
+  // Cividis/Monochrome contrast safe anomaly cell styling with extreme-value tiers
+  const getAnomalyColor = (val: number | null) => {
+    if (val === null || !isFinite(val as number) || isNaN(val as number)) return 'bg-stone-100 text-stone-400 font-normal';
+    // Extreme hot (>= 2.0 °C)
+    if (val >= 2.0) return 'bg-[#450a0a] text-white font-bold';
     if (val >= 1.2) return 'bg-[#7f1d1d] text-white font-bold';
     if (val >= 0.6) return 'bg-[#b91c1c] text-white font-semibold';
     if (val >= 0.2) return 'bg-[#fecaca] text-stone-900';
+    // Extreme cold (<= -2.0 °C)
+    if (val <= -2.0) return 'bg-[#0c4a6e] text-white font-bold';
     if (val <= -1.0) return 'bg-[#0369a1] text-white font-bold';
     if (val <= -0.4) return 'bg-[#38bdf8] text-stone-950 font-medium';
     if (val < 0) return 'bg-[#e0f2fe] text-stone-900';
@@ -195,6 +289,20 @@ export const CityDeepDive: React.FC = () => {
           </div>
         }
       />
+
+      {/* Loading & API Notice Banner */}
+      {loading && (
+        <div className="flex items-center gap-2 p-3 bg-stone-100 border border-stone-200 rounded-lg text-xs font-mono text-stone-700 animate-pulse" role="status" aria-live="polite">
+          <span className="w-2 h-2 rounded-full bg-stone-500 animate-ping" />
+          Loading longitudinal time series for {selectedCity}...
+        </div>
+      )}
+
+      {error && !loading && (
+        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs font-mono text-amber-800 flex items-center justify-between" role="alert">
+          <span>⚠ {error}</span>
+        </div>
+      )}
 
       {/* City Status & Summary KPI Bar */}
       <div tabIndex={0} role="region" aria-label={`Summary KPIs for ${selectedCity}`} className="bg-white rounded-lg border border-[#e9e8e4] p-4.5 shadow-xs flex flex-wrap items-center justify-between gap-4 focus-visible:outline-2 focus-visible:outline-stone-900">
@@ -339,52 +447,81 @@ export const CityDeepDive: React.FC = () => {
               </div>
             </div>
 
-            <div className="h-80 w-full" aria-hidden="true">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0efe9" />
-                  <XAxis
-                    dataKey="date"
-                    tick={{ fontSize: 10, fill: '#57534e' }}
-                    tickFormatter={(val) => val.slice(0, 4)}
-                    interval={11}
-                  />
-                  <YAxis tick={{ fontSize: 10, fill: '#57534e' }} />
-                  <RechartsTooltip
-                    contentStyle={{
-                      backgroundColor: '#ffffff',
-                      borderColor: '#e7e5e4',
-                      borderRadius: '6px',
-                      fontSize: '11px',
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="lst_urban"
-                    name="LST Urban"
-                    stroke="#b91c1c"
-                    strokeWidth={1.8}
-                    dot={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="lst_rural"
-                    name="LST Rural"
-                    stroke="#15803d"
-                    strokeWidth={1.8}
-                    dot={false}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="uhi"
-                    name="UHI Intensity"
-                    stroke="#b45309"
-                    strokeWidth={2.4}
-                    dot={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            {chartData.length === 0 ? (
+              <div className="h-80 w-full flex items-center justify-center text-stone-400 text-xs font-mono">
+                No time-series observations available for {selectedCity} in the selected range.
+              </div>
+            ) : (
+              <div className="h-80 w-full" aria-hidden="true">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={chartData} margin={{ top: 10, right: 20, left: 10, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0efe9" />
+                    <XAxis
+                      dataKey="date"
+                      tick={{ fontSize: 10, fill: '#57534e' }}
+                      tickFormatter={(val) => val.slice(0, 4)}
+                      interval={selectedYearRange === '2024-2025' ? 2 : selectedYearRange === '2020-2025' ? 5 : 11}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      domain={['auto', 'auto']}
+                      tick={{ fontSize: 10, fill: '#57534e' }}
+                      label={{ value: 'Surface Temp (°C)', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#78716c' }}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      domain={['auto', 'auto']}
+                      tick={{ fontSize: 10, fill: '#57534e' }}
+                      label={{ value: 'UHI Intensity (°C)', angle: 90, position: 'insideRight', fontSize: 10, fill: '#b45309' }}
+                    />
+                    <RechartsTooltip
+                      contentStyle={{
+                        backgroundColor: '#ffffff',
+                        borderColor: '#e7e5e4',
+                        borderRadius: '6px',
+                        fontSize: '11px',
+                      }}
+                      formatter={(value: any, name?: any) => {
+                        if (value === null || value === undefined || isNaN(Number(value))) return ['N/A (Cloud Gap)', String(name ?? '')];
+                        return [`${Number(value).toFixed(2)} °C`, String(name ?? '')];
+                      }}
+                      labelFormatter={(label: any) => `Month: ${label ?? ''}`}
+                    />
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="lst_urban"
+                      name="LST Urban"
+                      stroke="#b91c1c"
+                      strokeWidth={1.8}
+                      dot={false}
+                      connectNulls={true}
+                    />
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="lst_rural"
+                      name="LST Rural"
+                      stroke="#15803d"
+                      strokeWidth={1.8}
+                      dot={false}
+                      connectNulls={true}
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="uhi"
+                      name="UHI Intensity"
+                      stroke="#b45309"
+                      strokeWidth={2.4}
+                      dot={false}
+                      connectNulls={true}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </div>
 
           {/* Biophysical Indices Trajectory (NDVI vs NDBI) */}
@@ -402,13 +539,13 @@ export const CityDeepDive: React.FC = () => {
 
             <div className="h-48 w-full" aria-hidden="true">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 20 }}>
+                <AreaChart data={chartData} margin={{ top: 5, right: 20, left: 10, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0efe9" />
                   <XAxis
                     dataKey="date"
                     tick={{ fontSize: 10, fill: '#57534e' }}
                     tickFormatter={(val) => val.slice(0, 4)}
-                    interval={11}
+                    interval={selectedYearRange === '2024-2025' ? 2 : selectedYearRange === '2020-2025' ? 5 : 11}
                   />
                   <YAxis domain={[-0.5, 1.0]} tick={{ fontSize: 10, fill: '#57534e' }} />
                   <RechartsTooltip
@@ -418,6 +555,11 @@ export const CityDeepDive: React.FC = () => {
                       borderRadius: '6px',
                       fontSize: '11px',
                     }}
+                    formatter={(value: any, name?: any) => {
+                      if (value === null || value === undefined || isNaN(Number(value))) return ['N/A (Cloud Gap)', String(name ?? '')];
+                      return [Number(value).toFixed(4), String(name ?? '')];
+                    }}
+                    labelFormatter={(label: any) => `Month: ${label ?? ''}`}
                   />
                   <Area
                     type="monotone"
@@ -426,6 +568,7 @@ export const CityDeepDive: React.FC = () => {
                     stroke="#117733"
                     fill="#117733"
                     fillOpacity={0.3}
+                    connectNulls={true}
                   />
                   <Area
                     type="monotone"
@@ -434,6 +577,7 @@ export const CityDeepDive: React.FC = () => {
                     stroke="#882255"
                     fill="#882255"
                     fillOpacity={0.25}
+                    connectNulls={true}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -451,28 +595,85 @@ export const CityDeepDive: React.FC = () => {
                 10-Year Climatological Seasonal Cycle for {selectedCity}
               </h3>
               <p className="text-xs text-stone-600">
-                Averaged monthly UHI behavior across all 10 years showing peak summer divergence and monsoon attenuation
+                Calendar-month mean UHI intensity and land surface temperatures averaged across all 10 available years (2016–2025), computed from valid satellite observations only. Months with fewer than 5 valid years are flagged.
               </p>
             </div>
 
-            <div className="h-80 w-full" aria-hidden="true">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={seasonalProfile} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0efe9" />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#57534e' }} />
-                  <YAxis tick={{ fontSize: 11, fill: '#57534e' }} />
-                  <RechartsTooltip
-                    contentStyle={{
-                      backgroundColor: '#ffffff',
-                      borderColor: '#e7e5e4',
-                      borderRadius: '6px',
-                      fontSize: '11px',
-                    }}
-                  />
-                  <Bar dataKey="mean_uhi" name="Mean UHI (°C)" fill="#b45309" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            {/* Low-data month warnings */}
+            {seasonalProfile.some((m) => m.obs_uhi > 0 && m.obs_uhi < 5) && (
+              <div className="mb-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800 font-mono">
+                ⚠ Months with fewer than 5 valid years:{' '}
+                {seasonalProfile
+                  .filter((m) => m.obs_uhi > 0 && m.obs_uhi < 5)
+                  .map((m) => `${m.month} (n=${m.obs_uhi})`)
+                  .join(', ')}
+              </div>
+            )}
+
+            {seasonalProfile.every((m) => m.mean_uhi === null) ? (
+              <div className="h-80 w-full flex items-center justify-center text-stone-400 text-xs font-mono">
+                No valid seasonal observations available for {selectedCity}.
+              </div>
+            ) : (
+              <div className="h-80 w-full" aria-hidden="true">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={seasonalProfile} margin={{ top: 10, right: 20, left: 10, bottom: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0efe9" />
+                    <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#57534e' }} />
+                    <YAxis
+                      yAxisId="lst"
+                      orientation="left"
+                      tick={{ fontSize: 10, fill: '#57534e' }}
+                      label={{ value: 'LST (°C)', angle: -90, position: 'insideLeft', fontSize: 10, fill: '#78716c' }}
+                    />
+                    <YAxis
+                      yAxisId="uhi"
+                      orientation="right"
+                      tick={{ fontSize: 10, fill: '#b45309' }}
+                      label={{ value: 'UHI (°C)', angle: 90, position: 'insideRight', fontSize: 10, fill: '#b45309' }}
+                    />
+                    <RechartsTooltip
+                      contentStyle={{
+                        backgroundColor: '#ffffff',
+                        borderColor: '#e7e5e4',
+                        borderRadius: '6px',
+                        fontSize: '11px',
+                      }}
+                      formatter={(value: any, name?: any, props?: any) => {
+                        if (value === null || value === undefined || isNaN(Number(value))) return ['No data', String(name ?? '')];
+                        const obs = props?.payload?.obs_uhi ?? props?.payload?.obs_urban ?? '?';
+                        return [`${Number(value).toFixed(2)} °C (n=${obs})`, String(name ?? '')];
+                      }}
+                      labelFormatter={(label: any) => `Month: ${label ?? ''}`}
+                    />
+                    <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }} />
+                    <Bar
+                      yAxisId="lst"
+                      dataKey="mean_lst_urban"
+                      name="LST Urban (°C)"
+                      fill="#b91c1c"
+                      fillOpacity={0.7}
+                      radius={[3, 3, 0, 0]}
+                    />
+                    <Bar
+                      yAxisId="lst"
+                      dataKey="mean_lst_rural"
+                      name="LST Rural (°C)"
+                      fill="#15803d"
+                      fillOpacity={0.7}
+                      radius={[3, 3, 0, 0]}
+                    />
+                    <Bar
+                      yAxisId="uhi"
+                      dataKey="mean_uhi"
+                      name="Mean UHI Intensity (°C)"
+                      fill="#b45309"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </div>
 
           {/* Scientific Interpretation Card */}
@@ -495,7 +696,10 @@ export const CityDeepDive: React.FC = () => {
               UHI Temperature Anomaly Matrix (2016–2025 vs 10-Yr Mean)
             </h3>
             <p className="text-xs text-stone-600">
-              Each cell depicts deviation in °C from the city’s 10-year mean UHI. High-contrast color coding with explicit values for screen reader accessibility.
+              Each cell depicts deviation in °C from the city’s 10-year mean UHI. Baseline: city-wide mean across the full study period (2016–2025) using {anomalyBaseline.count} valid satellite observations out of {anomalyBaseline.total} total months.
+            </p>
+            <p className="text-xs font-mono text-stone-700 mt-1">
+              Baseline UHI: {anomalyBaseline.mean >= 0 ? '+' : ''}{anomalyBaseline.mean.toFixed(4)} °C &nbsp;|&nbsp; Anomaly = Observation − Baseline
             </p>
           </div>
 
@@ -520,17 +724,19 @@ export const CityDeepDive: React.FC = () => {
                       {row.year}
                     </th>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
-                      const val = Number(row[`m${m}`]);
+                      const rawVal = row[`m${m}`];
+                      const val = rawVal !== null && rawVal !== undefined ? Number(rawVal) : null;
+                      const hasVal = val !== null && !isNaN(val);
                       return (
                         <td key={m} className="p-1">
                           <span
                             tabIndex={0}
-                            aria-label={`Year ${row.year}, Month ${m}: ${val >= 0 ? `+${val.toFixed(1)}` : val.toFixed(1)} degrees Celsius anomaly`}
+                            aria-label={`Year ${row.year}, Month ${m}: ${hasVal ? `${val >= 0 ? `+${val.toFixed(1)}` : val.toFixed(1)} degrees Celsius anomaly` : 'Data unavailable'}`}
                             className={`inline-block w-full py-1 rounded text-[10px] font-semibold transition-all focus-visible:outline-2 focus-visible:outline-stone-900 ${getAnomalyColor(
                               val
                             )}`}
                           >
-                            {val >= 0 ? `+${val.toFixed(1)}` : val.toFixed(1)}
+                            {hasVal ? (val >= 0 ? `+${val.toFixed(1)}` : val.toFixed(1)) : '—'}
                           </span>
                         </td>
                       );
@@ -544,11 +750,13 @@ export const CityDeepDive: React.FC = () => {
           <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-xs text-stone-600">
             <div className="flex items-center gap-2" role="note" aria-label="Anomaly scale legend">
               <span className="text-[11px] font-mono font-medium">Scale:</span>
-              <span className="px-2 py-0.5 rounded bg-[#0369a1] text-white text-[10px] font-mono">&lt; -1.0 °C</span>
-              <span className="px-2 py-0.5 rounded bg-[#38bdf8] text-stone-950 text-[10px] font-mono">-0.4 to 0.0 °C</span>
-              <span className="px-2 py-0.5 rounded bg-stone-100 text-stone-800 text-[10px] font-mono">Normal (0.0)</span>
+              <span className="px-2 py-0.5 rounded bg-[#0c4a6e] text-white text-[10px] font-mono">&lt; -2.0 °C</span>
+              <span className="px-2 py-0.5 rounded bg-[#0369a1] text-white text-[10px] font-mono">-1.0 to -2.0 °C</span>
+              <span className="px-2 py-0.5 rounded bg-[#38bdf8] text-stone-950 text-[10px] font-mono">-0.4 to -1.0 °C</span>
+              <span className="px-2 py-0.5 rounded bg-stone-100 text-stone-800 text-[10px] font-mono">Normal (±0.2)</span>
               <span className="px-2 py-0.5 rounded bg-[#fecaca] text-stone-900 text-[10px] font-mono">+0.2 to +0.6 °C</span>
-              <span className="px-2 py-0.5 rounded bg-[#7f1d1d] text-white text-[10px] font-mono">&gt; +1.2 °C (Heatwave)</span>
+              <span className="px-2 py-0.5 rounded bg-[#7f1d1d] text-white text-[10px] font-mono">+1.2 to +2.0 °C</span>
+              <span className="px-2 py-0.5 rounded bg-[#450a0a] text-white text-[10px] font-mono">&gt; +2.0 °C (Extreme)</span>
             </div>
           </div>
         </section>
