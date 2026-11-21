@@ -8,13 +8,19 @@ Computes:
 4. Persists SHAP summary tables and individual city waterfalls for dashboard visualization.
 """
 
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Tuple
 from pathlib import Path
 import json
 import joblib
 import pandas as pd
 import numpy as np
-import shap
+
+try:
+    import shap
+    HAS_SHAP = True
+except ImportError:
+    shap = None
+    HAS_SHAP = False
 
 from src.utils.logger import get_logger
 from src.utils.config import load_config
@@ -56,8 +62,18 @@ class UHIExplainer:
         X_imputed = pd.DataFrame(X_imputed_array, columns=feature_cols, index=test_valid.index)
 
         logger.info(f"Computing TreeSHAP values across {len(X_imputed)} test records...")
-        explainer = shap.TreeExplainer(self.regressor)
-        shap_values = explainer.shap_values(X_imputed)
+        if HAS_SHAP:
+            explainer = shap.TreeExplainer(self.regressor)
+            shap_values = explainer.shap_values(X_imputed)
+        else:
+            logger.warning("shap package not installed; falling back to saved SHAP parquet values.")
+            shap_parquet = Path("data/processed/monthly_level/uhi_shap_values_2025.parquet")
+            if shap_parquet.exists():
+                shap_df = pd.read_parquet(shap_parquet)
+                shap_cols = [c for c in feature_cols if c in shap_df.columns]
+                shap_values = shap_df[shap_cols].to_numpy()
+            else:
+                raise ImportError("SHAP package not installed and precomputed SHAP values not found.")
 
         test_meta = test_valid[["city", "year", "month", "climate_group", "uhi"]].copy()
         test_meta["predicted_uhi"] = self.pipeline.predict(X_test)
