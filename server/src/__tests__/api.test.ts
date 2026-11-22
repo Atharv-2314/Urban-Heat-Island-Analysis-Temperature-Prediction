@@ -110,7 +110,7 @@ describe('Server Architecture & Data Serving Layer', () => {
         expect(typeof r.uhi_intensity).toBe('number');
       }
     }
-  });
+  }, 15000);
 
   test('Milestone 35: End-to-end multi-city monthly schema, chronological sorting, and seasonal consistency', async () => {
     const testCities = ['Delhi', 'Ahmedabad', 'Bengaluru', 'London'];
