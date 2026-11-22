@@ -605,9 +605,9 @@ The SHAP page must dynamically calculate and display feature importance based on
   - [x] Commit frontend changes in logical stages on `feature/city-heat-risk`.
   - [x] *Exit Gate:* UI renders cleanly across desktop and mobile viewports with zero hardcoded city names or scores.
 
-- [ ] **Milestone 6: Automated Verification, Build Check & Handoff Report**
-  - [ ] Run backend/frontend tests, linters, and production builds (`npm run build` / `pytest`, etc.) locally on `feature/city-heat-risk`.
-  - [ ] Verify all five reference cities and tier boundaries match across both the Heat Risk Ranking page and City Deep Dive page.
-  - [ ] Push final `feature/city-heat-risk` commits to GitHub (leaving `main` and `backup/pre-city-heat-risk-2026-11-22` untouched).
-  - [ ] Deliver the 9-point Final Report with commit hashes and preview-deployment review steps.
-  - [ ] *Exit Gate:* User reviews preview deployment and manually merges `feature/city-heat-risk` into `main` when ready.
+- [x] **Milestone 6: Automated Verification, Build Check & Handoff Report**
+  - [x] Run backend/frontend tests, linters, and production builds (`npm run build` / `pytest`, etc.) locally on `feature/city-heat-risk`.
+  - [x] Verify all five reference cities and tier boundaries match across both the Heat Risk Ranking page and City Deep Dive page.
+  - [x] Push final `feature/city-heat-risk` commits to GitHub (leaving `main` and `backup/pre-city-heat-risk-2026-11-22` untouched).
+  - [x] Deliver the 9-point Final Report with commit hashes and preview-deployment review steps.
+  - [x] *Exit Gate:* User reviews preview deployment and manually merges `feature/city-heat-risk` into `main` when ready.
