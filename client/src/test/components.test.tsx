@@ -1,12 +1,13 @@
 // Frontend UI Component Smoke and Accessibility Unit Tests
 // client/src/test/components.test.tsx
 
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MetricCard } from '../components/MetricCard';
 import { StatusBadge } from '../components/StatusBadge';
 import { PageHeader } from '../components/PageHeader';
-import { INITIAL_CITIES, INITIAL_MODEL_METRICS, generateCityShapMock } from '../lib/mockData';
+import { CityHeatRiskAssessment } from '../components/CityHeatRiskAssessment';
+import { INITIAL_CITIES, INITIAL_MODEL_METRICS, generateCityShapMock, generateMockCityRiskAssessment } from '../lib/mockData';
 import { getUhiViridisColor, getAccessibleTextColor } from '../lib/palette';
 
 describe('Frontend UI Component Library & Accessibility Tests', () => {
@@ -460,5 +461,76 @@ describe('Frontend UI Component Library & Accessibility Tests', () => {
       const lastStep = s.waterfall.steps[s.waterfall.steps.length - 1];
       expect(lastStep.end).toBeCloseTo(s.waterfall.finalPrediction, 1);
     }
+  });
+
+  describe('CityHeatRiskAssessment Component (Phase 11 Milestone 5)', () => {
+    it('renders the complete assessment score card, gauge, and component breakdown for Delhi', () => {
+      const assessment = generateMockCityRiskAssessment('Delhi');
+      render(<CityHeatRiskAssessment assessment={assessment} />);
+
+      // Section header and badges
+      expect(screen.getByRole('heading', { name: /City Heat Risk Assessment/i })).toBeInTheDocument();
+      expect(screen.getAllByText(assessment.climate_group).length).toBeGreaterThan(0);
+
+      // Circular gauge & score
+      expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
+      expect(screen.getAllByText('100.0').length).toBeGreaterThanOrEqual(1);
+
+      // Component Breakdown
+      expect(screen.getByText(/UHI Intensity \(50%\)/i)).toBeInTheDocument();
+      expect(screen.getByText(/Pop\. Density \(30%\)/i)).toBeInTheDocument();
+      expect(screen.getByText(/Canopy Deficit \(20%\)/i)).toBeInTheDocument();
+
+      // Raw indicator values
+      expect(screen.getAllByText(`${assessment.raw_indicators.mean_uhi.toFixed(2)} K`).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(Math.round(assessment.raw_indicators.mean_pop_density).toLocaleString()).length).toBeGreaterThan(0);
+
+      // Peer table
+      expect(screen.getByText(new RegExp(`Climate Group Peers \\(${assessment.climate_group}\\)`, 'i'))).toBeInTheDocument();
+      expect(screen.getByText('Active')).toBeInTheDocument();
+    });
+
+    it('renders data-driven interpretation without causal or health claims', () => {
+      const assessment = generateMockCityRiskAssessment('Ahmedabad');
+      render(<CityHeatRiskAssessment assessment={assessment} />);
+
+      const summary = screen.getByText(/Data-Driven Assessment Summary/i).parentElement;
+      const text = summary?.textContent || '';
+
+      // Must describe contributing factors
+      expect(text).toContain('Ahmedabad');
+      expect(text).toContain('primary contributor');
+
+      // Zero causal or health claims
+      expect(text).not.toMatch(/\bcauses\b/i);
+      expect(text).not.toMatch(/\bleads to\b/i);
+      expect(text).not.toMatch(/\bresults in\b/i);
+      expect(text).not.toMatch(/\bhealth danger\b/i);
+    });
+
+    it('handles peer selection callback when clicking a peer city inspect button', () => {
+      const assessment = generateMockCityRiskAssessment('Delhi');
+      const onSelect = vi.fn();
+      render(<CityHeatRiskAssessment assessment={assessment} onCitySelect={onSelect} />);
+
+      // Find an inspect button for a peer city (e.g. Jaipur or Ahmedabad)
+      const inspectButtons = screen.getAllByRole('button', { name: /Switch deep dive to/i });
+      expect(inspectButtons.length).toBeGreaterThan(0);
+
+      fireEvent.click(inspectButtons[0]);
+      expect(onSelect).toHaveBeenCalled();
+    });
+
+    it('renders loading, error, and empty states gracefully', () => {
+      const { rerender } = render(<CityHeatRiskAssessment assessment={null} loading={true} />);
+      expect(screen.getByLabelText(/Loading City Heat Risk Assessment/i)).toBeInTheDocument();
+
+      rerender(<CityHeatRiskAssessment assessment={null} loading={false} />);
+      expect(screen.getByText(/No heat risk assessment data available/i)).toBeInTheDocument();
+
+      const assessment = generateMockCityRiskAssessment('Sapporo');
+      rerender(<CityHeatRiskAssessment assessment={assessment} error="API unavailable" />);
+      expect(screen.getByRole('alert')).toHaveAttribute('role', 'alert');
+    });
   });
 });

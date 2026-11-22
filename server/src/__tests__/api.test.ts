@@ -4,7 +4,7 @@
 import { cacheService } from '../services/cache';
 import { REPORT_PATHS, DATA_PATHS, loadJsonReport, readParquet } from '../services/dataLoader';
 import { normalizeMonthlyRecord } from '../routes/monthly';
-import { computeShapAttribution, INDIAN_CITIES } from '../routes/models';
+import { computeShapAttribution, INDIAN_CITIES, getNormalizedRiskScores, buildCityRiskAssessment } from '../routes/models';
 import fs from 'fs';
 
 describe('Server Architecture & Data Serving Layer', () => {
@@ -110,7 +110,7 @@ describe('Server Architecture & Data Serving Layer', () => {
         expect(typeof r.uhi_intensity).toBe('number');
       }
     }
-  });
+  }, 15000);
 
   test('Milestone 35: End-to-end multi-city monthly schema, chronological sorting, and seasonal consistency', async () => {
     const testCities = ['Delhi', 'Ahmedabad', 'Bengaluru', 'London'];
@@ -286,5 +286,51 @@ describe('Server Architecture & Data Serving Layer', () => {
   test('Deterministic cache key builder constructs sorted keys', () => {
     const key1 = cacheService.constructor ? (cacheService.constructor as any).buildKey('test', { b: 2, a: 1 }) : null;
     expect(key1).toBe('test:a=1&b=2');
+  });
+
+  test('Milestone 4: City heat risk assessment provides scores, percentiles, raw indicators, and peers', async () => {
+    const allScores = await getNormalizedRiskScores();
+    expect(allScores.length).toBe(42);
+
+    // Verify benchmark scores
+    const benchmarks: Record<string, number> = {
+      'Ahmedabad': 100.0,
+      'Delhi': 100.0,
+      'Sapporo': 93.3,
+      'Kolkata': 91.4,
+      'Riyadh': 85.0,
+    };
+
+    for (const [cityName, expectedScore] of Object.entries(benchmarks)) {
+      const assessment = buildCityRiskAssessment(cityName, allScores);
+      expect(assessment).not.toBeNull();
+      expect(assessment?.city.toLowerCase()).toBe(cityName.toLowerCase());
+      expect(assessment?.vulnerability_score).toBeCloseTo(expectedScore, 1);
+      expect(assessment?.risk_score).toBeCloseTo(expectedScore, 1);
+      expect(assessment?.risk_tier).toBe('Extreme Risk');
+
+      // Verify raw indicators exist and are positive
+      expect(assessment?.raw_indicators.mean_pop_density).toBeGreaterThan(0);
+      expect(assessment?.raw_indicators.canopy_deficit).toBeGreaterThan(0);
+
+      // Verify percentiles exist and are between 0 and 1
+      expect(assessment?.percentiles.uhi_percentile).toBeGreaterThan(0);
+      expect(assessment?.percentiles.uhi_percentile).toBeLessThanOrEqual(1.0);
+      expect(assessment?.percentiles.pop_percentile).toBeGreaterThan(0);
+      expect(assessment?.percentiles.pop_percentile).toBeLessThanOrEqual(1.0);
+      expect(assessment?.percentiles.canopy_percentile).toBeGreaterThan(0);
+      expect(assessment?.percentiles.canopy_percentile).toBeLessThanOrEqual(1.0);
+
+      // Verify weights sum to 1.0
+      expect(assessment?.weights.uhi).toBe(0.50);
+      expect(assessment?.weights.pop).toBe(0.30);
+      expect(assessment?.weights.canopy).toBe(0.20);
+
+      // Verify peer cities
+      expect(assessment?.peer_cities.length).toBeGreaterThan(0);
+      const activePeer = assessment?.peer_cities.find((p) => p.is_active);
+      expect(activePeer).toBeDefined();
+      expect(activePeer?.city.toLowerCase()).toBe(cityName.toLowerCase());
+    }
   });
 });

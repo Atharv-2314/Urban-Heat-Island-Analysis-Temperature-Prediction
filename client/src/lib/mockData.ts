@@ -8,7 +8,10 @@ import type {
   RiskScore,
   MonthlyDataRecord,
   GridPixelRecord,
+  CityRiskAssessment,
+  PeerCityRisk,
 } from '../types';
+import riskData from './riskData.json';
 
 export const INITIAL_CITIES: CityRecord[] = [
   { city: 'Ahmedabad', country: 'India', latitude: 23.0225, longitude: 72.5714, climate_group: 'Arid', koppen_zone: 'BSh', population: 8400000, region: 'South Asia' },
@@ -503,4 +506,72 @@ export function generateMockGridPixels(cityName: string): GridPixelRecord[] {
     }
   }
   return pixels;
+}
+
+export function generateMockCityRiskAssessment(cityName: string): CityRiskAssessment {
+  const norm = (cityName || '').toLowerCase();
+  const list = riskData as Array<{
+    city: string;
+    climate_group: string;
+    latitude: number;
+    longitude: number;
+    mean_uhi: number;
+    max_uhi: number;
+    mean_air_temp: number;
+    mean_pop_density: number;
+    mean_ndvi: number;
+    mean_ndbi: number;
+    canopy_deficit: number;
+    uhi_percentile: number;
+    pop_percentile: number;
+    canopy_percentile: number;
+    vulnerability_score: number;
+    risk_tier: string;
+  }>;
+
+  const found = list.find((c) => c.city.toLowerCase() === norm) ?? list[0];
+  const peers: PeerCityRisk[] = list
+    .filter((c) => c.climate_group === found.climate_group)
+    .sort((a, b) => b.vulnerability_score - a.vulnerability_score)
+    .map((p) => ({
+      city: p.city,
+      climate_group: p.climate_group,
+      vulnerability_score: p.vulnerability_score,
+      risk_score: p.vulnerability_score,
+      risk_tier: p.risk_tier,
+      mean_uhi: p.mean_uhi,
+      mean_pop_density: p.mean_pop_density,
+      canopy_deficit: p.canopy_deficit,
+      uhi_percentile: p.uhi_percentile,
+      pop_percentile: p.pop_percentile,
+      canopy_percentile: p.canopy_percentile,
+      is_active: p.city.toLowerCase() === norm,
+    }));
+
+  return {
+    city: found.city,
+    climate_group: found.climate_group,
+    vulnerability_score: found.vulnerability_score,
+    risk_score: found.vulnerability_score,
+    risk_tier: found.risk_tier,
+    raw_indicators: {
+      mean_uhi: found.mean_uhi,
+      mean_pop_density: found.mean_pop_density,
+      canopy_deficit: found.canopy_deficit,
+      mean_ndvi: found.mean_ndvi,
+      mean_air_temp: found.mean_air_temp,
+      max_uhi: found.max_uhi,
+    },
+    percentiles: {
+      uhi_percentile: found.uhi_percentile,
+      pop_percentile: found.pop_percentile,
+      canopy_percentile: found.canopy_percentile,
+    },
+    weights: {
+      uhi: 0.50,
+      pop: 0.30,
+      canopy: 0.20,
+    },
+    peer_cities: peers,
+  };
 }

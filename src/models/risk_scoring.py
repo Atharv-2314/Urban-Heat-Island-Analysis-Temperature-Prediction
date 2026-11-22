@@ -127,6 +127,7 @@ class ClimateEvaluatorAndRiskScorer:
                 "city", "climate_group", "vulnerability_score", "risk_tier", "mean_uhi", "mean_pop_density"
             ]].to_dict(orient="records"),
             "tier_distribution": risk_scores["risk_tier"].value_counts().to_dict(),
+            "city_risk_scores": risk_scores.to_dict(orient="records"),
         }
 
         with open(report_file, "w", encoding="utf-8") as f:
