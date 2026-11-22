@@ -532,3 +532,37 @@ The SHAP page must dynamically calculate and display feature importance based on
 4. Installable, offline-capable PWA for both desktop and mobile platforms.
 5. Automated GitHub Actions CI workflow and live HTTPS deployment linked to `AvaniAgarwal-23/UrbanHeatIntelligence`.
 
+
+## Phase 10: Production Deployment — PC & Mobile Readiness (Milestones 42–46)
+
+- **Milestone 42: Repository Hygiene, Build Hardening & Environment Configuration**
+  - Audit `.gitignore` to ensure `.env`, `node_modules`, and cache files are untracked while required processed artifacts remain tracked.
+  - Externalize hardcoded `localhost` API endpoints into `VITE_API_BASE_URL`; add `.env.example` template.
+  - Configure Express production middleware (`helmet`, `compression`, strict CORS, `NODE_ENV=production`) and sanitized error handling.
+  - Implement `GET /api/health` verifying backend uptime and dataset/model artifact loading.
+  - Enable Vite route‑level lazy loading for heavy components (Rolling Validation, City Deep Dive, SHAP Explainability).
+
+- **Milestone 43: PC (Desktop/Laptop) Layout & Widescreen Optimization**
+  - Audit dashboard views across standard desktop viewports (1280×720, 1440×900, 1920×1080, ultrawide).
+  - Ensure Leaflet maps, Recharts containers, heatwave anomaly matrix, and SHAP waterfall plots scale without overflow or clipping.
+  - Verify keyboard navigation, focus states, and CSV export workflows on Chrome, Edge, Opera GX, and Safari.
+  - Confirm zero console errors or memory leaks when switching rapidly across all 42 cities.
+
+- **Milestone 44: Mobile Responsiveness & Touch Interaction Adaptation**
+  - Adapt CSS Grid/Flexbox layouts for mobile/tablet breakpoints (360×800, 390×844, 768×1024).
+  - Provide tap‑friendly targets (≥44×44 px) for map markers, chart tooltips, and matrix cells; replace hover‑only interactions.
+  - Add smooth horizontal scroll wrappers with sticky year/label columns for wide data tables on narrow screens.
+  - Collapse filter toolbars into a compact mobile filter drawer or stacked controls.
+
+- **Milestone 45: Mobile & Desktop PWA (Installable App) Packaging**
+  - Configure `vite-plugin-pwa` with `manifest.webmanifest` (app name, `standalone` display, theme colors, maskable icons).
+  - Set up Workbox runtime caching: `NetworkFirst` for `/api/*` and `CacheFirst` for static assets and map tiles.
+  - Add service‑worker update prompt and offline status indicator banner.
+  - Commit SPA rewrite rules (`vercel.json` or `_redirects`) to ensure direct route refreshes serve `index.html`.
+
+- **Milestone 46: GitHub CI/CD & Cross‑Device Cloud Deployment**
+  - Add `.github/workflows/ci.yml` with least‑privilege permissions to run Python/Node tests, linting, and Vite production builds on PRs and pushes to `main`.
+  - Connect repository to backend host (Render / Railway / Fly.io) and frontend host (Vercel / Netlify / Cloudflare Pages) for automated HTTPS deployments.
+  - Run Lighthouse audits targeting ≥90 across Performance, Accessibility, Best Practices, and PWA for both Desktop and Mobile.
+  - Perform end‑to‑end live verification on a physical PC browser and a mobile phone, then tag release `v1.0.0`.
+
