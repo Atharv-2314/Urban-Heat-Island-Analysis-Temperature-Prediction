@@ -12,7 +12,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'robots.txt'],
       manifest: {
-        name: 'UrbanHeatIntelligence — Global UHI Observatory',
+        name: 'Urban-Heat-Island-Analysis-Temperature-Prediction — Global UHI Observatory',
         short_name: 'UrbanHeat',
         description: '42 Global Cities Urban Heat Island Analysis & Policy Simulator (2016–2025)',
         theme_color: '#1f1e1d',
