@@ -499,11 +499,11 @@ The SHAP page must dynamically calculate and display feature importance based on
   - [x] Implement `GET /api/health` verifying backend uptime and confirming that all required Parquet/JSON datasets and model artifacts load without path errors.
   - [x] Enable Vite route-level lazy loading (Rolling Validation, City Deep Dive, SHAP Explainability) to minimize initial mobile bundle size.
 
-- [ ] **Milestone 43: PC (Desktop/Laptop) Layout & Widescreen Optimization**
-  - [ ] Audit all dashboard views across standard desktop viewports (`1280×720`, `1440×900`, `1920×1080`, and ultrawide).
-  - [ ] Verify that Leaflet maps, Recharts containers, the 10-year heatwave anomaly matrix, and SHAP waterfall plots scale cleanly without horizontal overflow or clipped tooltips.
-  - [ ] Verify keyboard navigation, focus states, and desktop CSV export workflows across Chrome, Edge, Opera GX, and Safari.
-  - [ ] Confirm zero console errors or memory leaks when switching rapidly across all 42 cities.
+- [x] **Milestone 43: PC (Desktop/Laptop) Layout & Widescreen Optimization**
+  - [x] Audit all dashboard views across standard desktop viewports (`1280×720`, `1440×900`, `1920×1080`, and ultrawide).
+  - [x] Verify that Leaflet maps, Recharts containers, the 10-year heatwave anomaly matrix, and SHAP waterfall plots scale cleanly without horizontal overflow or clipped tooltips.
+  - [x] Verify keyboard navigation, focus states, and desktop CSV export workflows across Chrome, Edge, Opera GX, and Safari.
+  - [x] Confirm zero console errors or memory leaks when switching rapidly across all 42 cities.
 
 - [ ] **Milestone 44: Mobile Responsiveness & Touch Interaction Adaptation**
   - [ ] Adapt CSS Grid/Flexbox layouts for mobile and tablet breakpoints (`360×800`, `390×844`, `768×1024`).

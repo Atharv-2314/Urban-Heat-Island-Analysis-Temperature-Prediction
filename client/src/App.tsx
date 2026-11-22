@@ -74,7 +74,7 @@ export const App: React.FC = () => {
       <div className="min-h-screen bg-[#fbfbf9] text-[#1f1e1d] flex flex-col font-sans selection:bg-stone-200">
         <Navbar apiStatus={apiStatus} />
 
-        <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 focus:outline-hidden">
+        <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl 2xl:max-w-(--breakpoint-2xl) w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 focus:outline-hidden">
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<OverviewMap />} />

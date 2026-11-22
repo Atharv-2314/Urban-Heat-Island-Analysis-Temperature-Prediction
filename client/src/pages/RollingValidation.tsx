@@ -84,7 +84,8 @@ export const RollingValidation: React.FC = () => {
   ];
 
   const handleExport = (type: string) => {
-    window.open(`http://localhost:3001/api/models/rolling/export/${type}`, '_blank');
+    const apiBase = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
+    window.open(`${apiBase}/api/models/rolling/export/${type}`, '_blank');
   };
 
   return (

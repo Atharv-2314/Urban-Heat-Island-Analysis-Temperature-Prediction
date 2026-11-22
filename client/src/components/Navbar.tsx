@@ -42,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({ apiStatus = 'checking' }) => {
 
   return (
     <header className="sticky top-0 z-50 bg-[#fbfbf9]/90 backdrop-blur-md border-b border-[#e9e8e4]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl 2xl:max-w-(--breakpoint-2xl) mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo & Title */}
           <div className="flex items-center gap-3">
