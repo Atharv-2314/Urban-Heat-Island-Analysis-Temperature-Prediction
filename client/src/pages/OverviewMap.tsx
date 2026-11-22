@@ -233,7 +233,7 @@ export const OverviewMap: React.FC = () => {
                   <CircleMarker
                     key={city.city}
                     center={[city.latitude, city.longitude]}
-                    radius={isSelected ? 10 : 6}
+                    radius={isSelected ? 14 : 9}
                     pathOptions={{
                       color: isSelected ? '#1f1e1d' : color,
                       weight: isSelected ? 3 : 1.5,
@@ -272,7 +272,7 @@ export const OverviewMap: React.FC = () => {
                           type="button"
                           onClick={() => navigate(`/city-dive?city=${encodeURIComponent(city.city)}`)}
                           aria-label={`Open 10-year deep-dive for ${city.city}`}
-                          className="w-full mt-2 py-1.5 px-2 text-center text-[11px] font-medium bg-stone-900 text-stone-50 rounded hover:bg-stone-800 transition-colors focus-visible:outline-2 focus-visible:outline-stone-900"
+                          className="w-full mt-2 py-2 px-3 min-h-[44px] flex items-center justify-center text-center text-xs font-semibold bg-stone-900 text-stone-50 rounded hover:bg-stone-800 transition-colors focus-visible:outline-2 focus-visible:outline-stone-900"
                         >
                           View City Deep-Dive →
                         </button>

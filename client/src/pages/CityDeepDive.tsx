@@ -33,6 +33,11 @@ export const CityDeepDive: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedYearRange, setSelectedYearRange] = useState<string>('all');
+  const [selectedCellAnomaly, setSelectedCellAnomaly] = useState<{
+    year: number;
+    month: number;
+    val: number | null;
+  } | null>(null);
 
   // Sync city selection with URL param
   const handleCityChange = (cityName: string) => {
@@ -349,8 +354,8 @@ export const CityDeepDive: React.FC = () => {
       </div>
 
       {/* Tab Navigation Controls */}
-      <div className="flex items-center justify-between border-b border-stone-200 pb-2" role="tablist" aria-label="City analysis view tabs">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-stone-200 pb-2 gap-3" role="tablist" aria-label="City analysis view tabs">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             role="tab"
             id="tab-trends"
@@ -358,7 +363,7 @@ export const CityDeepDive: React.FC = () => {
             aria-controls="panel-trends"
             type="button"
             onClick={() => setActiveTab('trends')}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all focus-visible:outline-2 focus-visible:outline-stone-900 ${
+            className={`min-h-[44px] px-3.5 py-2 text-xs font-semibold rounded-md transition-all flex items-center focus-visible:outline-2 focus-visible:outline-stone-900 ${
               activeTab === 'trends'
                 ? 'bg-stone-900 text-stone-50 shadow-xs'
                 : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
@@ -373,7 +378,7 @@ export const CityDeepDive: React.FC = () => {
             aria-controls="panel-seasonal"
             type="button"
             onClick={() => setActiveTab('seasonal')}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all focus-visible:outline-2 focus-visible:outline-stone-900 ${
+            className={`min-h-[44px] px-3.5 py-2 text-xs font-semibold rounded-md transition-all flex items-center focus-visible:outline-2 focus-visible:outline-stone-900 ${
               activeTab === 'seasonal'
                 ? 'bg-stone-900 text-stone-50 shadow-xs'
                 : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
@@ -388,7 +393,7 @@ export const CityDeepDive: React.FC = () => {
             aria-controls="panel-anomaly"
             type="button"
             onClick={() => setActiveTab('anomaly')}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all focus-visible:outline-2 focus-visible:outline-stone-900 ${
+            className={`min-h-[44px] px-3.5 py-2 text-xs font-semibold rounded-md transition-all flex items-center focus-visible:outline-2 focus-visible:outline-stone-900 ${
               activeTab === 'anomaly'
                 ? 'bg-stone-900 text-stone-50 shadow-xs'
                 : 'text-stone-700 hover:text-stone-900 hover:bg-stone-100'
@@ -399,7 +404,7 @@ export const CityDeepDive: React.FC = () => {
         </div>
 
         {activeTab === 'trends' && (
-          <div className="flex items-center gap-1.5 text-xs" role="group" aria-label="Filter time-series date range">
+          <div className="flex items-center gap-1.5 text-xs self-start sm:self-auto" role="group" aria-label="Filter time-series date range">
             <span className="text-stone-500 font-mono font-medium">Range:</span>
             {['all', '2020-2025', '2024-2025'].map((r) => (
               <button
@@ -407,7 +412,7 @@ export const CityDeepDive: React.FC = () => {
                 type="button"
                 onClick={() => setSelectedYearRange(r)}
                 aria-pressed={selectedYearRange === r}
-                className={`px-2 py-0.5 rounded text-[11px] font-mono transition-colors focus-visible:outline-2 focus-visible:outline-stone-900 ${
+                className={`min-h-[36px] px-2.5 py-1 rounded text-[11px] font-mono transition-colors flex items-center focus-visible:outline-2 focus-visible:outline-stone-900 ${
                   selectedYearRange === r
                     ? 'bg-stone-300 text-stone-950 font-bold'
                     : 'text-stone-600 hover:bg-stone-100'
@@ -704,14 +709,16 @@ export const CityDeepDive: React.FC = () => {
           </div>
 
           {/* Matrix Grid Table */}
-          <div tabIndex={0} role="region" aria-label="10-year monthly anomaly heatmap matrix" className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-stone-900">
+          <div tabIndex={0} role="region" aria-label="10-year monthly anomaly heatmap matrix" className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-stone-900 border border-stone-200 rounded-md">
             <table className="w-full text-center text-xs border-collapse">
               <caption className="sr-only">Monthly temperature anomalies in degrees Celsius from 2016 through 2025</caption>
               <thead>
-                <tr className="border-b border-stone-200 text-stone-600 font-mono text-[11px]">
-                  <th scope="col" className="py-2 px-3 text-left">Year</th>
+                <tr className="border-b border-stone-200 text-stone-600 font-mono text-[11px] bg-stone-50">
+                  <th scope="col" className="sticky left-0 bg-stone-50 z-20 py-2.5 px-3 text-left font-bold text-stone-900 border-r border-stone-200 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)]">
+                    Year
+                  </th>
                   {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((m) => (
-                    <th key={m} scope="col" className="py-2 px-1 w-12">
+                    <th key={m} scope="col" className="py-2.5 px-1 min-w-[44px]">
                       {m}
                     </th>
                   ))}
@@ -720,24 +727,26 @@ export const CityDeepDive: React.FC = () => {
               <tbody className="divide-y divide-stone-100 font-mono">
                 {anomalyMatrix.map((row) => (
                   <tr key={row.year as number} className="hover:bg-stone-50/50">
-                    <th scope="row" className="py-2 px-3 text-left font-bold text-stone-950">
+                    <th scope="row" className="sticky left-0 bg-white z-10 py-2 px-3 text-left font-bold text-stone-950 border-r border-stone-200 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)]">
                       {row.year}
                     </th>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((m) => {
                       const rawVal = row[`m${m}`];
                       const val = rawVal !== null && rawVal !== undefined ? Number(rawVal) : null;
                       const hasVal = val !== null && !isNaN(val);
+                      const isSelected = selectedCellAnomaly?.year === row.year && selectedCellAnomaly?.month === m;
                       return (
-                        <td key={m} className="p-1">
-                          <span
-                            tabIndex={0}
+                        <td key={m} className="p-0.5 min-w-[44px]">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedCellAnomaly({ year: row.year as number, month: m, val })}
                             aria-label={`Year ${row.year}, Month ${m}: ${hasVal ? `${val >= 0 ? `+${val.toFixed(1)}` : val.toFixed(1)} degrees Celsius anomaly` : 'Data unavailable'}`}
-                            className={`inline-block w-full py-1 rounded text-[10px] font-semibold transition-all focus-visible:outline-2 focus-visible:outline-stone-900 ${getAnomalyColor(
+                            className={`w-full min-h-[44px] min-w-[40px] flex items-center justify-center rounded text-[11px] font-semibold transition-all focus-visible:outline-2 focus-visible:outline-stone-900 active:scale-95 ${getAnomalyColor(
                               val
-                            )}`}
+                            )} ${isSelected ? 'ring-2 ring-stone-900 ring-offset-1 z-10 relative' : ''}`}
                           >
                             {hasVal ? (val >= 0 ? `+${val.toFixed(1)}` : val.toFixed(1)) : '—'}
-                          </span>
+                          </button>
                         </td>
                       );
                     })}
@@ -747,8 +756,31 @@ export const CityDeepDive: React.FC = () => {
             </table>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-xs text-stone-600">
-            <div className="flex items-center gap-2" role="note" aria-label="Anomaly scale legend">
+          {/* Active Tap / Selected Cell Detail Banner */}
+          {selectedCellAnomaly && (
+            <div className="mt-3 p-3 bg-stone-100 rounded-md border border-stone-200 flex items-center justify-between text-xs" role="region" aria-live="polite">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-stone-900">
+                  {new Date(2000, selectedCellAnomaly.month - 1).toLocaleString('en-US', { month: 'long' })} {selectedCellAnomaly.year}:
+                </span>
+                <span className="font-mono">
+                  {selectedCellAnomaly.val !== null
+                    ? `${selectedCellAnomaly.val >= 0 ? `+${selectedCellAnomaly.val.toFixed(2)}` : selectedCellAnomaly.val.toFixed(2)} °C anomaly vs 10-yr baseline (${anomalyBaseline.mean >= 0 ? '+' : ''}${anomalyBaseline.mean.toFixed(2)} °C)`
+                    : 'Missing satellite observation (cloud contamination)'}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedCellAnomaly(null)}
+                className="text-stone-600 hover:text-stone-900 text-[11px] font-semibold px-2 py-1 bg-stone-200 hover:bg-stone-300 rounded"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+
+          <div className="mt-4 pt-3 border-t border-stone-100 flex flex-wrap items-center justify-between gap-3 text-xs text-stone-600">
+            <div className="flex flex-wrap items-center gap-2" role="note" aria-label="Anomaly scale legend">
               <span className="text-[11px] font-mono font-medium">Scale:</span>
               <span className="px-2 py-0.5 rounded bg-[#0c4a6e] text-white text-[10px] font-mono">&lt; -2.0 °C</span>
               <span className="px-2 py-0.5 rounded bg-[#0369a1] text-white text-[10px] font-mono">-1.0 to -2.0 °C</span>

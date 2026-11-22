@@ -505,17 +505,17 @@ The SHAP page must dynamically calculate and display feature importance based on
   - [x] Verify keyboard navigation, focus states, and desktop CSV export workflows across Chrome, Edge, Opera GX, and Safari.
   - [x] Confirm zero console errors or memory leaks when switching rapidly across all 42 cities.
 
-- [ ] **Milestone 44: Mobile Responsiveness & Touch Interaction Adaptation**
-  - [ ] Adapt CSS Grid/Flexbox layouts for mobile and tablet breakpoints (`360×800`, `390×844`, `768×1024`).
-  - [ ] Ensure tap-friendly touch targets (>= 44×44 px) for Leaflet map markers, Recharts tooltips, and Heatwave Anomaly Matrix cells, replacing hover-only interactions.
-  - [ ] Add smooth horizontal scroll wrappers with sticky year/label columns for wide data tables (Rolling Fold comparison table and 12-month Anomaly Matrix) on narrow screens.
-  - [ ] Collapse multi-control filter toolbars (city selector, India/International scope toggle, model picker) into a compact mobile filter drawer or stacked controls.
+- [x] **Milestone 44: Mobile Responsiveness & Touch Interaction Adaptation**
+  - [x] Adapt CSS Grid/Flexbox layouts for mobile and tablet breakpoints (`360×800`, `390×844`, `768×1024`).
+  - [x] Ensure tap-friendly touch targets (>= 44×44 px) for Leaflet map markers, Recharts tooltips, and Heatwave Anomaly Matrix cells, replacing hover-only interactions.
+  - [x] Add smooth horizontal scroll wrappers with sticky year/label columns for wide data tables (Rolling Fold comparison table and 12-month Anomaly Matrix) on narrow screens.
+  - [x] Collapse multi-control filter toolbars (city selector, India/International scope toggle, model picker) into a compact mobile filter drawer or stacked controls.
 
-- [ ] **Milestone 45: Mobile & Desktop PWA (Installable App) Packaging**
-  - [ ] Configure `vite-plugin-pwa` with `manifest.webmanifest` (app name, `standalone` display mode, theme colors, and `192×192` + `512×512` maskable icons) so users can install UrbanHeatIntelligence on iOS/Android home screens and desktop docks.
-  - [ ] Configure Workbox runtime caching (`NetworkFirst` with short TTL for `/api/*` endpoints and `CacheFirst` for static assets and map tiles) so recently viewed cities remain accessible on unstable mobile networks.
-  - [ ] Add a service-worker update prompt ("New version available — Reload") and an offline status indicator banner.
-  - [ ] Commit SPA rewrite rules (`vercel.json` / `_redirects`) to `AvaniAgarwal-23/UrbanHeatIntelligence` so direct refreshes on sub-routes never return 404.
+- [x] **Milestone 45: Mobile & Desktop PWA (Installable App) Packaging**
+  - [x] Configure `vite-plugin-pwa` with `manifest.webmanifest` (app name, `standalone` display mode, theme colors, and `192×192` + `512×512` maskable icons) so users can install UrbanHeatIntelligence on iOS/Android home screens and desktop docks.
+  - [x] Configure Workbox runtime caching (`NetworkFirst` with short TTL for `/api/*` endpoints and `CacheFirst` for static assets and map tiles) so recently viewed cities remain accessible on unstable mobile networks.
+  - [x] Add a service-worker update prompt ("New version available — Reload") and an offline status indicator banner.
+  - [x] Commit SPA rewrite rules (`vercel.json` / `_redirects`) to `AvaniAgarwal-23/UrbanHeatIntelligence` so direct refreshes on sub-routes never return 404.
 
 - [ ] **Milestone 46: GitHub CI/CD & Cross-Device Cloud Deployment**
   - [ ] Add `.github/workflows/ci.yml` with least-privilege permissions (`contents: read`) to automatically run Python/Node tests, schema checks, and Vite production builds on pull requests and pushes to `main`.

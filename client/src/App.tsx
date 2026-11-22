@@ -8,6 +8,7 @@ import axios from 'axios';
 const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
 
 import { Navbar } from './components/Navbar';
+import { PwaPrompt } from './components/PwaPrompt';
 
 // Lazy load all 6 pages for optimal chunking and sub-second transitions
 const OverviewMap = lazy(() =>
@@ -72,6 +73,7 @@ export const App: React.FC = () => {
       </a>
 
       <div className="min-h-screen bg-[#fbfbf9] text-[#1f1e1d] flex flex-col font-sans selection:bg-stone-200">
+        <PwaPrompt />
         <Navbar apiStatus={apiStatus} />
 
         <main id="main-content" tabIndex={-1} className="flex-1 max-w-7xl 2xl:max-w-(--breakpoint-2xl) w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 focus:outline-hidden">

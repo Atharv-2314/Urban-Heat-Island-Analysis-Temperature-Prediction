@@ -244,7 +244,7 @@ export const SpatialExplorer: React.FC = () => {
                   <CircleMarker
                     key={i}
                     center={[pixel.latitude, pixel.longitude]}
-                    radius={isSelected ? 10 : 7}
+                    radius={isSelected ? 13 : 9}
                     pathOptions={{
                       color: isSelected ? '#000000' : color,
                       weight: isSelected ? 3 : 1,

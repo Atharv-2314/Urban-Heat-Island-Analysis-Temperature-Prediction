@@ -206,31 +206,31 @@ export const RollingValidation: React.FC = () => {
               </span>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
+            <div className="overflow-x-auto border border-stone-200 rounded-md">
+              <table className="w-full text-xs text-left border-collapse">
                 <thead className="bg-stone-50 text-stone-700 font-semibold border-b border-stone-200">
                   <tr>
-                    <th className="py-2.5 px-3">Fold</th>
-                    <th className="py-2.5 px-3">Training Window</th>
-                    <th className="py-2.5 px-3">Val Year</th>
-                    <th className="py-2.5 px-3">Valid Samples</th>
-                    <th className="py-2.5 px-3 text-right">HistGB RMSE</th>
-                    <th className="py-2.5 px-3 text-right">HistGB MAE</th>
-                    <th className="py-2.5 px-3 text-right">RF RMSE</th>
-                    <th className="py-2.5 px-3 text-right">Ridge (Base)</th>
+                    <th className="sticky left-0 bg-stone-50 z-20 py-2.5 px-3 border-r border-stone-200 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.06)]">Fold</th>
+                    <th className="py-2.5 px-3 whitespace-nowrap">Training Window</th>
+                    <th className="py-2.5 px-3 whitespace-nowrap">Val Year</th>
+                    <th className="py-2.5 px-3 whitespace-nowrap">Valid Samples</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">HistGB RMSE</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">HistGB MAE</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">RF RMSE</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">Ridge (Base)</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100 font-mono">
                   {foldRows.map((r) => (
                     <tr key={r.fold} className="hover:bg-stone-50/70 transition-colors">
-                      <td className="py-2.5 px-3 font-sans font-medium text-stone-900">{r.fold}</td>
-                      <td className="py-2.5 px-3 text-stone-600">{r.train}</td>
-                      <td className="py-2.5 px-3 font-semibold text-stone-900">{r.val}</td>
-                      <td className="py-2.5 px-3 text-stone-600">{r.samples}</td>
-                      <td className="py-2.5 px-3 text-right font-bold text-emerald-700">{r.hgb_rmse.toFixed(4)}</td>
-                      <td className="py-2.5 px-3 text-right text-stone-700">{r.hgb_mae.toFixed(4)}</td>
-                      <td className="py-2.5 px-3 text-right text-stone-700">{r.rf_rmse.toFixed(4)}</td>
-                      <td className="py-2.5 px-3 text-right text-stone-500">{r.ridge_rmse.toFixed(4)}</td>
+                      <td className="sticky left-0 bg-white z-10 py-2.5 px-3 font-sans font-medium text-stone-900 border-r border-stone-200 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.06)]">{r.fold}</td>
+                      <td className="py-2.5 px-3 text-stone-600 whitespace-nowrap">{r.train}</td>
+                      <td className="py-2.5 px-3 font-semibold text-stone-900 whitespace-nowrap">{r.val}</td>
+                      <td className="py-2.5 px-3 text-stone-600 whitespace-nowrap">{r.samples}</td>
+                      <td className="py-2.5 px-3 text-right font-bold text-emerald-700 whitespace-nowrap">{r.hgb_rmse.toFixed(4)}</td>
+                      <td className="py-2.5 px-3 text-right text-stone-700 whitespace-nowrap">{r.hgb_mae.toFixed(4)}</td>
+                      <td className="py-2.5 px-3 text-right text-stone-700 whitespace-nowrap">{r.rf_rmse.toFixed(4)}</td>
+                      <td className="py-2.5 px-3 text-right text-stone-500 whitespace-nowrap">{r.ridge_rmse.toFixed(4)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -309,29 +309,29 @@ export const RollingValidation: React.FC = () => {
               Comparing original 2024 validation results (trained on 8 years) against 4-fold rolling evaluation and 2025 test benchmark.
             </p>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-left">
+            <div className="overflow-x-auto border border-stone-200 rounded-md">
+              <table className="w-full text-xs text-left border-collapse">
                 <thead className="bg-stone-50 text-stone-700 font-semibold border-b border-stone-200">
                   <tr>
-                    <th className="py-2.5 px-3">Model</th>
-                    <th className="py-2.5 px-3 text-right">Fixed Val 2024 RMSE</th>
-                    <th className="py-2.5 px-3 text-right">Rolling Mean RMSE</th>
-                    <th className="py-2.5 px-3 text-right">Rolling Std</th>
-                    <th className="py-2.5 px-3 text-right">Δ (Rolling - Fixed Val)</th>
-                    <th className="py-2.5 px-3 text-right">Final Holdout 2025 RMSE</th>
-                    <th className="py-2.5 px-3 text-center">Rank Consistency</th>
+                    <th className="sticky left-0 bg-stone-50 z-20 py-2.5 px-3 border-r border-stone-200 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.06)]">Model</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">Fixed Val 2024 RMSE</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">Rolling Mean RMSE</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">Rolling Std</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">Δ (Rolling - Fixed Val)</th>
+                    <th className="py-2.5 px-3 text-right whitespace-nowrap">Final Holdout 2025 RMSE</th>
+                    <th className="py-2.5 px-3 text-center whitespace-nowrap">Rank Consistency</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100 font-mono">
                   {comparisonTable.map((r) => (
                     <tr key={r.model} className="hover:bg-stone-50/70 transition-colors">
-                      <td className="py-2.5 px-3 font-sans font-semibold text-stone-900">{r.model}</td>
-                      <td className="py-2.5 px-3 text-right text-stone-600">{r.fixed_val_rmse.toFixed(4)} °C</td>
-                      <td className="py-2.5 px-3 text-right font-bold text-stone-900">{r.rolling_mean_rmse.toFixed(4)} °C</td>
-                      <td className="py-2.5 px-3 text-right text-stone-500">±{r.rolling_std.toFixed(4)}</td>
-                      <td className="py-2.5 px-3 text-right text-emerald-700 font-semibold">{r.delta.toFixed(4)} °C</td>
-                      <td className="py-2.5 px-3 text-right font-bold text-blue-700">{r.fixed_test_rmse.toFixed(4)} °C</td>
-                      <td className="py-2.5 px-3 text-center font-sans font-medium text-emerald-800">
+                      <td className="sticky left-0 bg-white z-10 py-2.5 px-3 font-sans font-semibold text-stone-900 border-r border-stone-200 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.06)]">{r.model}</td>
+                      <td className="py-2.5 px-3 text-right text-stone-600 whitespace-nowrap">{r.fixed_val_rmse.toFixed(4)} °C</td>
+                      <td className="py-2.5 px-3 text-right font-bold text-stone-900 whitespace-nowrap">{r.rolling_mean_rmse.toFixed(4)} °C</td>
+                      <td className="py-2.5 px-3 text-right text-stone-500 whitespace-nowrap">±{r.rolling_std.toFixed(4)}</td>
+                      <td className="py-2.5 px-3 text-right text-emerald-700 font-semibold whitespace-nowrap">{r.delta.toFixed(4)} °C</td>
+                      <td className="py-2.5 px-3 text-right font-bold text-blue-700 whitespace-nowrap">{r.fixed_test_rmse.toFixed(4)} °C</td>
+                      <td className="py-2.5 px-3 text-center font-sans font-medium text-emerald-800 whitespace-nowrap">
                         <span className="inline-block px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[11px]">
                           {r.rank}
                         </span>

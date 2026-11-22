@@ -120,14 +120,14 @@ export const Explainability: React.FC = () => {
         title="SHAP Interpretability & Biophysical Insights"
         subtitle="Game-theoretic TreeSHAP feature attributions on HistGradientBoosting champion model. Explains the physics driving urban thermal anomalies."
         actions={
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
             {/* Geographical Scope Filter Controls */}
-            <div className="flex items-center gap-1 bg-stone-100 p-1 rounded-md border border-stone-200 text-xs" role="group" aria-label="Geographical Scope Filter">
+            <div className="flex flex-wrap items-center gap-1 bg-stone-100 p-1 rounded-md border border-stone-200 text-xs" role="group" aria-label="Geographical Scope Filter">
               <button
                 type="button"
                 onClick={() => handleScopeChange('all')}
                 aria-pressed={scope === 'all'}
-                className={`px-2.5 py-1 rounded font-medium transition-all focus-visible:outline-2 focus-visible:outline-stone-900 ${
+                className={`min-h-[38px] px-3 py-1.5 rounded font-medium transition-all flex items-center focus-visible:outline-2 focus-visible:outline-stone-900 ${
                   scope === 'all' ? 'bg-stone-900 text-stone-50 shadow-xs' : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
@@ -137,7 +137,7 @@ export const Explainability: React.FC = () => {
                 type="button"
                 onClick={() => handleScopeChange('india')}
                 aria-pressed={scope === 'india'}
-                className={`px-2.5 py-1 rounded font-medium transition-all focus-visible:outline-2 focus-visible:outline-stone-900 ${
+                className={`min-h-[38px] px-3 py-1.5 rounded font-medium transition-all flex items-center focus-visible:outline-2 focus-visible:outline-stone-900 ${
                   scope === 'india' ? 'bg-stone-900 text-stone-50 shadow-xs' : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
@@ -147,7 +147,7 @@ export const Explainability: React.FC = () => {
                 type="button"
                 onClick={() => handleScopeChange('international')}
                 aria-pressed={scope === 'international'}
-                className={`px-2.5 py-1 rounded font-medium transition-all focus-visible:outline-2 focus-visible:outline-stone-900 ${
+                className={`min-h-[38px] px-3 py-1.5 rounded font-medium transition-all flex items-center focus-visible:outline-2 focus-visible:outline-stone-900 ${
                   scope === 'international' ? 'bg-stone-900 text-stone-50 shadow-xs' : 'text-stone-600 hover:text-stone-900'
                 }`}
               >
@@ -163,7 +163,7 @@ export const Explainability: React.FC = () => {
                 aria-label="Select individual metro for SHAP attribution"
                 value={scope === 'city' ? selectedCity : ''}
                 onChange={(e) => handleCitySelect(e.target.value)}
-                className="text-xs bg-white border border-stone-300 rounded px-2.5 py-1.5 font-medium text-stone-900 shadow-xs focus-visible:outline-2 focus-visible:outline-stone-900"
+                className="min-h-[38px] text-xs bg-white border border-stone-300 rounded px-3 py-1.5 font-medium text-stone-900 shadow-xs focus-visible:outline-2 focus-visible:outline-stone-900"
               >
                 <option value="" disabled>-- Select Metro --</option>
                 <optgroup label="Indian Metros (24)">
