@@ -571,25 +571,25 @@ The SHAP page must dynamically calculate and display feature importance based on
 
 ## Phase 11: City Heat Risk Integration (Milestones 47–52 / Milestones 1–6)
 
-- [ ] **Milestone 1: Git Inspection & Safety Verification (Read-Only)**
-  - [ ] Run `git status`, `git branch -a`, and `git fetch origin`.
-  - [ ] Verify local `main` matches `origin/main` and record the exact production commit hash.
-  - [ ] Check for any uncommitted or untracked files and list them without discarding or staging them.
-  - [ ] Map out the frontend and backend directory structure.
-  - [ ] *Exit Gate:* Confirm the starting commit hash and verify that no existing local work was altered.
+- [x] **Milestone 1: Git Inspection & Safety Verification (Read-Only)**
+  - [x] Run `git status`, `git branch -a`, and `git fetch origin`.
+  - [x] Verify local `main` matches `origin/main` and record the exact production commit hash.
+  - [x] Check for any uncommitted or untracked files and list them without discarding or staging them.
+  - [x] Map out the frontend and backend directory structure.
+  - [x] *Exit Gate:* Confirm the starting commit hash and verify that no existing local work was altered.
 
-- [ ] **Milestone 2: Backup & Feature Branch Isolation**
-  - [ ] Create `backup/pre-city-heat-risk-2026-11-22` from the verified `origin/main` commit and push it to GitHub.
-  - [ ] Create `feature/city-heat-risk` from that exact same `origin/main` commit, check it out locally, and push it to GitHub.
-  - [ ] Confirm `main` and the backup branch point to the identical initial commit, and verify no Vercel/Render settings or environment files were touched.
-  - [ ] *Exit Gate (Hard Stop):* Antigravity pauses and reports the three branch commit hashes. Explicit user approval required before editing application code.
+- [x] **Milestone 2: Backup & Feature Branch Isolation**
+  - [x] Create `backup/pre-city-heat-risk-2026-11-22` from the verified `origin/main` commit and push it to GitHub.
+  - [x] Create `feature/city-heat-risk` from that exact same `origin/main` commit, check it out locally, and push it to GitHub.
+  - [x] Confirm `main` and the backup branch point to the identical initial commit, and verify no Vercel/Render settings or environment files were touched.
+  - [x] *Exit Gate (Hard Stop):* Antigravity pauses and reports the three branch commit hashes. Explicit user approval required before editing application code.
 
-- [ ] **Milestone 3: Existing Code & Backend Logic Audit**
-  - [ ] Inspect the existing Heat Risk Ranking page and City Deep Dive page.
-  - [ ] Trace the backend endpoint, JSON report/data source, climate-group assignments, and percentile/tie-handling formula:
+- [x] **Milestone 3: Existing Code & Backend Logic Audit**
+  - [x] Inspect the existing Heat Risk Ranking page and City Deep Dive page.
+  - [x] Trace the backend endpoint, JSON report/data source, climate-group assignments, and percentile/tie-handling formula:
     $$\text{Risk}(c) = 100 \times \left(0.50 \cdot P_{\text{UHI}}(c) + 0.30 \cdot P_{\text{pop}}(c) + 0.20 \cdot P_{\text{canopy}}(c)\right)$$
-  - [ ] Confirm how missing values and single-city climate groups are currently handled.
-  - [ ] *Exit Gate:* Summarize the exact backend endpoints/data structures to reuse and confirm whether any minimal API extension is needed.
+  - [x] Confirm how missing values and single-city climate groups are currently handled.
+  - [x] *Exit Gate:* Summarize the exact backend endpoints/data structures to reuse and confirm whether any minimal API extension is needed.
 
 - [ ] **Milestone 4: Backend / Data Wiring (If Needed)**
   - [ ] Ensure the City Deep Dive data payload provides the overall score, tier (`Low` $\le 30$, `Moderate` $30\text{–}60$, `High` $60\text{–}80$, `Extreme` $> 80$), climate group, raw indicator values ($\text{Mean UHI}$ in K, population density in $\text{people/km}^2$, canopy deficit $1 - \text{NDVI}$), climate-group percentiles, and peer cities in the same climate group.
