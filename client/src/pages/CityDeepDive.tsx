@@ -19,9 +19,10 @@ import {
 } from 'recharts';
 import { PageHeader } from '../components/PageHeader';
 import { StatusBadge } from '../components/StatusBadge';
-import { INITIAL_CITIES, generateMockTimeSeries } from '../lib/mockData';
-import { fetchCityTimeSeries } from '../lib/api';
-import type { MonthlyDataRecord } from '../types';
+import { CityHeatRiskAssessment } from '../components/CityHeatRiskAssessment';
+import { INITIAL_CITIES, generateMockTimeSeries, generateMockCityRiskAssessment } from '../lib/mockData';
+import { fetchCityTimeSeries, fetchCityRiskAssessment } from '../lib/api';
+import type { MonthlyDataRecord, CityRiskAssessment } from '../types';
 
 export const CityDeepDive: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,11 +40,56 @@ export const CityDeepDive: React.FC = () => {
     val: number | null;
   } | null>(null);
 
+  // Heat Risk Assessment state
+  const [riskAssessment, setRiskAssessment] = useState<CityRiskAssessment | null>(null);
+  const [riskLoading, setRiskLoading] = useState<boolean>(true);
+  const [riskError, setRiskError] = useState<string | null>(null);
+
   // Sync city selection with URL param
   const handleCityChange = (cityName: string) => {
     setSelectedCity(cityName);
     setSearchParams({ city: cityName });
   };
+
+  // Sync state if URL search param changes externally (e.g. browser navigation)
+  useEffect(() => {
+    const urlCity = searchParams.get('city');
+    if (urlCity && urlCity.toLowerCase() !== selectedCity.toLowerCase()) {
+      setSelectedCity(urlCity);
+    }
+  }, [searchParams]);
+
+  // Fetch live city heat risk assessment
+  useEffect(() => {
+    let isCancelled = false;
+    setRiskLoading(true);
+    setRiskError(null);
+
+    fetchCityRiskAssessment(selectedCity)
+      .then((data) => {
+        if (isCancelled) return;
+        if (data) {
+          setRiskAssessment(data);
+        } else {
+          setRiskAssessment(generateMockCityRiskAssessment(selectedCity));
+        }
+      })
+      .catch((err) => {
+        if (isCancelled) return;
+        console.error('Failed to load city risk assessment:', err);
+        setRiskError('Failed to fetch live risk assessment.');
+        setRiskAssessment(generateMockCityRiskAssessment(selectedCity));
+      })
+      .finally(() => {
+        if (!isCancelled) {
+          setRiskLoading(false);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [selectedCity]);
 
   // Fetch live API data with loading & error handling, and clean city transitions
   useEffect(() => {
@@ -793,6 +839,14 @@ export const CityDeepDive: React.FC = () => {
           </div>
         </section>
       )}
+
+      {/* City Heat Risk Assessment Integration */}
+      <CityHeatRiskAssessment
+        assessment={riskAssessment}
+        loading={riskLoading}
+        error={riskError}
+        onCitySelect={handleCityChange}
+      />
     </div>
   );
 };

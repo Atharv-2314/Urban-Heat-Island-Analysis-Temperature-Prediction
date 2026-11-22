@@ -596,14 +596,14 @@ The SHAP page must dynamically calculate and display feature importance based on
   - [x] Commit backend/API changes separately with a descriptive message.
   - [x] *Exit Gate:* Local API responses return matching numbers for the five benchmark cities (**Ahmedabad:** `100.0`, **Delhi:** `100.0`, **Kolkata:** `91.4`, **Sapporo:** `93.3`, **Riyadh:** `85.0`).
 
-- [ ] **Milestone 5: Frontend "City Heat Risk Assessment" UI**
-  - [ ] **Overall Score Card:** City name, score out of 100, tier badge, climate group, circular gauge, and brief methodology summary.
-  - [ ] **Component Breakdown:** Separate display of raw values, climate-group percentiles, and weights ($50\% / 30\% / 20\%$).
-  - [ ] **Climate-Group Comparison Table:** Lists peer cities in the same climate group, highlights the active city, and navigates to another city's Deep Dive on click.
-  - [ ] **Data-Driven Interpretation & Tooltip:** Explains which factor contributes most to that city's score without causal/health claims, plus an info tooltip covering single-city climate-group limits and land-surface vs. air-temperature caveats.
-  - [ ] Add loading, error, and missing-data states while keeping all existing City Deep Dive charts intact.
-  - [ ] Commit frontend changes in logical stages on `feature/city-heat-risk`.
-  - [ ] *Exit Gate:* UI renders cleanly across desktop and mobile viewports with zero hardcoded city names or scores.
+- [x] **Milestone 5: Frontend "City Heat Risk Assessment" UI**
+  - [x] **Overall Score Card:** City name, score out of 100, tier badge, climate group, circular gauge, and brief methodology summary.
+  - [x] **Component Breakdown:** Separate display of raw values, climate-group percentiles, and weights ($50\% / 30\% / 20\%$).
+  - [x] **Climate-Group Comparison Table:** Lists peer cities in the same climate group, highlights the active city, and navigates to another city's Deep Dive on click.
+  - [x] **Data-Driven Interpretation & Tooltip:** Explains which factor contributes most to that city's score without causal/health claims, plus an info tooltip covering single-city climate-group limits and land-surface vs. air-temperature caveats.
+  - [x] Add loading, error, and missing-data states while keeping all existing City Deep Dive charts intact.
+  - [x] Commit frontend changes in logical stages on `feature/city-heat-risk`.
+  - [x] *Exit Gate:* UI renders cleanly across desktop and mobile viewports with zero hardcoded city names or scores.
 
 - [ ] **Milestone 6: Automated Verification, Build Check & Handoff Report**
   - [ ] Run backend/frontend tests, linters, and production builds (`npm run build` / `pytest`, etc.) locally on `feature/city-heat-risk`.
