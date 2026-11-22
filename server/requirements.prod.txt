@@ -1,0 +1,6 @@
+# Minimal Python packages needed by the Express server at RUNTIME
+# (Parquet reader spawned by dataLoader.ts → reads .parquet files via pandas + pyarrow)
+# Dev/viz tools (streamlit, plotly, matplotlib, seaborn, pytest) are intentionally excluded.
+pandas>=2.2.0
+pyarrow>=15.0.0
+numpy>=1.26.0

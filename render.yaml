@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: uhi-api-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile.render
+    dockerContext: .
+    region: oregon
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: PYTHON_BIN
+        value: python3
+      - key: ALLOWED_ORIGINS
+        sync: false          # set your Vercel URL in Render dashboard
+      - key: FRONTEND_URL
+        sync: false          # same value as ALLOWED_ORIGINS
+    healthCheckPath: /health
+    autoDeploy: true
