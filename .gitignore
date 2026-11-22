@@ -1,4 +1,4 @@
-# Python bytecode and caches
+# ─── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
@@ -6,17 +6,58 @@ __pycache__/
 .coverage
 htmlcov/
 
-# Environment
+# Virtual environments
 .venv/
 venv/
 ENV/
 env/
 
-# IDE & OS
+# ─── Node.js ───────────────────────────────────────────────────────────────────
+node_modules/
+dist/
+build/
+.cache/
+
+# Lock files (keep package-lock.json; ignore yarn / pnpm locks if not used)
+yarn.lock
+pnpm-lock.yaml
+
+# ─── Environment & Secrets ─────────────────────────────────────────────────────
+# NEVER commit real secrets — commit only .env.example files
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+server/.env
+client/.env
+client/.env.local
+
+# ─── Build Outputs ─────────────────────────────────────────────────────────────
+client/dist/
+server/dist/
+
+# ─── IDE & OS ──────────────────────────────────────────────────────────────────
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-
-# Large raw or temporary data if needed (keeping processed parquets tracked)
 *.log
+
+# ─── Vite & TypeScript caches ──────────────────────────────────────────────────
+*.tsbuildinfo
+.vite/
+tsconfig.tsbuildinfo
+
+# ─── Test coverage ─────────────────────────────────────────────────────────────
+coverage/
+lcov.info
+
+# ─── Processed data: KEEP tracked — required for production data loading ───────
+# data/processed/rolling_results/   → keep
+# data/processed/monthly_level/     → keep
+# data/processed/pixel_level/       → keep (large files excluded below if needed)
+# Exclude raw / intermediate scratch files only:
+data/raw/
+data/interim/
+*.tmp

@@ -477,3 +477,58 @@ The SHAP page must dynamically calculate and display feature importance based on
 6. Dynamic geographical filtering and visualization updates.
 7. Validated SHAP calculations and regression tests.
 8. Updated biophysical interpretation based on the selected geographical scope.
+
+---
+
+## Phase 10: Production Deployment — PC & Mobile Readiness (Milestones 42–46)
+
+**Objective:** Prepare, harden, and deploy the full-stack Global Urban Heat Island (UHI) platform (Python ML artifacts + Node.js Express API + React/TypeScript frontend) from `https://github.com/AvaniAgarwal-23/UrbanHeatIntelligence` for seamless usage across desktop/PC browsers and mobile devices, including installable Progressive Web App (PWA) support.
+
+**Core Deployment Strategy:**
+- Use `https://github.com/AvaniAgarwal-23/UrbanHeatIntelligence` as the single source of truth for CI/CD, Git-triggered cloud deployments, and release versioning.
+- Externalize all environment-specific URLs and secrets while keeping required processed datasets and model artifacts reproducible in production.
+- Ensure full responsive usability and touch-friendly interactions across mobile viewports alongside widescreen PC layouts.
+- Package the frontend as an offline-capable PWA installable on both desktop and mobile devices.
+
+---
+
+- [x] **Milestone 42: Repository Hygiene, Build Hardening & Environment Configuration**
+  - [x] Audit `.gitignore` in `AvaniAgarwal-23/UrbanHeatIntelligence` so `.env` secrets, `node_modules`, and cache files remain untracked while required processed artifacts (`data/processed/rolling_results/`, `data/processed/monthly_level/`, and SHAP matrices) load cleanly in production.
+  - [x] Externalize all hardcoded `localhost` API endpoints into `VITE_API_BASE_URL` and commit `.env.example` templates.
+  - [x] Configure Express production middleware (`helmet`, `compression`, strict `CORS` origin allowlist, `NODE_ENV=production`, and sanitized error handling).
+  - [x] Implement `GET /api/health` verifying backend uptime and confirming that all required Parquet/JSON datasets and model artifacts load without path errors.
+  - [x] Enable Vite route-level lazy loading (Rolling Validation, City Deep Dive, SHAP Explainability) to minimize initial mobile bundle size.
+
+- [ ] **Milestone 43: PC (Desktop/Laptop) Layout & Widescreen Optimization**
+  - [ ] Audit all dashboard views across standard desktop viewports (`1280×720`, `1440×900`, `1920×1080`, and ultrawide).
+  - [ ] Verify that Leaflet maps, Recharts containers, the 10-year heatwave anomaly matrix, and SHAP waterfall plots scale cleanly without horizontal overflow or clipped tooltips.
+  - [ ] Verify keyboard navigation, focus states, and desktop CSV export workflows across Chrome, Edge, Opera GX, and Safari.
+  - [ ] Confirm zero console errors or memory leaks when switching rapidly across all 42 cities.
+
+- [ ] **Milestone 44: Mobile Responsiveness & Touch Interaction Adaptation**
+  - [ ] Adapt CSS Grid/Flexbox layouts for mobile and tablet breakpoints (`360×800`, `390×844`, `768×1024`).
+  - [ ] Ensure tap-friendly touch targets (>= 44×44 px) for Leaflet map markers, Recharts tooltips, and Heatwave Anomaly Matrix cells, replacing hover-only interactions.
+  - [ ] Add smooth horizontal scroll wrappers with sticky year/label columns for wide data tables (Rolling Fold comparison table and 12-month Anomaly Matrix) on narrow screens.
+  - [ ] Collapse multi-control filter toolbars (city selector, India/International scope toggle, model picker) into a compact mobile filter drawer or stacked controls.
+
+- [ ] **Milestone 45: Mobile & Desktop PWA (Installable App) Packaging**
+  - [ ] Configure `vite-plugin-pwa` with `manifest.webmanifest` (app name, `standalone` display mode, theme colors, and `192×192` + `512×512` maskable icons) so users can install UrbanHeatIntelligence on iOS/Android home screens and desktop docks.
+  - [ ] Configure Workbox runtime caching (`NetworkFirst` with short TTL for `/api/*` endpoints and `CacheFirst` for static assets and map tiles) so recently viewed cities remain accessible on unstable mobile networks.
+  - [ ] Add a service-worker update prompt ("New version available — Reload") and an offline status indicator banner.
+  - [ ] Commit SPA rewrite rules (`vercel.json` / `_redirects`) to `AvaniAgarwal-23/UrbanHeatIntelligence` so direct refreshes on sub-routes never return 404.
+
+- [ ] **Milestone 46: GitHub CI/CD & Cross-Device Cloud Deployment**
+  - [ ] Add `.github/workflows/ci.yml` with least-privilege permissions (`contents: read`) to automatically run Python/Node tests, schema checks, and Vite production builds on pull requests and pushes to `main`.
+  - [ ] Connect `AvaniAgarwal-23/UrbanHeatIntelligence` directly to the backend host (Render / Railway / Fly.io) and frontend host (Vercel / Netlify / Cloudflare Pages) for automated HTTPS deployments.
+  - [ ] Run Lighthouse audits targeting >= 90 across Performance, Accessibility, Best Practices, and PWA on both Desktop and Mobile profiles.
+  - [ ] Perform end-to-end live verification on a physical PC browser and a mobile phone against the deployed URLs, then tag release `v1.0.0` in `AvaniAgarwal-23/UrbanHeatIntelligence`.
+
+---
+
+**Expected Deliverables:**
+1. Production-hardened Express backend with `/api/health` and environment-based configuration.
+2. Widescreen-verified PC layout across all 42 cities and interactive visualizations.
+3. Touch-friendly mobile and tablet responsive UI with sticky-column data matrices.
+4. Installable, offline-capable PWA for both desktop and mobile platforms.
+5. Automated GitHub Actions CI workflow and live HTTPS deployment linked to `AvaniAgarwal-23/UrbanHeatIntelligence`.
+

@@ -12,17 +12,19 @@ export function requestId(req: Request, res: Response, next: NextFunction): void
   next();
 }
 
-/** Structured JSON error handler */
+/** Structured JSON error handler — sanitizes stack traces in production */
 export function errorHandler(
   err: Error,
   req: Request,
   res: Response,
   _next: NextFunction
 ): void {
+  const isProd = process.env.NODE_ENV === 'production';
   console.error(`[ERROR] ${req.method} ${req.path}:`, err.message);
   res.status(500).json({
     success: false,
-    error: err.message || 'Internal server error',
+    // Never leak internal error messages or stack traces in production
+    error: isProd ? 'Internal server error' : (err.message || 'Internal server error'),
     timestamp: new Date().toISOString(),
   });
 }

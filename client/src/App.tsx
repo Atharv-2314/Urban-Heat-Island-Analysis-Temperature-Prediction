@@ -5,6 +5,8 @@ import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
+
 import { Navbar } from './components/Navbar';
 
 // Lazy load all 6 pages for optimal chunking and sub-second transitions
@@ -46,7 +48,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     const checkBackend = async () => {
       try {
-        const res = await axios.get('http://localhost:3001/health', { timeout: 2000 });
+        const res = await axios.get(`${API_BASE}/api/health`, { timeout: 2000 });
         if (res.data && res.data.status === 'ok') {
           setApiStatus('online');
         } else {

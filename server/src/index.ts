@@ -13,6 +13,7 @@ import fs from 'fs';
 
 import { errorHandler, notFound, requestId } from './middleware';
 import { cacheService } from './services/cache';
+import { DATA_PATHS, REPORT_PATHS } from './services/dataLoader';
 
 import citiesRouter from './routes/cities';
 import monthlyRouter from './routes/monthly';
@@ -24,7 +25,21 @@ dotenv.config();
 
 const app = express();
 const PORT = parseInt(process.env.PORT ?? '3001', 10);
-const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:5173';
+const NODE_ENV = process.env.NODE_ENV ?? 'development';
+const IS_PROD = NODE_ENV === 'production';
+
+// Build CORS origin allowlist from env — supports comma-separated URLs
+const rawOrigins = process.env.ALLOWED_ORIGINS ?? process.env.FRONTEND_URL ?? 'http://localhost:5173';
+const ALLOWED_ORIGINS: string[] = rawOrigins
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+// Always allow localhost in dev; never leak dev origins in prod
+if (!IS_PROD) {
+  if (!ALLOWED_ORIGINS.includes('http://localhost:5173')) ALLOWED_ORIGINS.push('http://localhost:5173');
+  if (!ALLOWED_ORIGINS.includes('http://localhost:3000')) ALLOWED_ORIGINS.push('http://localhost:3000');
+}
 
 // ── Security & Utility Middleware ─────────────────────────────────────────────
 app.use(helmet({
@@ -32,7 +47,12 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: [FRONTEND_URL, 'http://localhost:5173', 'http://localhost:3000'],
+  origin: (origin, callback) => {
+    // Allow server-to-server requests (no Origin header) in dev
+    if (!origin && !IS_PROD) return callback(null, true);
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin ${origin} not in allowlist`));
+  },
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
   credentials: true,
@@ -53,7 +73,7 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// ── Health Check ──────────────────────────────────────────────────────────────
+// ── Health Check (legacy path) ────────────────────────────────────────────────
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
@@ -61,6 +81,44 @@ app.get('/health', (_req, res) => {
     cache_stats: cacheService.stats(),
     timestamp: new Date().toISOString(),
     version: '1.0.0',
+  });
+});
+
+// ── /api/health — production health check with dataset probing ────────────────
+app.get('/api/health', (_req, res) => {
+  const checks: Record<string, { ok: boolean; path?: string; error?: string }> = {};
+
+  // Check all required Parquet and JSON artifact paths
+  const artifacts: Record<string, string> = {
+    monthly_clean:           DATA_PATHS.monthlyClean,
+    risk_scores:             DATA_PATHS.riskScores,
+    shap_values:             DATA_PATHS.shapValues,
+    simulation_benchmarks:   DATA_PATHS.simulationBenchmarks,
+    model_metrics:           REPORT_PATHS.modelMetrics,
+    shap_explainability:     REPORT_PATHS.shapExplainability,
+    counterfactual:          REPORT_PATHS.counterfactual,
+    rolling_metrics:         REPORT_PATHS.rollingMetrics,
+    rolling_comparison:      REPORT_PATHS.rollingComparison,
+  };
+
+  for (const [key, filePath] of Object.entries(artifacts)) {
+    const exists = fs.existsSync(filePath);
+    checks[key] = exists
+      ? { ok: true, path: filePath }
+      : { ok: false, path: filePath, error: 'File not found' };
+  }
+
+  const allOk = Object.values(checks).every((c) => c.ok);
+  const status = allOk ? 'healthy' : 'degraded';
+
+  res.status(allOk ? 200 : 207).json({
+    status,
+    uptime: process.uptime(),
+    environment: NODE_ENV,
+    version: '1.0.0',
+    cache_stats: cacheService.stats(),
+    dataset_checks: checks,
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -120,8 +178,9 @@ if (fs.existsSync(STATIC_DIR)) {
 app.listen(PORT, () => {
   console.log(`\n🌡️  UHI API Server running at http://localhost:${PORT}`);
   console.log(`📊  API root:        http://localhost:${PORT}/api`);
-  console.log(`🏥  Health check:    http://localhost:${PORT}/health`);
-  console.log(`🔗  Frontend origin: ${FRONTEND_URL}\n`);
+  console.log(`🏥  Health check:    http://localhost:${PORT}/api/health`);
+  console.log(`🔗  Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`);
+  console.log(`🌍  Environment:     ${NODE_ENV}\n`);
 });
 
 export default app;
