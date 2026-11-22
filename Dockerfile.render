@@ -1,8 +1,8 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Dockerfile.render  — Backend-only image for Render deployment
 #
-# Installs Node 20 + minimal Python (pandas + pyarrow) so the Express server
-# can spawn the inline Python Parquet reader in dataLoader.ts.
+# Installs Node 20 + minimal Python (pandas + pyarrow + numpy) so the Express
+# server can spawn the inline Python Parquet reader in dataLoader.ts.
 # Does NOT install Streamlit, Matplotlib, Seaborn, or any dev tools.
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -25,27 +25,37 @@ RUN pip install --no-cache-dir -r /tmp/requirements.prod.txt
 # ── Node server build ─────────────────────────────────────────────────────────
 WORKDIR /app
 
-# Install Node deps
+# 1. Copy manifests first (layer-cache friendly)
 COPY server/package*.json ./server/
-RUN cd server && npm ci --omit=dev
 
-# Copy TypeScript source & compile
+# 2. Install ALL deps (including devDependencies — needed for tsc / typescript)
+RUN cd server && npm ci
+
+# 3. Copy TypeScript source and compile to JS
 COPY server/ ./server/
 RUN cd server && npm run build
 
-# ── Copy datasets & reports that the API reads at runtime ────────────────────
-COPY data/processed/monthly_level/ ./data/processed/monthly_level/
+# 4. Remove devDependencies to keep the final image lean
+RUN cd server && npm prune --omit=dev
+
+# ── Copy datasets & reports that the API reads at runtime ─────────────────────
+# These paths are referenced by DATA_PATHS / REPORT_PATHS in dataLoader.ts
+COPY data/processed/monthly_level/   ./data/processed/monthly_level/
 COPY data/processed/rolling_results/ ./data/processed/rolling_results/
-COPY models/ ./models/
-COPY reports/ ./reports/
+COPY models/                          ./models/
+COPY reports/                         ./reports/
 
 # ── Runtime environment ───────────────────────────────────────────────────────
 ENV NODE_ENV=production
+# Render injects PORT automatically at runtime; fallback to 3001 for local runs
+ENV PORT=3001
+# Python binary name inside the container
 ENV PYTHON_BIN=python3
 
 EXPOSE 3001
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
-    CMD curl -f http://localhost:3001/health || exit 1
+    CMD curl -f http://localhost:${PORT}/health || exit 1
 
+# Entry point: start the compiled Express server
 CMD ["node", "server/dist/index.js"]
