@@ -49,8 +49,10 @@ export const App: React.FC = () => {
   useEffect(() => {
     const checkBackend = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/api/health`, { timeout: 2000 });
-        if (res.data && res.data.status === 'ok') {
+        const res = await axios.get(`${API_BASE}/api/health`, { timeout: 5000 });
+        // /api/health returns "healthy" or "degraded"; /health returns "ok"
+        // Accept any 2xx response with a truthy status field as "online"
+        if (res.data && (res.data.status === 'ok' || res.data.status === 'healthy' || res.data.status === 'degraded')) {
           setApiStatus('online');
         } else {
           setApiStatus('offline');
