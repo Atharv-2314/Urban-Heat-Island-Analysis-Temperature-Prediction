@@ -591,10 +591,10 @@ The SHAP page must dynamically calculate and display feature importance based on
   - [x] Confirm how missing values and single-city climate groups are currently handled.
   - [x] *Exit Gate:* Summarize the exact backend endpoints/data structures to reuse and confirm whether any minimal API extension is needed.
 
-- [ ] **Milestone 4: Backend / Data Wiring (If Needed)**
-  - [ ] Ensure the City Deep Dive data payload provides the overall score, tier (`Low` $\le 30$, `Moderate` $30\text{–}60$, `High` $60\text{–}80$, `Extreme` $> 80$), climate group, raw indicator values ($\text{Mean UHI}$ in K, population density in $\text{people/km}^2$, canopy deficit $1 - \text{NDVI}$), climate-group percentiles, and peer cities in the same climate group.
-  - [ ] Commit backend/API changes separately with a descriptive message.
-  - [ ] *Exit Gate:* Local API responses return matching numbers for the five benchmark cities (**Ahmedabad:** `100.0`, **Delhi:** `100.0`, **Kolkata:** `91.4`, **Sapporo:** `93.3`, **Riyadh:** `85.0`).
+- [x] **Milestone 4: Backend / Data Wiring (If Needed)**
+  - [x] Ensure the City Deep Dive data payload provides the overall score, tier (`Low` $\le 30$, `Moderate` $30\text{–}60$, `High` $60\text{–}80$, `Extreme` $> 80$), climate group, raw indicator values ($\text{Mean UHI}$ in K, population density in $\text{people/km}^2$, canopy deficit $1 - \text{NDVI}$), climate-group percentiles, and peer cities in the same climate group.
+  - [x] Commit backend/API changes separately with a descriptive message.
+  - [x] *Exit Gate:* Local API responses return matching numbers for the five benchmark cities (**Ahmedabad:** `100.0`, **Delhi:** `100.0`, **Kolkata:** `91.4`, **Sapporo:** `93.3`, **Riyadh:** `85.0`).
 
 - [ ] **Milestone 5: Frontend "City Heat Risk Assessment" UI**
   - [ ] **Overall Score Card:** City name, score out of 100, tier badge, climate group, circular gauge, and brief methodology summary.

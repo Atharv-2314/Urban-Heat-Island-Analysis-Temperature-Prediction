@@ -4,7 +4,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { cacheService } from '../services/cache';
 import { loadJsonReport, readParquet, DATA_PATHS, REPORT_PATHS } from '../services/dataLoader';
-import { ModelMetricsResponse, RiskScore, ShapValue, ForecastBenchmark, ApiResponse } from '../types';
+import { ModelMetricsResponse, RiskScore, ShapValue, ForecastBenchmark, ApiResponse, CityRiskAssessment, PeerCityRisk } from '../types';
 import CacheService from '../services/cache';
 
 const router = Router();
@@ -26,27 +26,142 @@ router.get('/metrics', (_req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-/** GET /api/models/risk — City-level UHI risk scores and tiers */
-router.get('/risk', async (_req: Request, res: Response, next: NextFunction) => {
+/** Helper to retrieve and normalize all 42 city risk scores from JSON or Parquet with in-memory caching */
+export async function getNormalizedRiskScores(): Promise<RiskScore[]> {
+  const cacheKey = 'models:risk:all';
+  const cached = cacheService.get<RiskScore[]>(cacheKey);
+  if (cached) return cached;
+
+  let rawList: any[] = [];
   try {
-    const cacheKey = 'models:risk';
-    const cached = cacheService.get<RiskScore[]>(cacheKey);
-    if (cached) {
-      res.json({ success: true, data: cached, cached: true, count: cached.length, timestamp: new Date().toISOString() });
+    const json = loadJsonReport<{ city_risk_scores?: any[] }>(REPORT_PATHS.climateRisk);
+    if (json.city_risk_scores && Array.isArray(json.city_risk_scores) && json.city_risk_scores.length > 0) {
+      rawList = json.city_risk_scores;
+    }
+  } catch {
+    // fallback to parquet
+  }
+
+  if (!rawList || rawList.length === 0) {
+    rawList = await readParquet<any>(DATA_PATHS.riskScores);
+  }
+
+  const normalized: RiskScore[] = rawList.map((r) => {
+    const vScore = r.vulnerability_score ?? r.risk_score ?? 0;
+    const meanUhi = r.mean_uhi ?? r.uhi_intensity ?? 0;
+    return {
+      city: r.city,
+      risk_score: Number(Number(vScore).toFixed(1)),
+      vulnerability_score: Number(Number(vScore).toFixed(1)),
+      risk_tier: r.risk_tier || 'Moderate Risk',
+      uhi_intensity: Number(Number(meanUhi).toFixed(4)),
+      mean_uhi: Number(Number(meanUhi).toFixed(4)),
+      max_uhi: r.max_uhi !== undefined ? Number(Number(r.max_uhi).toFixed(4)) : undefined,
+      mean_air_temp: r.mean_air_temp !== undefined ? Number(Number(r.mean_air_temp).toFixed(2)) : undefined,
+      mean_pop_density: r.mean_pop_density !== undefined ? Number(Number(r.mean_pop_density).toFixed(1)) : undefined,
+      mean_ndvi: r.mean_ndvi !== undefined ? Number(Number(r.mean_ndvi).toFixed(4)) : undefined,
+      mean_ndbi: r.mean_ndbi !== undefined ? Number(Number(r.mean_ndbi).toFixed(4)) : undefined,
+      canopy_deficit: r.canopy_deficit !== undefined ? Number(Number(r.canopy_deficit).toFixed(4)) : (r.mean_ndvi !== undefined ? Number(Math.max(0, 1 - r.mean_ndvi).toFixed(4)) : undefined),
+      uhi_percentile: r.uhi_percentile !== undefined ? Number(Number(r.uhi_percentile).toFixed(4)) : undefined,
+      pop_percentile: r.pop_percentile !== undefined ? Number(Number(r.pop_percentile).toFixed(4)) : undefined,
+      canopy_percentile: r.canopy_percentile !== undefined ? Number(Number(r.canopy_percentile).toFixed(4)) : undefined,
+      climate_group: r.climate_group,
+      latitude: Number(r.latitude),
+      longitude: Number(r.longitude),
+    };
+  });
+
+  cacheService.set(cacheKey, normalized, CacheService.TTL_LONG);
+  return normalized;
+}
+
+/** Helper to construct a comprehensive City Heat Risk Assessment with peer comparisons */
+export function buildCityRiskAssessment(targetCity: string, allScores: RiskScore[]): CityRiskAssessment | null {
+  const normTarget = targetCity.trim().toLowerCase();
+  const found = allScores.find((c) => c.city.toLowerCase() === normTarget);
+  if (!found) return null;
+
+  const peers: PeerCityRisk[] = allScores
+    .filter((c) => c.climate_group === found.climate_group)
+    .sort((a, b) => b.vulnerability_score - a.vulnerability_score)
+    .map((p) => ({
+      city: p.city,
+      climate_group: p.climate_group,
+      vulnerability_score: p.vulnerability_score,
+      risk_score: p.risk_score,
+      risk_tier: p.risk_tier,
+      mean_uhi: p.mean_uhi,
+      mean_pop_density: p.mean_pop_density ?? 0,
+      canopy_deficit: p.canopy_deficit ?? 0,
+      uhi_percentile: p.uhi_percentile ?? 0,
+      pop_percentile: p.pop_percentile ?? 0,
+      canopy_percentile: p.canopy_percentile ?? 0,
+      is_active: p.city.toLowerCase() === normTarget,
+    }));
+
+  return {
+    city: found.city,
+    climate_group: found.climate_group,
+    vulnerability_score: found.vulnerability_score,
+    risk_score: found.risk_score,
+    risk_tier: found.risk_tier,
+    raw_indicators: {
+      mean_uhi: found.mean_uhi,
+      mean_pop_density: found.mean_pop_density ?? 0,
+      canopy_deficit: found.canopy_deficit ?? 0,
+      mean_ndvi: found.mean_ndvi ?? (1 - (found.canopy_deficit ?? 0)),
+      mean_air_temp: found.mean_air_temp ?? 0,
+      max_uhi: found.max_uhi ?? found.mean_uhi,
+    },
+    percentiles: {
+      uhi_percentile: found.uhi_percentile ?? 0,
+      pop_percentile: found.pop_percentile ?? 0,
+      canopy_percentile: found.canopy_percentile ?? 0,
+    },
+    weights: {
+      uhi: 0.50,
+      pop: 0.30,
+      canopy: 0.20,
+    },
+    peer_cities: peers,
+  };
+}
+
+/** GET /api/models/risk — All 42 city-level UHI risk scores (or single city assessment if ?city= is provided) */
+router.get('/risk', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const allScores = await getNormalizedRiskScores();
+    const cityParam = req.query['city'];
+
+    if (cityParam && typeof cityParam === 'string' && cityParam.trim()) {
+      const assessment = buildCityRiskAssessment(cityParam, allScores);
+      if (!assessment) {
+        res.status(404).json({ success: false, error: `Risk assessment not found for city: ${cityParam}`, timestamp: new Date().toISOString() });
+        return;
+      }
+      res.json({ success: true, data: assessment, cached: false, timestamp: new Date().toISOString() });
       return;
     }
 
-    // Try JSON report first (fastest), fall back to Parquet
-    try {
-      const json = loadJsonReport<{ city_risk_scores: RiskScore[] }>(REPORT_PATHS.climateRisk);
-      const data = json.city_risk_scores ?? (json as unknown as RiskScore[]);
-      cacheService.set(cacheKey, data, CacheService.TTL_LONG);
-      res.json({ success: true, data, cached: false, count: Array.isArray(data) ? data.length : 0, timestamp: new Date().toISOString() });
-    } catch {
-      const data = await readParquet<RiskScore>(DATA_PATHS.riskScores);
-      cacheService.set(cacheKey, data, CacheService.TTL_LONG);
-      res.json({ success: true, data, cached: false, count: data.length, timestamp: new Date().toISOString() });
+    res.json({ success: true, data: allScores, cached: false, count: allScores.length, timestamp: new Date().toISOString() });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/** GET /api/models/risk/city/:cityName — Single city heat risk assessment with climate-group peers */
+router.get('/risk/city/:cityName', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const cityName = decodeURIComponent(String(req.params['cityName']));
+    const allScores = await getNormalizedRiskScores();
+    const assessment = buildCityRiskAssessment(cityName, allScores);
+
+    if (!assessment) {
+      res.status(404).json({ success: false, error: `Risk assessment not found for city: ${cityName}`, timestamp: new Date().toISOString() });
+      return;
     }
+
+    res.json({ success: true, data: assessment, cached: false, timestamp: new Date().toISOString() });
   } catch (err) {
     next(err);
   }

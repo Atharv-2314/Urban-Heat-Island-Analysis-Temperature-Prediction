@@ -9,6 +9,7 @@ import type {
   MonthlyDataRecord,
   ModelMetricsResponse,
   RiskScore,
+  CityRiskAssessment,
   SimulationResponse,
   GridPixelRecord,
 } from '../types';
@@ -65,6 +66,16 @@ export async function fetchModelMetrics(): Promise<ModelMetricsResponse> {
 export async function fetchRiskScores(): Promise<RiskScore[]> {
   const { data } = await client.get<ApiResponse<RiskScore[]>>('/models/risk');
   return data.data ?? [];
+}
+
+export async function fetchCityRiskAssessment(cityName: string): Promise<CityRiskAssessment | null> {
+  try {
+    const { data } = await client.get<ApiResponse<CityRiskAssessment>>(`/models/risk/city/${encodeURIComponent(cityName)}`);
+    return data.data ?? null;
+  } catch (err) {
+    console.warn(`Failed to fetch risk assessment for ${cityName}:`, err);
+    return null;
+  }
 }
 
 export async function fetchShapData(

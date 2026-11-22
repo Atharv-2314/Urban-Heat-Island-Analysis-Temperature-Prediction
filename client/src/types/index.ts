@@ -61,11 +61,64 @@ export interface ModelMetricsResponse {
 export interface RiskScore {
   city: string;
   risk_score: number;
+  vulnerability_score?: number;
   risk_tier: string;
   uhi_intensity: number;
+  mean_uhi?: number;
+  max_uhi?: number;
+  mean_air_temp?: number;
+  mean_pop_density?: number;
+  mean_ndvi?: number;
+  mean_ndbi?: number;
+  canopy_deficit?: number;
+  uhi_percentile?: number;
+  pop_percentile?: number;
+  canopy_percentile?: number;
   climate_group: string;
   latitude: number;
   longitude: number;
+}
+
+export interface PeerCityRisk {
+  city: string;
+  climate_group: string;
+  vulnerability_score: number;
+  risk_score: number;
+  risk_tier: string;
+  mean_uhi: number;
+  mean_pop_density: number;
+  canopy_deficit: number;
+  uhi_percentile: number;
+  pop_percentile: number;
+  canopy_percentile: number;
+  is_active: boolean;
+}
+
+export interface CityRiskAssessment {
+  city: string;
+  climate_group: string;
+  vulnerability_score: number;
+  risk_score: number;
+  risk_tier: string;
+  raw_indicators: {
+    mean_uhi: number;
+    mean_pop_density: number;
+    canopy_deficit: number;
+    mean_ndvi: number;
+    mean_air_temp: number;
+    max_uhi: number;
+  };
+  percentiles: {
+    uhi_percentile: number;
+    pop_percentile: number;
+    canopy_percentile: number;
+  };
+  weights: {
+    uhi: number;
+    pop: number;
+    canopy: number;
+  };
+  peer_cities: PeerCityRisk[];
 }
 
 export interface SimulationResultItem {
